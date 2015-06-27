@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Client.Console", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Client", "src\AnimeXdcc.Client\AnimeXdcc.Client.csproj", "{FE398CF6-8A55-4466-90B2-ABEA013E543D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Common", "src\AnimeXdcc.Common\AnimeXdcc.Common.csproj", "{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{FE398CF6-8A55-4466-90B2-ABEA013E543D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE398CF6-8A55-4466-90B2-ABEA013E543D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE398CF6-8A55-4466-90B2-ABEA013E543D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,5 +85,6 @@ Global
 		{23D59D6E-DA63-4329-A9B4-84ABCE9ED6DE} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{55661347-4B15-4732-9E46-7733EF372561} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{FE398CF6-8A55-4466-90B2-ABEA013E543D} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
+		{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 	EndGlobalSection
 EndGlobal

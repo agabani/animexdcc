@@ -53,6 +53,10 @@
       <Project>{FE398CF6-8A55-4466-90B2-ABEA013E543D}</Project>
       <Name>AnimeXdcc.Client</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AnimeXdcc.Common\AnimeXdcc.Common.csproj">
+      <Project>{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1}</Project>
+      <Name>AnimeXdcc.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

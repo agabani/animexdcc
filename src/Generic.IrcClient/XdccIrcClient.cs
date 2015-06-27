@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AnimeXdcc.Common.Logging;
 using Generic.IrcClient.Dcc;
 using IrcDotNet;
 
@@ -7,15 +8,16 @@ namespace Generic.IrcClient
 {
     public class XdccIrcClient
     {
-        private readonly IrcUserRegistrationInfo _ircUserRegistrationInfo;
-        private readonly StandardIrcClient _standardIrcClient;
-        private readonly string _hostName;
-        private readonly int _port;
+        private const string LogTag = "[XdccIrcClient] ";
         private readonly string _channels;
+        private readonly string _hostName;
+        private readonly IrcUserRegistrationInfo _ircUserRegistrationInfo;
+        private readonly ILogger _logger;
+        private readonly int _port;
+        private readonly StandardIrcClient _standardIrcClient;
 
-        public event EventHandler<DccSendMessage> DccSendReceived; 
-
-        public XdccIrcClient(string nickName, string realName, string userName, string hostName, int port, string channels)
+        public XdccIrcClient(string nickName, string realName, string userName, string hostName, int port,
+            string channels, ILogger logger)
         {
             _standardIrcClient = new StandardIrcClient();
             _ircUserRegistrationInfo = new IrcUserRegistrationInfo
@@ -27,14 +29,17 @@ namespace Generic.IrcClient
             _hostName = hostName;
             _port = port;
             _channels = channels;
+            _logger = logger;
         }
+
+        public event EventHandler<DccSendMessage> DccSendReceived;
 
         public void Run()
         {
             _standardIrcClient.Connected += (sender, args) =>
             {
                 var client = (StandardIrcClient) sender;
-                Console.WriteLine("[connected] {0}", client);
+                _logger.Info(LogTag + string.Format("[Connected] {0}", client));
             };
 
             _standardIrcClient.Registered += (sender, args) =>
@@ -45,10 +50,6 @@ namespace Generic.IrcClient
             };
 
             _standardIrcClient.Connect(_hostName, _port, false, _ircUserRegistrationInfo);
-
-            /*while (true)
-            {
-            }*/
         }
 
         public void RequestPackage(string botName, int packageNumber)
@@ -60,28 +61,25 @@ namespace Generic.IrcClient
         {
             _standardIrcClient.LocalUser.JoinedChannel += (sender, args) =>
             {
-                var client = (IrcLocalUser) sender;
                 var channelEventArgs = args;
 
-                Console.WriteLine("[joined] {0}", channelEventArgs.Channel.Name);
-                //client.SendMessage(channelEventArgs.Channel.Name, "Hi!");
-                //client.SendMessage("CR-HOLLAND|NEW", "xdcc send #3072");
+                _logger.Info(LogTag + string.Format("[Joined] {0}", channelEventArgs.Channel.Name));
 
-                channelEventArgs.Channel.MessageReceived += (o, eventArgs) =>
-                {
-                    var c = (IrcChannel) o;
-                    //client.SendMessage(GetDefaultReplyTargets(_standardIrcClient, eventArgs.Source, eventArgs.Targets),
-                    //    eventArgs.Text);
-                    Console.WriteLine("[Channel.MessageReceived] {0} {1}", eventArgs.Source.Name, eventArgs.GetText());
-                };
+                channelEventArgs.Channel.MessageReceived +=
+                    (o, eventArgs) =>
+                    {
+                        _logger.Info(LogTag +
+                                     string.Format("[Channel.MessageReceived] {0} {1}", eventArgs.Source.Name,
+                                         eventArgs.GetText()));
+                    };
 
-                channelEventArgs.Channel.NoticeReceived += (o, eventArgs) =>
-                {
-                    var c = (IrcLocalUser) o;
-                    //client.SendMessage(GetDefaultReplyTargets(_standardIrcClient, eventArgs.Source, eventArgs.Targets),
-                    //    eventArgs.Text);
-                    Console.WriteLine("[Channel.NoticeReceived] {0} {1}", eventArgs.Source.Name, eventArgs.GetText());
-                };
+                channelEventArgs.Channel.NoticeReceived +=
+                    (o, eventArgs) =>
+                    {
+                        _logger.Info(LogTag +
+                                     string.Format("[Channel.NoticeReceived] {0} {1}", eventArgs.Source.Name,
+                                         eventArgs.GetText()));
+                    };
             };
 
             _standardIrcClient.LocalUser.MessageReceived += (sender, args) =>
@@ -95,23 +93,20 @@ namespace Generic.IrcClient
                     var result = dccMessageParser.Parse(args.Text);
 
                     OnDccSendReceived(result);
-
-                    //var xdccDccClient = new XdccDccClient();
-                    //xdccDccClient.Download(result.IpAddress, result.Port, result.FileSize, result.FileName);
                 }
                 else
                 {
-                    //client.SendMessage(GetDefaultReplyTargets(_standardIrcClient, args.Source, args.Targets), args.Text);
-                    Console.WriteLine("[LocalUser.MessageReceived] {0} {1}", args.Source.Name, args.Text);
+                    _logger.Info(LogTag +
+                                 string.Format("[LocalUser.MessageReceived] {0} {1}", args.Source.Name, args.Text));
                 }
             };
 
-            _standardIrcClient.LocalUser.NoticeReceived += (sender, args) =>
-            {
-                var client = (IrcLocalUser) sender;
-                //client.SendNotice(GetDefaultReplyTargets(_standardIrcClient, args.Source, args.Targets), args.Text);
-                Console.WriteLine("[LocalUser.NoticeReceived] {0} {1}", args.Source.Name, args.GetText());
-            };
+            _standardIrcClient.LocalUser.NoticeReceived +=
+                (sender, args) =>
+                {
+                    _logger.Info(LogTag +
+                                 string.Format("[LocalUser.NoticeReceived] {0} {1}", args.Source.Name, args.GetText()));
+                };
         }
 
         private IList<IIrcMessageTarget> GetDefaultReplyTargets(IrcDotNet.IrcClient ircClient, IIrcMessageSource source,

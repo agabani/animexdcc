@@ -38,6 +38,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AnimeXdcc.Common\AnimeXdcc.Common.csproj">
+      <Project>{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1}</Project>
+      <Name>AnimeXdcc.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Generic.DccClient\Generic.DccClient.csproj">
       <Project>{852748D8-BC3E-4E63-8173-A6EAD81AF023}</Project>
       <Name>Generic.DccClient</Name>

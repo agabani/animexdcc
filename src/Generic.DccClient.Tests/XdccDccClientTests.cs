@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using AnimeXdcc.Common.Logging;
+using NUnit.Framework;
 
 namespace Generic.DccClient.Tests
 {
@@ -8,7 +9,7 @@ namespace Generic.DccClient.Tests
         [Test]
         public void Should_be_able_to_download_file()
         {
-            var xdccDccClient = new XdccDccClient();
+            var xdccDccClient = new XdccDccClient(new TraceLogger(TraceLogger.Level.Debug));
 
             const string ipAddress = "95.211.136.69";
             const int port = 12351;
@@ -21,7 +22,7 @@ namespace Generic.DccClient.Tests
         [Test]
         public void Should_be_able_to_download_file_async()
         {
-            var xdccDccClient = new XdccDccClient();
+            var xdccDccClient = new XdccDccClient(new TraceLogger(TraceLogger.Level.Debug));
 
             const string ipAddress = "95.211.136.69";
             const int port = 12348;

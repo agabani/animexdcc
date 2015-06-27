@@ -1,31 +1,38 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using AnimeXdcc.Common.Logging;
 
 namespace Generic.DccClient
 {
     public class XdccDccClient
     {
+        private const string LogTag = "[XdccDccClient] ";
         private static int _transferCounter;
+        private readonly ILogger _logger;
+
+        public XdccDccClient(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public void Download(string ipAddress, int port, uint filesize, string path)
         {
             var transferTag = string.Format("[TRANSFER {0}]: ", ++_transferCounter);
 
-            Trace.TraceInformation(transferTag + "Attempting an active DCC RECV connection");
-            Trace.TraceInformation(transferTag + "Contacting host {0} on port {1}", ipAddress, port);
+            _logger.Info(LogTag + transferTag + "Attempting an active DCC RECV connection");
+            _logger.Info(LogTag + transferTag + string.Format("Contacting host {0} on port {1}", ipAddress, port));
 
             using (var tcpClient = new TcpClient(ipAddress, port))
             {
                 using (var networkStream = tcpClient.GetStream())
                 {
-                    Trace.TraceInformation(transferTag + "Connected to {0}:{1}", ipAddress, port);
+                    _logger.Info(LogTag + transferTag + string.Format("Connected to {0}:{1}", ipAddress, port));
 
                     var totalBytes = 0;
                     var buffer = new byte[4096];
 
-                    Trace.TraceInformation(transferTag + "Transferring data");
+                    _logger.Info(LogTag + transferTag + "Transferring data");
 
                     using (var fileStream = File.Create(path))
                     {
@@ -44,14 +51,13 @@ namespace Generic.DccClient
                             {
                                 break;
                             }
-
                         } while (bytes > 0);
                     }
 
-                    Trace.TraceInformation(transferTag + "Data transfer terminated");
+                    _logger.Info(LogTag + transferTag + "Data transfer terminated");
                 }
 
-                Trace.TraceInformation(transferTag + "Transfer completed");
+                _logger.Info(LogTag + transferTag + "Transfer completed");
             }
         }
 
@@ -59,22 +65,24 @@ namespace Generic.DccClient
         {
             var transferTag = string.Format("[TRANSFER {0}]: ", ++_transferCounter);
 
-            Trace.TraceInformation(transferTag + "Attempting an active DCC RECV connection");
-            Trace.TraceInformation(transferTag + "Contacting host {0} on port {1}", ipAddress, port);
+            _logger.Info(LogTag + transferTag + "Attempting an active DCC RECV connection");
+            _logger.Info(LogTag + transferTag + string.Format("Contacting host {0} on port {1}", ipAddress, port));
 
             using (var tcpClient = new TcpClient(ipAddress, port))
             {
                 using (var networkStream = tcpClient.GetStream())
                 {
-                    Trace.TraceInformation(transferTag + "Connected to {0}:{1}", ipAddress, port);
+                    _logger.Info(LogTag + transferTag + string.Format("Connected to {0}:{1}", ipAddress, port));
 
                     var totalBytes = 0;
                     var buffer = new byte[1024];
 
-                    Trace.TraceInformation(transferTag + "Transferring data");
+                    _logger.Info(LogTag + transferTag + "Transferring data");
 
                     using (var fileStream = File.Create(path))
                     {
+                        _logger.Debug(LogTag + transferTag + string.Format("Create file: {0}", path));
+
                         int bytes;
                         do
                         {
@@ -94,10 +102,10 @@ namespace Generic.DccClient
                         } while (bytes > 0);
                     }
 
-                    Trace.TraceInformation(transferTag + "Data transfer terminated");
+                    _logger.Info(LogTag + transferTag + "Data transfer terminated");
                 }
 
-                Trace.TraceInformation(transferTag + "Transfer completed");
+                _logger.Info(LogTag + transferTag + "Transfer completed");
             }
         }
     }

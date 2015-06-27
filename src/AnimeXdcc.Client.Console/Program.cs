@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using AnimeXdcc.Client.Console.Configuration;
+﻿using AnimeXdcc.Client.Console.Configuration;
+using AnimeXdcc.Common.Logging;
 
 namespace AnimeXdcc.Client.Console
 {
@@ -17,7 +17,9 @@ namespace AnimeXdcc.Client.Console
                 configuration.Irc.User.UserName,
                 configuration.Irc.User.RealName,
                 configuration.Irc.User.NickName,
-                configuration.Irc.Channel);
+                configuration.Irc.Channel,
+                new ConsoleLogger(ConsoleLogger.Level.Debug)
+                );
 
             animeXdccClient.Run().Wait();
         }
