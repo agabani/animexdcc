@@ -23,7 +23,7 @@ namespace Generic.DccClient
                     Trace.TraceInformation(transferTag + "Connected to {0}:{1}", ipAddress, port);
 
                     var totalBytes = 0;
-                    var buffer = new byte[1024];
+                    var buffer = new byte[4096];
 
                     Trace.TraceInformation(transferTag + "Transferring data");
 

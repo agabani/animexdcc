@@ -17,7 +17,7 @@ namespace Intel.Haruhichan.ApiClient.Models
         [JsonProperty(PropertyName = "packnum")]
         public int PackageNumber { get; set; }
 
-        [JsonProperty(PropertyName = "requestid")]
+        [JsonProperty(PropertyName = "requested")]
         public int Requested { get; set; }
 
         [JsonProperty(PropertyName = "size")]

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Generic.DccClient;
 using Generic.IrcClient.Dcc;
 using IrcDotNet;
 
@@ -10,16 +9,24 @@ namespace Generic.IrcClient
     {
         private readonly IrcUserRegistrationInfo _ircUserRegistrationInfo;
         private readonly StandardIrcClient _standardIrcClient;
+        private readonly string _hostName;
+        private readonly int _port;
+        private readonly string _channels;
 
-        public XdccIrcClient()
+        public event EventHandler<DccSendMessage> DccSendReceived; 
+
+        public XdccIrcClient(string nickName, string realName, string userName, string hostName, int port, string channels)
         {
             _standardIrcClient = new StandardIrcClient();
             _ircUserRegistrationInfo = new IrcUserRegistrationInfo
             {
-                NickName = "speech",
-                RealName = "speech",
-                UserName = "speech"
+                NickName = nickName,
+                RealName = realName,
+                UserName = userName
             };
+            _hostName = hostName;
+            _port = port;
+            _channels = channels;
         }
 
         public void Run()
@@ -33,15 +40,20 @@ namespace Generic.IrcClient
             _standardIrcClient.Registered += (sender, args) =>
             {
                 var client = (StandardIrcClient) sender;
-                client.Channels.Join("#intel");
+                client.Channels.Join(_channels);
                 RegisterCallbacks();
             };
 
-            _standardIrcClient.Connect("irc.rizon.net", false, _ircUserRegistrationInfo);
+            _standardIrcClient.Connect(_hostName, _port, false, _ircUserRegistrationInfo);
 
-            while (true)
+            /*while (true)
             {
-            }
+            }*/
+        }
+
+        public void RequestPackage(string botName, int packageNumber)
+        {
+            _standardIrcClient.LocalUser.SendMessage(botName, string.Format("xdcc send #{0}", packageNumber));
         }
 
         private void RegisterCallbacks()
@@ -53,7 +65,7 @@ namespace Generic.IrcClient
 
                 Console.WriteLine("[joined] {0}", channelEventArgs.Channel.Name);
                 //client.SendMessage(channelEventArgs.Channel.Name, "Hi!");
-                client.SendMessage("CR-HOLLAND|NEW", "xdcc send #3072");
+                //client.SendMessage("CR-HOLLAND|NEW", "xdcc send #3072");
 
                 channelEventArgs.Channel.MessageReceived += (o, eventArgs) =>
                 {
@@ -82,8 +94,10 @@ namespace Generic.IrcClient
                 {
                     var result = dccMessageParser.Parse(args.Text);
 
-                    var xdccDccClient = new XdccDccClient();
-                    xdccDccClient.Download(result.IpAddress, result.Port, result.FileSize, result.FileName);
+                    OnDccSendReceived(result);
+
+                    //var xdccDccClient = new XdccDccClient();
+                    //xdccDccClient.Download(result.IpAddress, result.Port, result.FileSize, result.FileName);
                 }
                 else
                 {
@@ -109,6 +123,12 @@ namespace Generic.IrcClient
             }
 
             return targets;
+        }
+
+        protected virtual void OnDccSendReceived(DccSendMessage e)
+        {
+            var handler = DccSendReceived;
+            if (handler != null) handler(this, e);
         }
     }
 }
