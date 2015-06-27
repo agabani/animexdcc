@@ -1,6 +1,6 @@
 using System;
 
-namespace Intel.Haruhichan.Characterization.Tests.Core
+namespace Intel.Haruhichan.ApiClient.Tests
 {
     public class ConfigurationManager
     {

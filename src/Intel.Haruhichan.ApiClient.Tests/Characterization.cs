@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
-using Intel.Haruhichan.Characterization.Tests.Core;
+using Intel.Haruhichan.ApiClient.Client;
 using NUnit.Framework;
 
-namespace Intel.Haruhichan.Characterization.Tests.Tests
+namespace Intel.Haruhichan.ApiClient.Tests
 {
     [TestFixture]
     public class Characterization

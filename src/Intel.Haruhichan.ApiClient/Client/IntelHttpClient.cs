@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Intel.Haruhichan.Characterization.Tests.Models;
+using Intel.Haruhichan.ApiClient.Models;
 using Newtonsoft.Json;
 
-namespace Intel.Haruhichan.Characterization.Tests.Core
+namespace Intel.Haruhichan.ApiClient.Client
 {
     public class IntelHttpClient
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Intel.Haruhichan.Characterization.Tests.Models
+namespace Intel.Haruhichan.ApiClient.Models
 {
     [JsonObject]
     public class Search

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2C37611A-058A-4763-A4A3-2BEA4D127763}</ProjectGuid>
+    <ProjectGuid>{58B2473F-CE22-42CE-B9F8-7FA802872616}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Generic.IrcClient</RootNamespace>
-    <AssemblyName>Generic.IrcClient</AssemblyName>
+    <RootNamespace>Intel.Haruhichan.ApiClient</RootNamespace>
+    <AssemblyName>Intel.Haruhichan.ApiClient</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,29 +30,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IrcDotNet">
-      <HintPath>..\..\packages\IrcDotNet.0.5.0\lib\net45\IrcDotNet.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dcc\DccSendMessage.cs" />
-    <Compile Include="Dcc\DccMessageParser.cs" />
-    <Compile Include="IpConverter.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Client\IntelHttpClient.cs" />
+    <Compile Include="Models\File.cs" />
+    <Compile Include="Models\Search.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XdccIrcClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Generic.DccClient\Generic.DccClient.csproj">
-      <Project>{852748D8-BC3E-4E63-8173-A6EAD81AF023}</Project>
-      <Name>Generic.DccClient</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
