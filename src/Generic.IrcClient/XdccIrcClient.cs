@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Generic.DccClient;
+using Generic.IrcClient.Dcc;
 using IrcDotNet;
 
 namespace Generic.IrcClient
@@ -53,8 +53,7 @@ namespace Generic.IrcClient
 
                 Console.WriteLine("[joined] {0}", channelEventArgs.Channel.Name);
                 //client.SendMessage(channelEventArgs.Channel.Name, "Hi!");
-                //client.SendMessage("Ginpachi-Sensei", "xdcc send #2");
-                client.SendMessage("CR-NL|NEW", "xdcc send #2318");
+                client.SendMessage("CR-HOLLAND|NEW", "xdcc send #3072");
 
                 channelEventArgs.Channel.MessageReceived += (o, eventArgs) =>
                 {
@@ -77,25 +76,14 @@ namespace Generic.IrcClient
             {
                 var client = (IrcLocalUser) sender;
 
-                if (args.Text.StartsWith((char) 0x01 + "DCC SEND "))
+                var dccMessageParser = new DccMessageParser(new IpConverter());
+
+                if (dccMessageParser.IsDccMessage(args.Text))
                 {
-                    var text = args.Text.Replace(((char) 0x01).ToString(), string.Empty);
-
-                    var parameters = text.Split(' ');
-                    var ipAddress =
-                        new IpConverter().UintAddressToIpAddress(uint.Parse(parameters.ElementAt(parameters.Length - 3)));
-                    var port = int.Parse(parameters.ElementAt(parameters.Length - 2));
-                    var filesize = uint.Parse(parameters.ElementAt(parameters.Length - 1));
-                    string filename = string.Empty;
-                    for (var i = 2; i < parameters.Length - 3; i++)
-                    {
-                        filename += parameters.ElementAt(i);
-                    }
-
-                    Console.WriteLine("[DCC] {0}:{1} {2} bytes ({3})", ipAddress, port, filesize, filename);
+                    var result = dccMessageParser.Parse(args.Text);
 
                     var xdccDccClient = new XdccDccClient();
-                    xdccDccClient.Download(ipAddress, port, filesize, filename);
+                    xdccDccClient.Download(result.IpAddress, result.Port, result.FileSize, result.FileName);
                 }
                 else
                 {

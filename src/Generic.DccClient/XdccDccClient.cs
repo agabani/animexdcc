@@ -1,54 +1,104 @@
-﻿using System;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Generic.DccClient
 {
     public class XdccDccClient
     {
+        private static int _transferCounter;
+
         public void Download(string ipAddress, int port, uint filesize, string path)
         {
-            Console.WriteLine("Starting download");
+            var transferTag = string.Format("[TRANSFER {0}]: ", ++_transferCounter);
 
-            BinaryWriter file;
+            Trace.TraceInformation(transferTag + "Attempting an active DCC RECV connection");
+            Trace.TraceInformation(transferTag + "Contacting host {0} on port {1}", ipAddress, port);
+
             using (var tcpClient = new TcpClient(ipAddress, port))
             {
                 using (var networkStream = tcpClient.GetStream())
                 {
-                    int bytes;
+                    Trace.TraceInformation(transferTag + "Connected to {0}:{1}", ipAddress, port);
 
                     var totalBytes = 0;
+                    var buffer = new byte[1024];
 
-                    file = new BinaryWriter(File.OpenWrite(path));
+                    Trace.TraceInformation(transferTag + "Transferring data");
 
-                    var buffer = new byte[8192];
-
-                    Console.WriteLine("Connection opened");
-
-                    do
+                    using (var fileStream = File.Create(path))
                     {
-                        bytes = networkStream.Read(buffer, 0, buffer.Length);
-
-                        if (bytes > 0)
+                        int bytes;
+                        do
                         {
-                            file.Write(buffer, 0, bytes);
-                            totalBytes += bytes;
-                        }
+                            bytes = networkStream.Read(buffer, 0, buffer.Length);
 
-                        if (totalBytes == filesize)
-                        {
-                            break;
-                        }
-                    } while (bytes > 0);
+                            if (bytes > 0)
+                            {
+                                fileStream.Write(buffer, 0, bytes);
+                                totalBytes += bytes;
+                            }
 
-                    Console.WriteLine("Connection closed");
+                            if (totalBytes == filesize)
+                            {
+                                break;
+                            }
+
+                        } while (bytes > 0);
+                    }
+
+                    Trace.TraceInformation(transferTag + "Data transfer terminated");
                 }
+
+                Trace.TraceInformation(transferTag + "Transfer completed");
             }
+        }
 
-            Console.WriteLine("Finished download");
+        public async Task DownloadAsync(string ipAddress, int port, uint filesize, string path)
+        {
+            var transferTag = string.Format("[TRANSFER {0}]: ", ++_transferCounter);
 
-            file.Close();
+            Trace.TraceInformation(transferTag + "Attempting an active DCC RECV connection");
+            Trace.TraceInformation(transferTag + "Contacting host {0} on port {1}", ipAddress, port);
+
+            using (var tcpClient = new TcpClient(ipAddress, port))
+            {
+                using (var networkStream = tcpClient.GetStream())
+                {
+                    Trace.TraceInformation(transferTag + "Connected to {0}:{1}", ipAddress, port);
+
+                    var totalBytes = 0;
+                    var buffer = new byte[1024];
+
+                    Trace.TraceInformation(transferTag + "Transferring data");
+
+                    using (var fileStream = File.Create(path))
+                    {
+                        int bytes;
+                        do
+                        {
+                            bytes = await networkStream.ReadAsync(buffer, 0, buffer.Length);
+
+                            if (bytes > 0)
+                            {
+                                await fileStream.WriteAsync(buffer, 0, bytes);
+                                totalBytes += bytes;
+                            }
+
+                            if (totalBytes == filesize)
+                            {
+                                break;
+                            }
+
+                        } while (bytes > 0);
+                    }
+
+                    Trace.TraceInformation(transferTag + "Data transfer terminated");
+                }
+
+                Trace.TraceInformation(transferTag + "Transfer completed");
+            }
         }
     }
 }
