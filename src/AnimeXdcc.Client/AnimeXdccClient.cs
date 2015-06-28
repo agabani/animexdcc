@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AnimeXdcc.Common.Logging;
-using Generic.DccClient;
 using Generic.DccClient.Clients;
 using Generic.IrcClient;
 using Intel.Haruhichan.ApiClient.Clients;
@@ -13,7 +12,6 @@ namespace AnimeXdcc.Client
     public class AnimeXdccClient
     {
         private const string LogTag = "[AnimeXdccClient] ";
-
         private readonly string _baseUrl;
         private readonly string _ircChannel;
         private readonly string _ircHostName;
@@ -56,8 +54,9 @@ namespace AnimeXdcc.Client
 
             var package = search.Files.Aggregate((p1, p2) => p1.Requested > p2.Requested ? p1 : p2);
 
-            _logger.Info(LogTag + string.Format("[SELECTED] \"{0}\" from {1}. Package Id: {2}. Size: {3}. Requested: {4}.",
-                package.FileName, package.BotName, package.PackageNumber, package.Size, package.Requested));
+            _logger.Info(LogTag +
+                         string.Format("[SELECTED] \"{0}\" from {1}. Package Id: {2}. Size: {3}. Requested: {4}.",
+                             package.FileName, package.BotName, package.PackageNumber, package.Size, package.Requested));
 
             var xdccIrcClient = new XdccIrcClient(
                 _ircNickName,
@@ -72,10 +71,14 @@ namespace AnimeXdcc.Client
             {
                 var xdccDccClient = new XdccDccClient(_logger);
 
-                xdccDccClient.DccTransferredPacket += (o, status) =>
-                {
-                    _logger.Info(LogTag + string.Format("[TRANSFER {0}] {1}/{2} @ {3}", status.TransferId, status.TransferedBytes, status.TotalBytes, status.TransferSpeed));
-                };
+                xdccDccClient.DccTransferredPacket +=
+                    (o, status) =>
+                    {
+                        _logger.Info(LogTag +
+                                     string.Format("[TRANSFER {0}] {1}/{2} @ {3}KB/s. ETA: {4} seconds.", status.TransferId,
+                                         status.TransferedBytes, status.TotalBytes, status.TransferSpeed,
+                                         status.RemainingMilliseconds/1000));
+                    };
 
                 await xdccDccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, message.FileName);
                 Environment.Exit(0);

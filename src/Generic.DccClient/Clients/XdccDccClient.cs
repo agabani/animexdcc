@@ -11,7 +11,7 @@ namespace Generic.DccClient.Clients
     public class XdccDccClient
     {
         private const string LogTag = "[XdccDccClient] ";
-        private static uint _transferCounter;
+        private static int _transferCounter;
         private readonly ILogger _logger;
 
         public XdccDccClient(ILogger logger)
@@ -19,7 +19,7 @@ namespace Generic.DccClient.Clients
             _logger = logger;
         }
 
-        public async Task<uint> DownloadAsync(string ipAddress, int port, uint filesize, string path)
+        public async Task<long> DownloadAsync(string ipAddress, int port, long filesize, string path)
         {
             var transferId = ++_transferCounter;
 
@@ -46,12 +46,13 @@ namespace Generic.DccClient.Clients
             return remainingBytes;
         }
 
-        private async Task<uint> CopyStreamAsync(Stream input, Stream output, uint bytes, uint id)
+        private async Task<long> CopyStreamAsync(Stream input, Stream output, long bytes, int id)
         {
-            uint transferredBytes = 0;
+            long transferredBytes = 0;
             var buffer = new byte[8192];
 
             var transferStatusPublisher = new TransferStatusPublisher(OnDccTransferredPacket);
+            transferStatusPublisher.NewSession();
 
             while (transferredBytes < bytes)
             {
@@ -63,10 +64,10 @@ namespace Generic.DccClient.Clients
                 }
 
                 await output.WriteAsync(buffer, 0, readBytes);
-                transferredBytes += (uint) readBytes;
+                transferredBytes += readBytes;
 
-                var bytes1 = transferredBytes;
-                new Task(() => transferStatusPublisher.Publish(bytes1, bytes, id)).Start();
+                var transferred = transferredBytes;
+                new Task(() => transferStatusPublisher.Publish(id, transferred, bytes)).Start();
             }
 
             return bytes - transferredBytes;

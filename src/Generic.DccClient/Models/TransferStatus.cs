@@ -2,9 +2,11 @@
 {
     public class TransferStatus
     {
-        public uint TransferId { get; set; }
-        public uint TransferedBytes { get; set; }
-        public uint TotalBytes { get; set; }
-        public uint TransferSpeed { get; set; }
+        public int TransferId { get; set; }
+        public long TransferedBytes { get; set; }
+        public long TotalBytes { get; set; }
+        public long TransferSpeed { get; set; }
+        public long ElapsedMilliseconds { get; set; }
+        public long RemainingMilliseconds { get; set; }
     }
 }

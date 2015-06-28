@@ -8,45 +8,72 @@ namespace Generic.DccClient.Publishers
 {
     public class TransferStatusPublisher
     {
+        private readonly int _movingAverageResolution;
         private readonly Action<TransferStatus> _publish;
+        private readonly int _publishRateMilliseconds;
         private readonly Stopwatch _stopwatch;
-        private readonly Queue<uint> _transferHistory;
         private long _elapsedMilliseconds;
+        private Queue<long> _transferHistory;
 
         public TransferStatusPublisher(Action<TransferStatus> publish)
         {
             _publish = publish;
             _stopwatch = new Stopwatch();
-            _transferHistory = new Queue<uint>();
+            _publishRateMilliseconds = 2000;
+            _movingAverageResolution = 5;
         }
 
-        public void Publish(uint bytes, uint totalBytes, uint id)
+        public void NewSession()
         {
-            if (!_stopwatch.IsRunning)
-            {
-                _stopwatch.Start();
-            }
+            _transferHistory = new Queue<long>();
+            _stopwatch.Restart();
+            _elapsedMilliseconds = 0;
+        }
 
-            if (_stopwatch.ElapsedMilliseconds >= _elapsedMilliseconds + 2000)
+        public void Publish(int id, long bytes, long totalBytes)
+        {
+            if (_stopwatch.ElapsedMilliseconds >= _elapsedMilliseconds + _publishRateMilliseconds)
             {
                 _elapsedMilliseconds = _stopwatch.ElapsedMilliseconds;
                 _transferHistory.Enqueue(bytes);
 
-                while (_transferHistory.Count > 5)
-                {
-                    _transferHistory.Dequeue();
-                }
+                TrimMovingAverage();
 
-                var average = (_transferHistory.Last() - _transferHistory.First())/((uint) _transferHistory.Count*2);
+                var averageBytesPerMillisecond = CalculateAverageSpeedBytesPerMilliseconds();
+
+                var remainingMilliseconds = CalculateEstimatedTimeRemainingMilliseconds(bytes, totalBytes,
+                    averageBytesPerMillisecond);
 
                 _publish(new TransferStatus
                 {
-                    TransferSpeed = average,
+                    TransferSpeed = averageBytesPerMillisecond,
                     TotalBytes = totalBytes,
                     TransferedBytes = bytes,
-                    TransferId = id
+                    TransferId = id,
+                    ElapsedMilliseconds = _elapsedMilliseconds,
+                    RemainingMilliseconds = remainingMilliseconds
                 });
             }
+        }
+
+        private void TrimMovingAverage()
+        {
+            while (_transferHistory.Count > _movingAverageResolution)
+            {
+                _transferHistory.Dequeue();
+            }
+        }
+
+        private long CalculateAverageSpeedBytesPerMilliseconds()
+        {
+            return (_transferHistory.Last() - (_transferHistory.Count > 1 ? _transferHistory.First() : 0))/
+                   (_transferHistory.Count*_publishRateMilliseconds);
+        }
+
+        private static long CalculateEstimatedTimeRemainingMilliseconds(long bytes, long totalBytes,
+            long averageBytesPerMillisecond)
+        {
+            return (totalBytes - bytes)/averageBytesPerMillisecond;
         }
     }
 }

@@ -7,21 +7,21 @@ namespace Generic.IrcClient.Tests
     public class IpConverterTest
     {
         [Test]
-        public void Should_be_able_to_convert_ip_address_to_uint_address()
+        public void Should_be_able_to_convert_ip_address_to_int_address()
         {
             const string ipAddress = "202.186.13.4";
 
-            var intAddress = new IpConverter().IpAddressToUintAddress(ipAddress);
+            var intAddress = new IpConverter().IpAddressToIntAddress(ipAddress);
 
             Assert.That(intAddress, Is.EqualTo(3401190660));
         }
 
         [Test]
-        public void Should_be_able_to_convert_uint_address_to_ip_address()
+        public void Should_be_able_to_convert_int_address_to_ip_address()
         {
-            const uint uintAddress = 3401190660;
+            const long intAddress = 3401190660;
 
-            var ipAddress = new IpConverter().UintAddressToIpAddress(uintAddress);
+            var ipAddress = new IpConverter().IntAddressToIpAddress(intAddress);
 
             Assert.That(ipAddress, Is.EqualTo("202.186.13.4"));
         }

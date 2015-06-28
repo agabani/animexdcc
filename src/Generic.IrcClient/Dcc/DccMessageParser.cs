@@ -57,7 +57,7 @@ namespace Generic.IrcClient.Dcc
 
         private string ParseIpAddress(IReadOnlyList<string> parameters)
         {
-            return _ipConverter.UintAddressToIpAddress(uint.Parse(parameters[parameters.Count - 3]));
+            return _ipConverter.IntAddressToIpAddress(long.Parse(parameters[parameters.Count - 3]));
         }
 
         private static int ParsePort(IReadOnlyList<string> parameters)
@@ -65,9 +65,9 @@ namespace Generic.IrcClient.Dcc
             return int.Parse(parameters[parameters.Count - 2]);
         }
 
-        private static uint ParseFileSize(IReadOnlyList<string> parameters)
+        private static long ParseFileSize(IReadOnlyList<string> parameters)
         {
-            return uint.Parse(parameters[parameters.Count - 1]);
+            return long.Parse(parameters[parameters.Count - 1]);
         }
 
         private static bool IsWrappedInDoubleQuotes(string fileName)

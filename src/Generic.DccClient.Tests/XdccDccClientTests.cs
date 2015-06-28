@@ -15,7 +15,7 @@ namespace Generic.DccClient.Tests
             const string ipAddress = "95.211.136.69";
             const int port = 12348;
             const string fileName = "DanMachi.mkv";
-            const uint fileSize = 154208487;
+            const long fileSize = 154208487;
 
             xdccDccClient.DownloadAsync(ipAddress, port, fileSize, fileName).GetAwaiter().GetResult();
         }
