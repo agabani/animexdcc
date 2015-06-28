@@ -70,6 +70,12 @@ namespace AnimeXdcc.Client
             xdccIrcClient.DccSendReceived += (sender, message) =>
             {
                 var xdccDccClient = new XdccDccClient(_logger);
+
+                xdccDccClient.DccTransferredPacket += (o, status) =>
+                {
+                    _logger.Info(LogTag + string.Format("[TRANSFER {0}] {1}/{2} @ {3}", status.TransferId, status.TransferedBytes, status.TotalBytes, status.TransferSpeed));
+                };
+
                 xdccDccClient.Download(message.IpAddress, message.Port, message.FileSize, message.FileName);
                 Environment.Exit(0);
             };
