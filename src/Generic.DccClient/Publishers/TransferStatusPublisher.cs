@@ -46,12 +46,12 @@ namespace Generic.DccClient.Publishers
 
                 _publish(new TransferStatus
                 {
-                    TransferSpeed = averageBytesPerMillisecond,
+                    TransferSpeedBytesPerMillisecond = averageBytesPerMillisecond,
                     TotalBytes = totalBytes,
                     TransferedBytes = bytes,
                     TransferId = id,
-                    ElapsedMilliseconds = _elapsedMilliseconds,
-                    RemainingMilliseconds = remainingMilliseconds
+                    ElapsedTimeMilliseconds = _elapsedMilliseconds,
+                    RemainingTimeMilliseconds = remainingMilliseconds
                 });
             }
         }

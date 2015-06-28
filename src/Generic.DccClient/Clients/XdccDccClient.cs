@@ -21,29 +21,43 @@ namespace Generic.DccClient.Clients
 
         public async Task<long> DownloadAsync(string ipAddress, int port, long filesize, string path)
         {
-            var transferId = ++_transferCounter;
+            var transferId = NewTransferId();
 
             var transferTag = string.Format("[TRANSFER {0}]: ", transferId);
 
             _logger.Info(LogTag + transferTag + "Attempting an active DCC RECV connection");
             _logger.Info(LogTag + transferTag + string.Format("Contacting host {0} on port {1}", ipAddress, port));
 
-            var tcpClient = new TcpClient(ipAddress, port);
-            var networkStream = tcpClient.GetStream();
+            long remainingBytes;
 
-            _logger.Info(LogTag + transferTag + string.Format("Connected to {0}:{1}", ipAddress, port));
-            _logger.Info(LogTag + transferTag + "Transferring data");
+            using (var tcpClient = new TcpClient(ipAddress, port))
+            {
+                using (var networkStream = tcpClient.GetStream())
+                {
+                    _logger.Info(LogTag + transferTag + string.Format("Connected to {0}:{1}", ipAddress, port));
 
-            var fileStream = File.Create(path);
+                    using (var fileStream = File.Create(path))
+                    {
+                        _logger.Debug(LogTag + transferTag + string.Format("Create file: {0}", path));
+                        _logger.Info(LogTag + transferTag + "Transferring data");
 
-            _logger.Debug(LogTag + transferTag + string.Format("Create file: {0}", path));
+                        remainingBytes = await CopyStreamAsync(networkStream, fileStream, filesize, transferId);
 
-            var remainingBytes = await CopyStreamAsync(networkStream, fileStream, filesize, _transferCounter);
+                        _logger.Debug(LogTag + transferTag + string.Format("{0} bytes remaining", remainingBytes));
+                    }
 
-            _logger.Info(LogTag + transferTag + "Data transfer terminated");
+                    _logger.Info(LogTag + transferTag + "Data transfer terminated");
+                }
+            }
+
             _logger.Info(LogTag + transferTag + "Transfer completed");
 
             return remainingBytes;
+        }
+
+        private static int NewTransferId()
+        {
+            return ++_transferCounter;
         }
 
         private async Task<long> CopyStreamAsync(Stream input, Stream output, long bytes, int id)

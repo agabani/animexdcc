@@ -5,8 +5,8 @@
         public int TransferId { get; set; }
         public long TransferedBytes { get; set; }
         public long TotalBytes { get; set; }
-        public long TransferSpeed { get; set; }
-        public long ElapsedMilliseconds { get; set; }
-        public long RemainingMilliseconds { get; set; }
+        public long TransferSpeedBytesPerMillisecond { get; set; }
+        public long ElapsedTimeMilliseconds { get; set; }
+        public long RemainingTimeMilliseconds { get; set; }
     }
 }
