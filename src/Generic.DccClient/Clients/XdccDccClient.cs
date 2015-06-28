@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using AnimeXdcc.Common.Logging;
 using Generic.DccClient.Models;
+using Generic.DccClient.Publishers;
 
 namespace Generic.DccClient.Clients
 {
@@ -50,6 +51,8 @@ namespace Generic.DccClient.Clients
             uint transferredBytes = 0;
             var buffer = new byte[8192];
 
+            var transferStatusPublisher = new TransferStatusPublisher(OnDccTransferredPacket);
+
             while (transferredBytes < bytes)
             {
                 var readBytes = await input.ReadAsync(buffer, 0, buffer.Length);
@@ -62,13 +65,8 @@ namespace Generic.DccClient.Clients
                 await output.WriteAsync(buffer, 0, readBytes);
                 transferredBytes += (uint) readBytes;
 
-                OnDccTransferredPacket(new TransferStatus
-                {
-                    TransferId = id,
-                    TransferedBytes = transferredBytes,
-                    TotalBytes = bytes,
-                    TransferSpeed = 0
-                });
+                var bytes1 = transferredBytes;
+                new Task(() => transferStatusPublisher.Publish(bytes1, bytes, id)).Start();
             }
 
             return bytes - transferredBytes;
