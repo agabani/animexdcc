@@ -5,7 +5,7 @@ using AnimeXdcc.Common.Logging;
 using Intel.Haruhichan.ApiClient.Models;
 using Newtonsoft.Json;
 
-namespace Intel.Haruhichan.ApiClient.Client
+namespace Intel.Haruhichan.ApiClient.Clients
 {
     public class IntelHttpClient
     {

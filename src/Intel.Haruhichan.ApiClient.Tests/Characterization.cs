@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using AnimeXdcc.Common.Logging;
-using Intel.Haruhichan.ApiClient.Client;
+using Intel.Haruhichan.ApiClient.Clients;
 using NUnit.Framework;
 
 namespace Intel.Haruhichan.ApiClient.Tests

@@ -4,8 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using AnimeXdcc.Common.Logging;
 using Generic.DccClient;
+using Generic.DccClient.Clients;
 using Generic.IrcClient;
-using Intel.Haruhichan.ApiClient.Client;
+using Intel.Haruhichan.ApiClient.Clients;
 
 namespace AnimeXdcc.Client
 {
@@ -67,7 +68,7 @@ namespace AnimeXdcc.Client
                 _ircChannel,
                 _logger);
 
-            xdccIrcClient.DccSendReceived += (sender, message) =>
+            xdccIrcClient.DccSendReceived += async (sender, message) =>
             {
                 var xdccDccClient = new XdccDccClient(_logger);
 
@@ -76,7 +77,7 @@ namespace AnimeXdcc.Client
                     _logger.Info(LogTag + string.Format("[TRANSFER {0}] {1}/{2} @ {3}", status.TransferId, status.TransferedBytes, status.TotalBytes, status.TransferSpeed));
                 };
 
-                xdccDccClient.Download(message.IpAddress, message.Port, message.FileSize, message.FileName);
+                await xdccDccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, message.FileName);
                 Environment.Exit(0);
             };
 
