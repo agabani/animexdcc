@@ -65,8 +65,10 @@ namespace Generic.DccClient.Clients
             long transferredBytes = 0;
             var buffer = new byte[8192];
 
-            var transferStatusPublisher = new TransferStatusPublisher(OnDccTransferredPacket);
-            transferStatusPublisher.NewSession();
+           // var transferStatusPublisher = new TransferStatusPublisher(OnDccTransferredPacket);
+           /// transferStatusPublisher.NewSession();
+
+            var transferStatusPublisher2 = new TransferStatusPublisher2(OnDccTransferredPacket, id, bytes);
 
             while (transferredBytes < bytes)
             {
@@ -80,8 +82,9 @@ namespace Generic.DccClient.Clients
                 await output.WriteAsync(buffer, 0, readBytes);
                 transferredBytes += readBytes;
 
-                var transferred = transferredBytes;
-                new Task(() => transferStatusPublisher.Publish(id, transferred, bytes)).Start();
+/*                var transferred = transferredBytes;
+                new Task(() => transferStatusPublisher.Publish(id, transferred, bytes)).Start();*/
+                transferStatusPublisher2.Publish(bytes);
             }
 
             return bytes - transferredBytes;

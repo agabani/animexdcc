@@ -34,6 +34,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Publishers\TransferStatusPublisher2.cs" />
     <Compile Include="Publishers\TransferStatusPublisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\TransferStatus.cs" />

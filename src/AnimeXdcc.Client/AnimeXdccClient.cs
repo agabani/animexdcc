@@ -58,37 +58,31 @@ namespace AnimeXdcc.Client
                          string.Format("[SELECTED] {0} from {1}. Package Id: {2}. Size: {3}. Requested: {4}.",
                              package.FileName.Replace("\r", string.Empty), package.BotName, package.PackageNumber, package.Size, package.Requested));
 
-            var xdccIrcClient = new XdccIrcClient(
-                _ircNickName,
-                _ircRealName,
-                _ircUserName,
-                _ircHostName,
-                _ircPort,
-                _ircChannel,
-                _logger);
-
-            xdccIrcClient.DccSendReceived += async (sender, message) =>
+            using (var xdccIrcClient = new XdccIrcClient(_ircNickName, _ircRealName, _ircUserName, _ircHostName, _ircPort, _ircChannel, _logger))
             {
-                var xdccDccClient = new XdccDccClient(_logger);
+                xdccIrcClient.DccSendReceived += async (sender, message) =>
+                {
+                    var xdccDccClient = new XdccDccClient(_logger);
 
-                xdccDccClient.DccTransferredPacket +=
-                    (o, status) =>
-                    {
-                        _logger.Info(LogTag +
-                                     string.Format("[TRANSFER {0}] {1}/{2} @ {3}KB/s. ETA: {4} seconds.", status.TransferId,
-                                         status.TransferedBytes, status.TotalBytes, status.TransferSpeedBytesPerMillisecond,
-                                         status.RemainingTimeMilliseconds/1000));
-                    };
+                    xdccDccClient.DccTransferredPacket +=
+                        (o, status) =>
+                        {
+                            _logger.Info(LogTag +
+                                         string.Format("[TRANSFER {0}] {1}/{2} @ {3}KB/s. ETA: {4} seconds.", status.TransferId,
+                                             status.TransferedBytes, status.TotalBytes, status.TransferSpeedBytesPerMillisecond,
+                                             status.RemainingTimeMilliseconds/1000));
+                        };
 
-                await xdccDccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, message.FileName);
-                Environment.Exit(0);
-            };
+                    await xdccDccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, message.FileName);
+                    Environment.Exit(0);
+                };
 
-            xdccIrcClient.Run();
+                xdccIrcClient.Run();
 
-            Thread.Sleep(3000);
+                Thread.Sleep(3000);
 
-            xdccIrcClient.RequestPackage(package.BotName, package.PackageNumber);
+                xdccIrcClient.RequestPackage(package.BotName, package.PackageNumber);
+            }
 
             while (true)
             {

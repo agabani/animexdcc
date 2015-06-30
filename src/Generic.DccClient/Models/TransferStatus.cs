@@ -1,6 +1,8 @@
-﻿namespace Generic.DccClient.Models
+﻿using System;
+
+namespace Generic.DccClient.Models
 {
-    public class TransferStatus
+    public class TransferStatus : EventArgs
     {
         public int TransferId { get; set; }
         public long TransferedBytes { get; set; }

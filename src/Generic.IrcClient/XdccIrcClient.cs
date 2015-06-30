@@ -6,7 +6,7 @@ using IrcDotNet;
 
 namespace Generic.IrcClient
 {
-    public class XdccIrcClient
+    public class XdccIrcClient : IDisposable
     {
         private const string LogTag = "[XdccIrcClient] ";
         private readonly string _channels;
@@ -54,6 +54,7 @@ namespace Generic.IrcClient
 
         public void RequestPackage(string botName, int packageNumber)
         {
+            _logger.Info(LogTag + string.Format("[PRIVMSG] /msg {0} xdcc send #{1}", botName, packageNumber));
             _standardIrcClient.LocalUser.SendMessage(botName, string.Format("xdcc send #{0}", packageNumber));
         }
 
@@ -84,8 +85,6 @@ namespace Generic.IrcClient
 
             _standardIrcClient.LocalUser.MessageReceived += (sender, args) =>
             {
-                var client = (IrcLocalUser) sender;
-
                 var dccMessageParser = new DccMessageParser(new IpConverter());
 
                 if (dccMessageParser.IsDccMessage(args.Text))
@@ -124,6 +123,19 @@ namespace Generic.IrcClient
         {
             var handler = DccSendReceived;
             if (handler != null) handler(this, e);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposeManaged)
+        {
+            if (disposeManaged)
+            {
+                _standardIrcClient.Dispose();
+            }
         }
     }
 }

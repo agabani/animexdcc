@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using AnimeXdcc.Common.Logging;
 using Intel.Haruhichan.ApiClient.Clients;

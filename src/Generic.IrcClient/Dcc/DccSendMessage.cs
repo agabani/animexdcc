@@ -1,6 +1,8 @@
-﻿namespace Generic.IrcClient.Dcc
+﻿using System;
+
+namespace Generic.IrcClient.Dcc
 {
-    public class DccSendMessage
+    public class DccSendMessage : EventArgs
     {
         public string FileName { get; set; }
         public long FileSize { get; set; }
