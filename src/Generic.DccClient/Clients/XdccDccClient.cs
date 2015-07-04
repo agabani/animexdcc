@@ -2,9 +2,11 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Timers;
 using AnimeXdcc.Common.Logging;
 using Generic.DccClient.Models;
 using Generic.DccClient.Publishers;
+using Generic.DccClient.SystemWrappers;
 
 namespace Generic.DccClient.Clients
 {
@@ -68,7 +70,7 @@ namespace Generic.DccClient.Clients
            // var transferStatusPublisher = new TransferStatusPublisher(OnDccTransferredPacket);
            /// transferStatusPublisher.NewSession();
 
-            var transferStatusPublisher2 = new TransferStatusPublisher2(OnDccTransferredPacket, id, bytes);
+            var transferStatusPublisher2 = new TransferStatusPublisher2(OnDccTransferredPacket, id, bytes, new TimerWrapper(2000), new StopwatchWrapper());
 
             while (transferredBytes < bytes)
             {
