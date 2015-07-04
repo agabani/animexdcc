@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Timers;
 using Generic.DccClient.Models;
@@ -11,15 +9,17 @@ namespace Generic.DccClient.Publishers
 {
     public class TransferStatusPublisher2
     {
-        private readonly Action<TransferStatus> _publish;
-        private readonly int _id;
-        private readonly long _totalBytes;
-        private readonly ITimer _timer;
-        private readonly IStopwatch _stopwatch;
-        private long _transferedBytes;
         private readonly Queue<long> _history = new Queue<long>();
+        private readonly int _id;
+        private readonly Action<TransferStatus> _publish;
+        private readonly IStopwatch _stopwatch;
+        private readonly ITimer _timer;
+        private readonly long _totalBytes;
+        private long _transferedBytes;
+        private const int Samples = 6;
 
-        public TransferStatusPublisher2(Action<TransferStatus> publish, int id, long totalBytes, ITimer timer, IStopwatch stopwatch)
+        public TransferStatusPublisher2(Action<TransferStatus> publish, int id, long totalBytes, ITimer timer,
+            IStopwatch stopwatch)
         {
             _publish = publish;
             _id = id;
@@ -29,37 +29,27 @@ namespace Generic.DccClient.Publishers
             _timer.Elapsed += TimerOnElapsed;
             _timer.Start();
             _stopwatch.Start();
+            _history.Enqueue(0);
+        }
+
+        public void Publish(long bytes)
+        {
+            _transferedBytes += bytes;
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             _history.Enqueue(_transferedBytes);
 
-            while (_history.Count > 6)
+            while (_history.Count > Samples)
             {
                 _history.Dequeue();
             }
 
-            long avg = 0;
+            var avg = CalculateAverageTransferSpeed();
 
-            if (_history.Count > 1)
-            {
-                var min = _history.First();
-                var max = _history.Last();
+            var remainingTime = CalculateRemainingTime(avg);
 
-                var diff = (max - min);
-                var time = (long)_timer.Interval * (_history.Count - 1);
-                avg = diff / time;
-            }
-
-            long remainingTime = 0;
-
-            if (avg > 0)
-            {
-                var remainingBytes = _totalBytes - _transferedBytes;
-                remainingTime = remainingBytes/avg;
-            }
-           
             _publish(new TransferStatus
             {
                 TransferId = _id,
@@ -71,9 +61,31 @@ namespace Generic.DccClient.Publishers
             });
         }
 
-        public void Publish(long bytes)
+        private long CalculateAverageTransferSpeed()
         {
-            _transferedBytes += bytes;
+            if (_history.Count <= 1)
+            {
+                return 0;
+            }
+
+            var minimum = _history.First();
+            var maximum = _history.Last();
+            var difference = (maximum - minimum);
+            var time = (long) _timer.Interval*(_history.Count - 1);
+            var average = difference/time;
+            return average;
+        }
+
+        private long CalculateRemainingTime(long bytesPerMillisecond)
+        {
+            if (bytesPerMillisecond <= 0)
+            {
+                return long.MaxValue;
+            }
+
+            var remainingBytes = _totalBytes - _transferedBytes;
+            var remainingTime = remainingBytes/bytesPerMillisecond;
+            return remainingTime;
         }
     }
 }

@@ -160,12 +160,16 @@ namespace Generic.DccClient.Tests
 
             timer.Raise(m => m.Elapsed += null, new EventArgs() as ElapsedEventArgs);
 
+            Assert.That(transferStatus.TransferSpeedBytesPerMillisecond, Is.EqualTo(50));
+
             publisher.Publish(10000);
             publisher.Publish(5000);
             publisher.Publish(25000);
             publisher.Publish(20000);
 
             timer.Raise(m => m.Elapsed += null, new EventArgs() as ElapsedEventArgs);
+
+            Assert.That(transferStatus.TransferSpeedBytesPerMillisecond, Is.EqualTo(55));
 
             publisher.Publish(10000);
             publisher.Publish(5000);
@@ -174,6 +178,7 @@ namespace Generic.DccClient.Tests
 
             timer.Raise(m => m.Elapsed += null, new EventArgs() as ElapsedEventArgs);
 
+            Assert.That(transferStatus.TransferSpeedBytesPerMillisecond, Is.EqualTo(60));
 
             publisher.Publish(10000);
             publisher.Publish(5000);
@@ -182,12 +187,16 @@ namespace Generic.DccClient.Tests
 
             timer.Raise(m => m.Elapsed += null, new EventArgs() as ElapsedEventArgs);
 
+            Assert.That(transferStatus.TransferSpeedBytesPerMillisecond, Is.EqualTo(65));
+
             publisher.Publish(10000);
             publisher.Publish(5000);
             publisher.Publish(25000);
             publisher.Publish(50000);
 
             timer.Raise(m => m.Elapsed += null, new EventArgs() as ElapsedEventArgs);
+
+            Assert.That(transferStatus.TransferSpeedBytesPerMillisecond, Is.EqualTo(70));
 
             publisher.Publish(10000);
             publisher.Publish(5000);
