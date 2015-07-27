@@ -56,9 +56,12 @@ namespace AnimeXdcc.Client
 
             _logger.Info(LogTag +
                          string.Format("[SELECTED] {0} from {1}. Package Id: {2}. Size: {3}. Requested: {4}.",
-                             package.FileName.Replace("\r", string.Empty), package.BotName, package.PackageNumber, package.Size, package.Requested));
+                             package.FileName.Replace("\r", string.Empty), package.BotName, package.PackageNumber,
+                             package.Size, package.Requested));
 
-            using (var xdccIrcClient = new XdccIrcClient(_ircNickName, _ircRealName, _ircUserName, _ircHostName, _ircPort, _ircChannel, _logger))
+            using (
+                var xdccIrcClient = new XdccIrcClient(_ircNickName, _ircRealName, _ircUserName, _ircHostName, _ircPort,
+                    _ircChannel, _logger))
             {
                 xdccIrcClient.DccSendReceived += async (sender, message) =>
                 {
@@ -68,12 +71,15 @@ namespace AnimeXdcc.Client
                         (o, status) =>
                         {
                             _logger.Info(LogTag +
-                                         string.Format("[TRANSFER {0}] {1}/{2} @ {3}KB/s. ETA: {4} seconds.", status.TransferId,
-                                             status.TransferedBytes, status.TotalBytes, status.TransferSpeedBytesPerMillisecond,
+                                         string.Format("[TRANSFER {0}] {1}/{2} @ {3}KB/s. ETA: {4} seconds.",
+                                             status.TransferId,
+                                             status.TransferedBytes, status.TotalBytes,
+                                             status.TransferSpeedBytesPerMillisecond,
                                              status.RemainingTimeMilliseconds/1000));
                         };
 
-                    await xdccDccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, message.FileName);
+                    await
+                        xdccDccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, message.FileName);
                     Environment.Exit(0);
                 };
 

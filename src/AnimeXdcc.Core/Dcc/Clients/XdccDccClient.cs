@@ -66,10 +66,11 @@ namespace AnimeXdcc.Core.Dcc.Clients
             long transferredBytes = 0;
             var buffer = new byte[8192];
 
-           // var transferStatusPublisher = new TransferStatusPublisher(OnDccTransferredPacket);
-           // transferStatusPublisher.NewSession();
+            // var transferStatusPublisher = new TransferStatusPublisher(OnDccTransferredPacket);
+            // transferStatusPublisher.NewSession();
 
-            var transferStatusPublisher2 = new TransferStatusPublisher2(OnDccTransferredPacket, id, bytes, new TimerWrapper(2000), new StopwatchWrapper());
+            var transferStatusPublisher2 = new TransferStatusPublisher2(OnDccTransferredPacket, id, bytes,
+                new TimerWrapper(2000), new StopwatchWrapper());
 
             while (transferredBytes < bytes)
             {

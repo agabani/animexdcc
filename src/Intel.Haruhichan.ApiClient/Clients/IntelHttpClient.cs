@@ -9,10 +9,9 @@ namespace Intel.Haruhichan.ApiClient.Clients
 {
     public class IntelHttpClient
     {
+        private const string LogTag = "[IntelHttpClient] ";
         private readonly Uri _baseAddress;
         private readonly ILogger _logger;
-
-        private const string LogTag = "[IntelHttpClient] "; 
 
         public IntelHttpClient(Uri baseAddress, ILogger logger)
         {

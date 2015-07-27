@@ -32,6 +32,11 @@ namespace AnimeXdcc.Core.Irc
             _logger = logger;
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
         public event EventHandler<DccSendMessage> DccSendReceived;
 
         public void Run()
@@ -123,11 +128,6 @@ namespace AnimeXdcc.Core.Irc
         {
             var handler = DccSendReceived;
             if (handler != null) handler(this, e);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
 
         protected virtual void Dispose(bool disposeManaged)

@@ -5,7 +5,7 @@ namespace AnimeXdcc.Client.Console
 {
     public class Program
     {
-        static void Main()
+        private static void Main()
         {
             var configuration = new ConfigurationManager();
 

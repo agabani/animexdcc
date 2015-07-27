@@ -9,6 +9,7 @@ namespace AnimeXdcc.Core.Dcc.Publishers
 {
     public class TransferStatusPublisher2
     {
+        private const int Samples = 6;
         private readonly Queue<long> _history = new Queue<long>();
         private readonly int _id;
         private readonly Action<TransferStatus> _publish;
@@ -16,7 +17,6 @@ namespace AnimeXdcc.Core.Dcc.Publishers
         private readonly ITimer _timer;
         private readonly long _totalBytes;
         private long _transferedBytes;
-        private const int Samples = 6;
 
         public TransferStatusPublisher2(Action<TransferStatus> publish, int id, long totalBytes, ITimer timer,
             IStopwatch stopwatch)

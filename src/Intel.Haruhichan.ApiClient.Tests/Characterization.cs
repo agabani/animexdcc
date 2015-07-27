@@ -9,7 +9,8 @@ namespace Intel.Haruhichan.ApiClient.Tests
     [TestFixture]
     public class Characterization
     {
-        private readonly IntelHttpClient _intelHttpClient = new IntelHttpClient(new ConfigurationManager().BaseUri, new TraceLogger(TraceLogger.Level.Debug));
+        private readonly IntelHttpClient _intelHttpClient = new IntelHttpClient(new ConfigurationManager().BaseUri,
+            new TraceLogger(TraceLogger.Level.Debug));
 
         [Test]
         public void Should_search()

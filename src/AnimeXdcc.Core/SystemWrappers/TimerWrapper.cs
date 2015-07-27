@@ -6,15 +6,15 @@ namespace AnimeXdcc.Core.SystemWrappers
     {
         private readonly Timer _timer;
 
-        public double Interval
-        {
-            get { return _timer.Interval; }
-        }
-
         public TimerWrapper(double interval)
         {
             _timer = new Timer(interval);
             _timer.Elapsed += TimerOnElapsed;
+        }
+
+        public double Interval
+        {
+            get { return _timer.Interval; }
         }
 
         public void Start()
