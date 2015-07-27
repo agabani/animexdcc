@@ -1,5 +1,5 @@
 ﻿using AnimeXdcc.Client;
-using AnimeXdcc.Common.Logging;
+using AnimeXdcc.Core.Logging;
 using AnimeXdcc.Core.Tests.Configuration;
 using NUnit.Framework;
 

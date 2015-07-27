@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Generic.DccClient.Models;
+using AnimeXdcc.Core.Dcc.Models;
 
-namespace Generic.DccClient.Publishers
+namespace AnimeXdcc.Core.Dcc.Publishers
 {
     public class TransferStatusPublisher
     {

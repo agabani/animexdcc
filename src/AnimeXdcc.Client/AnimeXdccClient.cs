@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AnimeXdcc.Common.Logging;
-using Generic.DccClient.Clients;
-using Generic.IrcClient;
+using AnimeXdcc.Core.Dcc.Clients;
+using AnimeXdcc.Core.Irc;
+using AnimeXdcc.Core.Logging;
 using Intel.Haruhichan.ApiClient.Clients;
 
 namespace AnimeXdcc.Client

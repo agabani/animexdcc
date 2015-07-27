@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AnimeXdcc.Common.Logging;
+using AnimeXdcc.Core.Logging;
 using Intel.Haruhichan.ApiClient.Models;
 using Newtonsoft.Json;
 

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Generic.IrcClient
+namespace AnimeXdcc.Core.Irc
 {
     public class IpConverter
     {

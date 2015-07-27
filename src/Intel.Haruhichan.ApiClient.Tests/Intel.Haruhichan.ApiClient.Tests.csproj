@@ -47,9 +47,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AnimeXdcc.Common\AnimeXdcc.Common.csproj">
-      <Project>{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1}</Project>
-      <Name>AnimeXdcc.Common</Name>
+    <ProjectReference Include="..\AnimeXdcc.Core\AnimeXdcc.Core.csproj">
+      <Project>{7CC688AD-0200-485D-9909-6974B64E1746}</Project>
+      <Name>AnimeXdcc.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Intel.Haruhichan.ApiClient\Intel.Haruhichan.ApiClient.csproj">
       <Project>{58B2473F-CE22-42CE-B9F8-7FA802872616}</Project>

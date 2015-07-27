@@ -1,6 +1,6 @@
 ﻿using System.Timers;
 
-namespace Generic.DccClient.SystemWrappers
+namespace AnimeXdcc.Core.SystemWrappers
 {
     public interface ITimer
     {

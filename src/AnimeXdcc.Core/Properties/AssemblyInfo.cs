@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Generic.DccClient")]
+[assembly: AssemblyTitle("AnimeXdcc.Core")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Generic.DccClient")]
+[assembly: AssemblyProduct("AnimeXdcc.Core")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8fe12215-d203-4bd6-bf46-b823f9d1de3d")]
+[assembly: Guid("2c934c2b-13a8-4dbc-8a30-8888a3d2d956")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
-using Generic.DccClient.Models;
-using Generic.DccClient.SystemWrappers;
+using AnimeXdcc.Core.Dcc.Models;
+using AnimeXdcc.Core.SystemWrappers;
 
-namespace Generic.DccClient.Publishers
+namespace AnimeXdcc.Core.Dcc.Publishers
 {
     public class TransferStatusPublisher2
     {

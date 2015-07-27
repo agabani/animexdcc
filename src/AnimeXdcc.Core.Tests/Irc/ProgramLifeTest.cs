@@ -1,5 +1,5 @@
-﻿using AnimeXdcc.Common.Logging;
-using Generic.IrcClient;
+﻿using AnimeXdcc.Core.Irc;
+using AnimeXdcc.Core.Logging;
 using NUnit.Framework;
 
 namespace AnimeXdcc.Core.Tests.Irc

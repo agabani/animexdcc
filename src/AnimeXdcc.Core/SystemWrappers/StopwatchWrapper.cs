@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Generic.DccClient.SystemWrappers
+namespace AnimeXdcc.Core.SystemWrappers
 {
     public class StopwatchWrapper : IStopwatch
     {

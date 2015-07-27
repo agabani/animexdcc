@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Generic.IrcClient.Dcc
+namespace AnimeXdcc.Core.Irc.Dcc
 {
     public class DccMessageParser
     {

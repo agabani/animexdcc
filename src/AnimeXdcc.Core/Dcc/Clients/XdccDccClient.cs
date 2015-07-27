@@ -2,13 +2,12 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using System.Timers;
-using AnimeXdcc.Common.Logging;
-using Generic.DccClient.Models;
-using Generic.DccClient.Publishers;
-using Generic.DccClient.SystemWrappers;
+using AnimeXdcc.Core.Dcc.Models;
+using AnimeXdcc.Core.Dcc.Publishers;
+using AnimeXdcc.Core.Logging;
+using AnimeXdcc.Core.SystemWrappers;
 
-namespace Generic.DccClient.Clients
+namespace AnimeXdcc.Core.Dcc.Clients
 {
     public class XdccDccClient
     {
@@ -68,7 +67,7 @@ namespace Generic.DccClient.Clients
             var buffer = new byte[8192];
 
            // var transferStatusPublisher = new TransferStatusPublisher(OnDccTransferredPacket);
-           /// transferStatusPublisher.NewSession();
+           // transferStatusPublisher.NewSession();
 
             var transferStatusPublisher2 = new TransferStatusPublisher2(OnDccTransferredPacket, id, bytes, new TimerWrapper(2000), new StopwatchWrapper());
 

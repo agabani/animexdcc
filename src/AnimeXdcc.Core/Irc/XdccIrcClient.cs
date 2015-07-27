@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using AnimeXdcc.Common.Logging;
-using Generic.IrcClient.Dcc;
+using AnimeXdcc.Core.Irc.Dcc;
+using AnimeXdcc.Core.Logging;
 using IrcDotNet;
 
-namespace Generic.IrcClient
+namespace AnimeXdcc.Core.Irc
 {
     public class XdccIrcClient : IDisposable
     {
@@ -108,7 +108,7 @@ namespace Generic.IrcClient
                 };
         }
 
-        private IList<IIrcMessageTarget> GetDefaultReplyTargets(IrcDotNet.IrcClient ircClient, IIrcMessageSource source,
+        private IList<IIrcMessageTarget> GetDefaultReplyTargets(IrcClient ircClient, IIrcMessageSource source,
             IList<IIrcMessageTarget> targets)
         {
             if (targets.Contains(ircClient.LocalUser) && source is IIrcMessageTarget)

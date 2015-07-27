@@ -1,5 +1,5 @@
-﻿using Generic.IrcClient;
-using Generic.IrcClient.Dcc;
+﻿using AnimeXdcc.Core.Irc;
+using AnimeXdcc.Core.Irc.Dcc;
 using NUnit.Framework;
 
 namespace AnimeXdcc.Core.Tests.Irc

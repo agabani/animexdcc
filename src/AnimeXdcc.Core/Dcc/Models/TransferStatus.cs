@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Generic.DccClient.Models
+namespace AnimeXdcc.Core.Dcc.Models
 {
     public class TransferStatus : EventArgs
     {

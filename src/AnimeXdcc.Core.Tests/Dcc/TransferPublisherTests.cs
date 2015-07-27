@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Timers;
-using Generic.DccClient.Models;
-using Generic.DccClient.Publishers;
-using Generic.DccClient.SystemWrappers;
+using AnimeXdcc.Core.Dcc.Models;
+using AnimeXdcc.Core.Dcc.Publishers;
+using AnimeXdcc.Core.SystemWrappers;
 using Moq;
 using NUnit.Framework;
 

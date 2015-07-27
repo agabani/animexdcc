@@ -1,4 +1,4 @@
-﻿namespace AnimeXdcc.Common.Logging
+﻿namespace AnimeXdcc.Core.Logging
 {
     public interface ILogger
     {

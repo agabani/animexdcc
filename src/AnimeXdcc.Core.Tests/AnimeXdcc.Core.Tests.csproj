@@ -60,17 +60,9 @@
       <Project>{FE398CF6-8A55-4466-90B2-ABEA013E543D}</Project>
       <Name>AnimeXdcc.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AnimeXdcc.Common\AnimeXdcc.Common.csproj">
-      <Project>{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1}</Project>
-      <Name>AnimeXdcc.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Generic.DccClient\Generic.DccClient.csproj">
-      <Project>{852748d8-bc3e-4e63-8173-a6ead81af023}</Project>
-      <Name>Generic.DccClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Generic.IrcClient\Generic.IrcClient.csproj">
-      <Project>{2C37611A-058A-4763-A4A3-2BEA4D127763}</Project>
-      <Name>Generic.IrcClient</Name>
+    <ProjectReference Include="..\AnimeXdcc.Core\AnimeXdcc.Core.csproj">
+      <Project>{7CC688AD-0200-485D-9909-6974B64E1746}</Project>
+      <Name>AnimeXdcc.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

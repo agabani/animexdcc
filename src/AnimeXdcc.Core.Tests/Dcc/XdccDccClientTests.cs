@@ -1,5 +1,5 @@
-﻿using AnimeXdcc.Common.Logging;
-using Generic.DccClient.Clients;
+﻿using AnimeXdcc.Core.Dcc.Clients;
+using AnimeXdcc.Core.Logging;
 using NUnit.Framework;
 
 namespace AnimeXdcc.Core.Tests.Dcc

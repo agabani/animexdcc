@@ -1,5 +1,5 @@
 ﻿using AnimeXdcc.Client.Console.Configuration;
-using AnimeXdcc.Common.Logging;
+using AnimeXdcc.Core.Logging;
 
 namespace AnimeXdcc.Client.Console
 {
