@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="IrcClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SelfTest.cs" />
+    <Compile Include="SelfTesting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

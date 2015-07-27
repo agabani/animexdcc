@@ -6,10 +6,10 @@ using NUnit.Framework;
 namespace Integration.IrcClient
 {
     [TestFixture]
-    public class SelfTest
+    public class SelfTesting
     {
-        private const string ObserverName = "observerIrcClient";
-        private const string PractitionerName = "practitionerIrcClient";
+        private const string ObserverName = "ObserverIrcClient";
+        private const string PractitionerName = "PractitionerIrcClient";
         private readonly string[] _channels = {"#speech", "#speechless"};
         private IrcClient _observer;
         private IrcClient _practitioner;
@@ -62,7 +62,7 @@ namespace Integration.IrcClient
         /// <returns></returns>
         private async Task Init()
         {
-            const string hostname = "irc.rizon.net";
+            const string hostname = "irc.synirc.net";
             const int port = 6667;
             const bool useSsl = false;
 

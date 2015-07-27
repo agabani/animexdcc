@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using IrcDotNet;
@@ -60,19 +59,16 @@ namespace Integration.IrcClient
         {
             _ircClient.Channels.Join(channels);
 
-            var joinedChannels = new List<string>();
+            var joinedChannels = new HashSet<string>();
 
-            foreach (var channel in _ircClient.Channels)
+            foreach (var channel in _ircClient.Channels.Where(channel => channels.Contains(channel.Name)))
             {
-                if (channels.Contains(channel.Name))
-                {
-                    joinedChannels.Add(channel.Name);
-                }
+                joinedChannels.Add(channel.Name);
             }
 
             _ircClient.LocalUser.JoinedChannel += (sender, args) => { joinedChannels.Add(args.Channel.Name); };
 
-            while (!new HashSet<string>(channels).SetEquals(joinedChannels))
+            while (!joinedChannels.SetEquals(channels))
             {
                 await Sleep();
             }
@@ -80,7 +76,7 @@ namespace Integration.IrcClient
 
         public async Task WatchJoin(string[] channels, string nickname)
         {
-            var joinedChannels = new List<string>();
+            var joinedChannels = new HashSet<string>();
 
             foreach (var channel in channels.Select(channel => _ircClient.Channels.First(c => c.Name == channel)))
             {
@@ -93,7 +89,7 @@ namespace Integration.IrcClient
                 };
             }
 
-            while (!new HashSet<string>(channels).SetEquals(joinedChannels))
+            while (!joinedChannels.SetEquals(channels))
             {
                 await Sleep();
             }
@@ -103,11 +99,11 @@ namespace Integration.IrcClient
         {
             _ircClient.Channels.Leave(channels);
 
-            var leftChannels = new List<string>();
+            var leftChannels = new HashSet<string>();
 
             _ircClient.LocalUser.LeftChannel += (sender, args) => { leftChannels.Add(args.Channel.Name); };
 
-            while (!new HashSet<string>(channels).SetEquals(leftChannels))
+            while (!leftChannels.SetEquals(channels))
             {
                 await Sleep();
             }
@@ -115,7 +111,7 @@ namespace Integration.IrcClient
 
         public async Task WatchLeave(string[] channels, string nickname)
         {
-            var leftChannels = new List<string>();
+            var leftChannels = new HashSet<string>();
 
             foreach (var channel in channels.Select(channel => _ircClient.Channels.First(c => c.Name == channel)))
             {
@@ -128,7 +124,7 @@ namespace Integration.IrcClient
                 };
             }
 
-            while (!new HashSet<string>(channels).SetEquals(leftChannels))
+            while (!leftChannels.SetEquals(channels))
             {
                 await Sleep();
             }
@@ -206,7 +202,7 @@ namespace Integration.IrcClient
             }
         }
 
-        private Task Sleep()
+        private static Task Sleep()
         {
             return Task.Delay(100);
         }
