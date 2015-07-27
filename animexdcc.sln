@@ -5,19 +5,13 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generic.IrcClient.Tests", "src\Generic.IrcClient.Tests\Generic.IrcClient.Tests.csproj", "{1A22425B-31D7-4AE0-B63B-A88BDE856905}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generic.IrcClient", "src\Generic.IrcClient\Generic.IrcClient.csproj", "{2C37611A-058A-4763-A4A3-2BEA4D127763}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generic.DccClient.Tests", "src\Generic.DccClient.Tests\Generic.DccClient.Tests.csproj", "{57BD123E-92AD-4A2F-A04F-8C2CD57F87EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generic.DccClient", "src\Generic.DccClient\Generic.DccClient.csproj", "{852748D8-BC3E-4E63-8173-A6EAD81AF023}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intel.Haruhichan.ApiClient", "src\Intel.Haruhichan.ApiClient\Intel.Haruhichan.ApiClient.csproj", "{58B2473F-CE22-42CE-B9F8-7FA802872616}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intel.Haruhichan.ApiClient.Tests", "src\Intel.Haruhichan.ApiClient.Tests\Intel.Haruhichan.ApiClient.Tests.csproj", "{06473E43-1135-4FCE-9891-7BE1125B0879}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Client.Tests", "src\AnimeXdcc.Client.Tests\AnimeXdcc.Client.Tests.csproj", "{23D59D6E-DA63-4329-A9B4-84ABCE9ED6DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Client.Console", "src\AnimeXdcc.Client.Console\AnimeXdcc.Client.Console.csproj", "{55661347-4B15-4732-9E46-7733EF372561}"
 EndProject
@@ -27,24 +21,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Common", "src\Ani
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.IrcClient", "src\Integration.IrcClient\Integration.IrcClient.csproj", "{F9A25B0D-FF7A-44FA-A139-BD05E0502F8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Core.Tests", "src\AnimeXdcc.Core.Tests\AnimeXdcc.Core.Tests.csproj", "{50214FA2-CD23-4304-B77C-900C745F8AFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1A22425B-31D7-4AE0-B63B-A88BDE856905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A22425B-31D7-4AE0-B63B-A88BDE856905}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A22425B-31D7-4AE0-B63B-A88BDE856905}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A22425B-31D7-4AE0-B63B-A88BDE856905}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2C37611A-058A-4763-A4A3-2BEA4D127763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C37611A-058A-4763-A4A3-2BEA4D127763}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C37611A-058A-4763-A4A3-2BEA4D127763}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C37611A-058A-4763-A4A3-2BEA4D127763}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57BD123E-92AD-4A2F-A04F-8C2CD57F87EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57BD123E-92AD-4A2F-A04F-8C2CD57F87EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57BD123E-92AD-4A2F-A04F-8C2CD57F87EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57BD123E-92AD-4A2F-A04F-8C2CD57F87EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{852748D8-BC3E-4E63-8173-A6EAD81AF023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{852748D8-BC3E-4E63-8173-A6EAD81AF023}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{852748D8-BC3E-4E63-8173-A6EAD81AF023}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,10 +45,6 @@ Global
 		{06473E43-1135-4FCE-9891-7BE1125B0879}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06473E43-1135-4FCE-9891-7BE1125B0879}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06473E43-1135-4FCE-9891-7BE1125B0879}.Release|Any CPU.Build.0 = Release|Any CPU
-		{23D59D6E-DA63-4329-A9B4-84ABCE9ED6DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{23D59D6E-DA63-4329-A9B4-84ABCE9ED6DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{23D59D6E-DA63-4329-A9B4-84ABCE9ED6DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{23D59D6E-DA63-4329-A9B4-84ABCE9ED6DE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55661347-4B15-4732-9E46-7733EF372561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{55661347-4B15-4732-9E46-7733EF372561}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55661347-4B15-4732-9E46-7733EF372561}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -77,21 +61,23 @@ Global
 		{F9A25B0D-FF7A-44FA-A139-BD05E0502F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9A25B0D-FF7A-44FA-A139-BD05E0502F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9A25B0D-FF7A-44FA-A139-BD05E0502F8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50214FA2-CD23-4304-B77C-900C745F8AFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50214FA2-CD23-4304-B77C-900C745F8AFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50214FA2-CD23-4304-B77C-900C745F8AFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50214FA2-CD23-4304-B77C-900C745F8AFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{1A22425B-31D7-4AE0-B63B-A88BDE856905} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{2C37611A-058A-4763-A4A3-2BEA4D127763} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
-		{57BD123E-92AD-4A2F-A04F-8C2CD57F87EE} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{852748D8-BC3E-4E63-8173-A6EAD81AF023} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{58B2473F-CE22-42CE-B9F8-7FA802872616} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{06473E43-1135-4FCE-9891-7BE1125B0879} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
-		{23D59D6E-DA63-4329-A9B4-84ABCE9ED6DE} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{55661347-4B15-4732-9E46-7733EF372561} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{FE398CF6-8A55-4466-90B2-ABEA013E543D} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{F9A25B0D-FF7A-44FA-A139-BD05E0502F8E} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
+		{50214FA2-CD23-4304-B77C-900C745F8AFA} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 	EndGlobalSection
 EndGlobal

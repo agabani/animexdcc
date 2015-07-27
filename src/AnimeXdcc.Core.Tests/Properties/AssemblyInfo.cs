@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Generic.IrcClient.Tests")]
+[assembly: AssemblyTitle("AnimeXdcc.Core.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Generic.IrcClient.Tests")]
+[assembly: AssemblyProduct("AnimeXdcc.Core.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("7d6feefe-6d7c-4039-bc98-2b2bb6b721a1")]
+[assembly: Guid("84b25e81-3331-4589-a9fa-6f301a3ec0a1")]
 
 // Version information for an assembly consists of the following four values:
 //

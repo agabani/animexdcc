@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1A22425B-31D7-4AE0-B63B-A88BDE856905}</ProjectGuid>
+    <ProjectGuid>{50214FA2-CD23-4304-B77C-900C745F8AFA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Generic.IrcClient.Tests</RootNamespace>
-    <AssemblyName>Generic.IrcClient.Tests</AssemblyName>
+    <RootNamespace>AnimeXdcc.Core.Tests</RootNamespace>
+    <AssemblyName>AnimeXdcc.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,33 +30,52 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IrcDotNet">
-      <HintPath>..\..\packages\IrcDotNet.0.5.0\lib\net45\IrcDotNet.dll</HintPath>
+    <Reference Include="Moq">
+      <HintPath>..\..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DccSendRequestTests.cs" />
-    <Compile Include="IpConverterTest.cs" />
-    <Compile Include="ProgramLifeTest.cs" />
+    <Compile Include="Client\ProgramTests.cs" />
+    <Compile Include="Configuration\ConfigurationManager.cs" />
+    <Compile Include="Configuration\IrcConfiguration.cs" />
+    <Compile Include="Configuration\IrcServerConfiguration.cs" />
+    <Compile Include="Configuration\IrcUserConfiguration.cs" />
+    <Compile Include="Configuration\XdccConfiguration.cs" />
+    <Compile Include="Dcc\TransferPublisherTests.cs" />
+    <Compile Include="Dcc\XdccDccClientTests.cs" />
+    <Compile Include="Irc\DccSendRequestTests.cs" />
+    <Compile Include="Irc\IpConverterTest.cs" />
+    <Compile Include="Irc\ProgramLifeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\AnimeXdcc.Client\AnimeXdcc.Client.csproj">
+      <Project>{FE398CF6-8A55-4466-90B2-ABEA013E543D}</Project>
+      <Name>AnimeXdcc.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AnimeXdcc.Common\AnimeXdcc.Common.csproj">
       <Project>{10A4C342-6FF4-45DD-9B6C-4A80D5E184A1}</Project>
       <Name>AnimeXdcc.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Generic.DccClient\Generic.DccClient.csproj">
+      <Project>{852748d8-bc3e-4e63-8173-a6ead81af023}</Project>
+      <Name>Generic.DccClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\Generic.IrcClient\Generic.IrcClient.csproj">
       <Project>{2C37611A-058A-4763-A4A3-2BEA4D127763}</Project>
       <Name>Generic.IrcClient</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

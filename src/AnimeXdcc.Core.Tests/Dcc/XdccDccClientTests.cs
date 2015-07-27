@@ -2,7 +2,7 @@
 using Generic.DccClient.Clients;
 using NUnit.Framework;
 
-namespace Generic.DccClient.Tests
+namespace AnimeXdcc.Core.Tests.Dcc
 {
     [TestFixture]
     public class XdccDccClientTests

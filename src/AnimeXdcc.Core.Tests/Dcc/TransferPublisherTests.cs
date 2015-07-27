@@ -6,7 +6,7 @@ using Generic.DccClient.SystemWrappers;
 using Moq;
 using NUnit.Framework;
 
-namespace Generic.DccClient.Tests
+namespace AnimeXdcc.Core.Tests.Dcc
 {
     [TestFixture]
     public class TransferPublisherTests

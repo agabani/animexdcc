@@ -1,7 +1,8 @@
-﻿using Generic.IrcClient.Dcc;
+﻿using Generic.IrcClient;
+using Generic.IrcClient.Dcc;
 using NUnit.Framework;
 
-namespace Generic.IrcClient.Tests
+namespace AnimeXdcc.Core.Tests.Irc
 {
     [TestFixture]
     public class DccSendRequestTests

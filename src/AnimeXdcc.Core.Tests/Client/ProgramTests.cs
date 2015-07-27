@@ -1,8 +1,9 @@
-﻿using AnimeXdcc.Client.Tests.Configuration;
+﻿using AnimeXdcc.Client;
 using AnimeXdcc.Common.Logging;
+using AnimeXdcc.Core.Tests.Configuration;
 using NUnit.Framework;
 
-namespace AnimeXdcc.Client.Tests
+namespace AnimeXdcc.Core.Tests.Client
 {
     [TestFixture]
     public class ProgramTests

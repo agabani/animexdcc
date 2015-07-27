@@ -1,7 +1,8 @@
 ﻿using AnimeXdcc.Common.Logging;
+using Generic.IrcClient;
 using NUnit.Framework;
 
-namespace Generic.IrcClient.Tests
+namespace AnimeXdcc.Core.Tests.Irc
 {
     [TestFixture]
     public class ProgramLifeTest
