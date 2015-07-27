@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using IrcDotNet;
@@ -20,9 +21,9 @@ namespace Integration.IrcClient
             _ircClient.Dispose();
         }
 
-        public void Connect(string hostName, int port, bool useSsl, string name, string password)
+        public async Task Connect(string hostname, int port, bool useSsl, string name, string password)
         {
-            _ircClient.Connect(hostName, port, useSsl,
+            _ircClient.Connect(hostname, port, useSsl,
                 new IrcUserRegistrationInfo
                 {
                     NickName = name,
@@ -37,11 +38,11 @@ namespace Integration.IrcClient
 
             while (!registered)
             {
-                Sleep();
+                await Sleep();
             }
         }
 
-        public void Disconnect()
+        public async Task Disconnect()
         {
             var disconnected = false;
 
@@ -51,25 +52,33 @@ namespace Integration.IrcClient
 
             while (!disconnected)
             {
-                Sleep();
+                await Sleep();
             }
         }
 
-        public void Join(string[] channels)
+        public async Task Join(string[] channels)
         {
             _ircClient.Channels.Join(channels);
 
             var joinedChannels = new List<string>();
 
+            foreach (var channel in _ircClient.Channels)
+            {
+                if (channels.Contains(channel.Name))
+                {
+                    joinedChannels.Add(channel.Name);
+                }
+            }
+
             _ircClient.LocalUser.JoinedChannel += (sender, args) => { joinedChannels.Add(args.Channel.Name); };
 
             while (!new HashSet<string>(channels).SetEquals(joinedChannels))
             {
-                Sleep();
+                await Sleep();
             }
         }
 
-        public void WatchJoin(string[] channels, string nickname)
+        public async Task WatchJoin(string[] channels, string nickname)
         {
             var joinedChannels = new List<string>();
 
@@ -86,11 +95,11 @@ namespace Integration.IrcClient
 
             while (!new HashSet<string>(channels).SetEquals(joinedChannels))
             {
-                Sleep();
+                await Sleep();
             }
         }
 
-        public void Leave(string[] channels)
+        public async Task Leave(string[] channels)
         {
             _ircClient.Channels.Leave(channels);
 
@@ -100,11 +109,11 @@ namespace Integration.IrcClient
 
             while (!new HashSet<string>(channels).SetEquals(leftChannels))
             {
-                Sleep();
+                await Sleep();
             }
         }
 
-        public void WatchLeave(string[] channels, string nickname)
+        public async Task WatchLeave(string[] channels, string nickname)
         {
             var leftChannels = new List<string>();
 
@@ -121,11 +130,11 @@ namespace Integration.IrcClient
 
             while (!new HashSet<string>(channels).SetEquals(leftChannels))
             {
-                Sleep();
+                await Sleep();
             }
         }
 
-        public void SendChannelMessage(string target, string message)
+        public async Task SendChannelMessage(string target, string message)
         {
             var sent = false;
 
@@ -137,11 +146,11 @@ namespace Integration.IrcClient
 
             while (!sent)
             {
-                Sleep();
+                await Sleep();
             }
         }
 
-        public void ReceiveChannelMessage(string source, string target, string message)
+        public async Task ReceiveChannelMessage(string source, string target, string message)
         {
             var recieved = false;
 
@@ -155,11 +164,11 @@ namespace Integration.IrcClient
 
             while (!recieved)
             {
-                Sleep();
+                await Sleep();
             }
         }
 
-        public void SendPrivateMessage(string target, string message)
+        public async Task SendPrivateMessage(string target, string message)
         {
             var sent = false;
 
@@ -175,11 +184,11 @@ namespace Integration.IrcClient
 
             while (!sent)
             {
-                Sleep();
+                await Sleep();
             }
         }
 
-        public void RecievePrivateMessage(string source, string message)
+        public async Task RecievePrivateMessage(string source, string message)
         {
             var recieved = false;
 
@@ -193,13 +202,13 @@ namespace Integration.IrcClient
 
             while (!recieved)
             {
-                Sleep();
+                await Sleep();
             }
         }
 
-        private void Sleep()
+        private Task Sleep()
         {
-            Task.Delay(100).Wait();
+            return Task.Delay(100);
         }
     }
 }
