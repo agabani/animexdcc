@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Integration.IrcClient
+namespace Integration
 {
     [TestFixture]
     public class SelfTesting

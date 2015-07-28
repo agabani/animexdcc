@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IrcDotNet;
 
-namespace Integration.IrcClient
+namespace Integration
 {
     public class IrcClient : IDisposable
     {
