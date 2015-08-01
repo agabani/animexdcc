@@ -66,9 +66,6 @@ namespace AnimeXdcc.Core.Dcc.Clients
             long transferredBytes = 0;
             var buffer = new byte[8192];
 
-            // var transferStatusPublisher = new TransferStatusPublisher(OnDccTransferredPacket);
-            // transferStatusPublisher.NewSession();
-
             var transferStatusPublisher2 = new TransferStatusPublisher2(OnDccTransferredPacket, id, bytes,
                 new TimerWrapper(2000), new StopwatchWrapper());
 
@@ -84,8 +81,8 @@ namespace AnimeXdcc.Core.Dcc.Clients
                 await output.WriteAsync(buffer, 0, readBytes);
                 transferredBytes += readBytes;
 
-/*                var transferred = transferredBytes;
-                new Task(() => transferStatusPublisher.Publish(id, transferred, bytes)).Start();*/
+                await input.WriteAsync(ReverseEndian(BitConverter.GetBytes(transferredBytes)), 0, 4);
+
                 transferStatusPublisher2.Publish(bytes);
             }
 
@@ -98,6 +95,11 @@ namespace AnimeXdcc.Core.Dcc.Clients
         {
             var handler = DccTransferredPacket;
             if (handler != null) handler(this, e);
+        }
+
+        private byte[] ReverseEndian(byte[] bytes)
+        {
+            return new[] {bytes[3], bytes[2], bytes[1], bytes[0]};
         }
     }
 }

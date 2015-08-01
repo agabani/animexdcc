@@ -54,6 +54,11 @@ namespace Integration.Clients
                 bytes = await output.ReadAsync(buffer, 0, buffer.Length);
                 dataReceived = ToInt32(buffer);
             } while (dataReceived < length && bytes > 0);
+
+            if (dataReceived < length)
+            {
+                throw new Exception(string.Format("Broken Pipe: {0}/{1} bytes transfered", dataReceived, length));
+            }
         }
 
         private static int ToInt32(byte[] buffer)

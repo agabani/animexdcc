@@ -6,7 +6,7 @@ using AnimeXdcc.Core.Irc;
 using Integration.Clients;
 using NUnit.Framework;
 
-namespace Integration
+namespace Integration.Bots
 {
     [TestFixture]
     public class SimpleXdccBot
