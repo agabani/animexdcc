@@ -4,16 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using AnimeXdcc.Core.Utilities;
 using Integration.Clients;
-using NUnit.Framework;
 
 namespace Integration.Bots
 {
-    [TestFixture]
     public class SimpleXdccBot
     {
         private readonly IntegrationIrcClient _integrationIrcClient = new IntegrationIrcClient();
+        private readonly string _hostname;
+        private readonly int _port;
+        private readonly string _nickname;
+        private readonly string _filePath;
 
-        [Test]
+        public SimpleXdccBot(string hostname, string nickname, string filePath)
+        {
+            _hostname = hostname;
+            _port = 6667;
+            _nickname = nickname;
+            _filePath = filePath;
+        }
+
         public async Task HostFile(string nickname)
         {
             var port = 12345 + new Random().Next(10);
@@ -32,9 +41,9 @@ namespace Integration.Bots
             }
         }
 
-        private static Task Connect(IntegrationIrcClient integrationIrcClient)
+        private Task Connect(IntegrationIrcClient integrationIrcClient)
         {
-            return integrationIrcClient.Connect("irc.rizon.net", 6667, false, "ObserverXdccServer", null);
+            return integrationIrcClient.Connect(_hostname, _port, false, _nickname, null);
         }
 
         private static Task JoinChannel(IntegrationIrcClient integrationIrcClient)
@@ -47,9 +56,9 @@ namespace Integration.Bots
             return integrationIrcClient.RecievePrivateMessage(nickname, "XDCC SEND #1");
         }
 
-        private static FileStream OpenFileRead()
+        private FileStream OpenFileRead()
         {
-            return File.OpenRead(@"Data\17 - Nintendo - Mute City Ver. 3.mp3");
+            return File.OpenRead(_filePath);
         }
 
         private static string CreateDccSendMessage(FileStream file, int port)

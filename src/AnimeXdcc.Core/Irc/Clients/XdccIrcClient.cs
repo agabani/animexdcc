@@ -7,15 +7,24 @@ namespace AnimeXdcc.Core.Irc.Clients
 {
     public class XdccIrcClient : IDisposable
     {
-        private readonly StandardIrcClient _standardIrcClient;
         private readonly string _hostname;
+        private readonly string _nickname;
         private readonly int _port;
+        private readonly StandardIrcClient _standardIrcClient = new StandardIrcClient();
 
-        public XdccIrcClient(string hostname, int port)
+        public XdccIrcClient(string hostname, int port, string nickname)
         {
             _port = port;
             _hostname = hostname;
-            _standardIrcClient = new StandardIrcClient();
+            _nickname = nickname;
+        }
+
+        public void Dispose()
+        {
+            if (_standardIrcClient != null)
+            {
+                _standardIrcClient.Dispose();
+            }
         }
 
         public async Task<string> RequestPackageAsync(string target, int packageId)
@@ -29,24 +38,21 @@ namespace AnimeXdcc.Core.Irc.Clients
 
         private async Task ConnectAsync()
         {
-            bool isRegistered = false;
+            var isRegistered = false;
 
-            _standardIrcClient.Registered += (sender, args) =>
-            {
-                isRegistered = true;
-            };
-            
+            _standardIrcClient.Registered += (sender, args) => { isRegistered = true; };
+
             _standardIrcClient.Connect(_hostname, _port, false, new IrcUserRegistrationInfo
             {
-                NickName = "speechlessdownloader",
+                NickName = _nickname,
                 Password = null,
-                RealName = "speechlessdownloader",
-                UserName = "speechlessdownloader"
+                RealName = _nickname,
+                UserName = _nickname
             });
 
             while (!isRegistered)
             {
-                await Task.Delay(100);
+                await Delay();
             }
         }
 
@@ -54,16 +60,14 @@ namespace AnimeXdcc.Core.Irc.Clients
         {
             string channel = null;
 
-            _standardIrcClient.WhoIsReplyReceived += (sender, args) =>
-            {
-                channel = args.User.Client.Channels.First().Name;
-            };
+            _standardIrcClient.WhoIsReplyReceived +=
+                (sender, args) => { channel = args.User.Client.Channels.First().Name; };
 
             _standardIrcClient.QueryWhoIs(target);
 
             while (channel == null)
             {
-                await Task.Delay(100);
+                await Delay();
             }
 
             return channel;
@@ -71,7 +75,7 @@ namespace AnimeXdcc.Core.Irc.Clients
 
         private async Task JoinChannel(string channel)
         {
-            bool joinedChannel = false;
+            var joinedChannel = false;
 
             _standardIrcClient.LocalUser.JoinedChannel += (sender, args) =>
             {
@@ -80,12 +84,12 @@ namespace AnimeXdcc.Core.Irc.Clients
                     joinedChannel = true;
                 }
             };
-            
+
             _standardIrcClient.Channels.Join(channel);
 
             while (!joinedChannel)
             {
-                await Task.Delay(100);
+                await Delay();
             }
         }
 
@@ -93,16 +97,13 @@ namespace AnimeXdcc.Core.Irc.Clients
         {
             var privateMessageSent = false;
 
-            _standardIrcClient.LocalUser.MessageSent += (sender, args) =>
-            {
-                privateMessageSent = true;
-            };
+            _standardIrcClient.LocalUser.MessageSent += (sender, args) => { privateMessageSent = true; };
 
             _standardIrcClient.LocalUser.SendMessage(target, string.Format("XDCC SEND #{0}", packageId));
 
             while (!privateMessageSent)
             {
-                await Task.Delay(100);
+                await Delay();
             }
         }
 
@@ -120,18 +121,15 @@ namespace AnimeXdcc.Core.Irc.Clients
 
             while (messageReceived == null)
             {
-                await Task.Delay(100);
+                await Delay();
             }
 
             return messageReceived;
         }
 
-        public void Dispose()
+        private static Task Delay()
         {
-            if (_standardIrcClient != null)
-            {
-                _standardIrcClient.Dispose();
-            }
+            return Task.Delay(100);
         }
     }
 }

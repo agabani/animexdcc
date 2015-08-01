@@ -14,9 +14,9 @@ namespace AnimeXdcc.Core
         private readonly XdccDccClient _xdccDccClient;
         private readonly XdccIrcClient _xdccIrcClient;
 
-        public AnimeXdccClient(string hostname, int port)
+        public AnimeXdccClient(string hostname, int port, string nickname)
         {
-            _xdccIrcClient = new XdccIrcClient(hostname, port);
+            _xdccIrcClient = new XdccIrcClient(hostname, port, nickname);
             _xdccDccClient = new XdccDccClient();
         }
 
