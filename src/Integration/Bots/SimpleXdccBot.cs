@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AnimeXdcc.Core.Irc;
 using AnimeXdcc.Core.Utilities;
 using Integration.Clients;
 using NUnit.Framework;
@@ -15,9 +14,8 @@ namespace Integration.Bots
         private readonly IntegrationIrcClient _integrationIrcClient = new IntegrationIrcClient();
 
         [Test]
-        public async Task HostFile()
+        public async Task HostFile(string nickname)
         {
-            const string nickname = "speechless";
             var port = 12345 + new Random().Next(10);
 
             await Connect(_integrationIrcClient);
@@ -46,7 +44,7 @@ namespace Integration.Bots
 
         private static Task RecievePrivateMessage(IntegrationIrcClient integrationIrcClient, string nickname)
         {
-            return integrationIrcClient.RecievePrivateMessage(nickname, "xdcc send #1");
+            return integrationIrcClient.RecievePrivateMessage(nickname, "XDCC SEND #1");
         }
 
         private static FileStream OpenFileRead()

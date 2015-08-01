@@ -40,6 +40,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimeXdccClientTest.cs" />
     <Compile Include="Clients\IntegrationDccClient.cs" />
     <Compile Include="Clients\IntegrationIrcClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

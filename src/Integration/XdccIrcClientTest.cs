@@ -25,7 +25,7 @@ namespace Integration
             var recievePrivateMessage = integrationIrcClient.RecievePrivateMessage("\x01XDCC SEND #1\x01");
 
             var xdccIrcClient = new XdccIrcClient(ircServerHostname, ircServerPort);
-            var requestPackage = xdccIrcClient.RequestPackage(integrationIrcClientNickname, 1);
+            var requestPackage = xdccIrcClient.RequestPackageAsync(integrationIrcClientNickname, 1);
 
             await watchJoin;
             await recievePrivateMessage;

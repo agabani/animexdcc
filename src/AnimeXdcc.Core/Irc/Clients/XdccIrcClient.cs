@@ -18,7 +18,7 @@ namespace AnimeXdcc.Core.Irc.Clients
             _standardIrcClient = new StandardIrcClient();
         }
 
-        public async Task<string> RequestPackage(string target, int packageId)
+        public async Task<string> RequestPackageAsync(string target, int packageId)
         {
             await ConnectAsync();
             var channel = await FindTargetChannel(target);
@@ -98,7 +98,7 @@ namespace AnimeXdcc.Core.Irc.Clients
                 privateMessageSent = true;
             };
 
-            _standardIrcClient.LocalUser.SendMessage(target, string.Format("{0}XDCC SEND #{1}{0}", "\x01", packageId));
+            _standardIrcClient.LocalUser.SendMessage(target, string.Format("XDCC SEND #{0}", packageId));
 
             while (!privateMessageSent)
             {

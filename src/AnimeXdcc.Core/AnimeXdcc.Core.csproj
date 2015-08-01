@@ -37,6 +37,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimeXdccClient.cs" />
     <Compile Include="Dcc\Clients\XdccDccClient.cs" />
     <Compile Include="Dcc\Models\DccTransferStatus.cs" />
     <Compile Include="Dcc\Models\TransferStatus.cs" />
