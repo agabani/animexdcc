@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using AnimeXdcc.Core.Dcc.Clients;
+using AnimeXdcc.Core.Dcc.Models;
 using AnimeXdcc.Core.Logging;
 using NUnit.Framework;
 using DccClient = Integration.Clients.DccClient;
@@ -42,8 +43,10 @@ namespace Integration
                 Console.WriteLine("{0}/{1} @ {2} KB/s [{3} ms]",status.DownloadedBytes, status.FileSize, status.BytesPerMillisecond, status.ElapsedTime);
             };
 
-            Console.WriteLine(await xdccDccClient.DownloadAsync(File.OpenWrite(@"17 - Nintendo - Mute City Ver. 3_1.mp3"), IPAddress.Parse("127.0.0.1"), 12345, fileStream1.Length, 0));
-            Console.WriteLine(await xdccDccClient.DownloadAsync(File.OpenWrite(@"17 - Nintendo - Mute City Ver. 3_2.mp3"), IPAddress.Parse("127.0.0.1"), 12346, fileStream1.Length, 0));
+            var dccTransferStatus = await xdccDccClient.DownloadAsync(File.OpenWrite(@"17 - Nintendo - Mute City Ver. 3_1.mp3"), IPAddress.Parse("127.0.0.1"), 12345, fileStream1.Length, 0);
+            Console.WriteLine("{0}/{1} @ {2} KB/s [{3} ms]", dccTransferStatus.DownloadedBytes, dccTransferStatus.FileSize, dccTransferStatus.BytesPerMillisecond, dccTransferStatus.ElapsedTime);
+            dccTransferStatus = await xdccDccClient.DownloadAsync(File.OpenWrite(@"17 - Nintendo - Mute City Ver. 3_2.mp3"), IPAddress.Parse("127.0.0.1"), 12346, fileStream1.Length, 0);
+            Console.WriteLine("{0}/{1} @ {2} KB/s [{3} ms]", dccTransferStatus.DownloadedBytes, dccTransferStatus.FileSize, dccTransferStatus.BytesPerMillisecond, dccTransferStatus.ElapsedTime);
 
             await sendTask1;
             await sendTask2;

@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Timers;
+using AnimeXdcc.Core.Dcc.Models;
 
 namespace AnimeXdcc.Core.Dcc.Clients
 {
     public class DccClient : IDisposable
     {
+        private readonly Stopwatch _stopwatch;
         private readonly Timer _timer;
         private long _elapsedEvents;
         private long _fileSize;
@@ -20,6 +23,7 @@ namespace AnimeXdcc.Core.Dcc.Clients
         {
             _timer = new Timer(50);
             _timer.Elapsed += TimerOnElapsed;
+            _stopwatch = new Stopwatch();
         }
 
         private long DownloadedBytes
@@ -37,7 +41,7 @@ namespace AnimeXdcc.Core.Dcc.Clients
 
         public event EventHandler<DccTransferStatus> TransferStatus;
 
-        public async Task<long> DownloadAsync(Stream stream, IPAddress ipAddress, int port, long fileSize,
+        public async Task<DccTransferStatus> DownloadAsync(Stream stream, IPAddress ipAddress, int port, long fileSize,
             long resumePosition)
         {
             Seek(stream, resumePosition);
@@ -57,6 +61,7 @@ namespace AnimeXdcc.Core.Dcc.Clients
                     int bytesReceived;
 
                     _timer.Start();
+                    _stopwatch.Restart();
 
                     do
                     {
@@ -67,11 +72,13 @@ namespace AnimeXdcc.Core.Dcc.Clients
                         await writeAsyncTask;
                     } while (bytesReceived > 0 && DownloadedBytes < fileSize);
 
+                    _stopwatch.Stop();
                     _timer.Stop();
                 }
             }
 
-            return _transferredBytes;
+            return new DccTransferStatus(fileSize, _stopwatch.ElapsedMilliseconds, DownloadedBytes,
+                _transferredBytes/(double) _stopwatch.ElapsedMilliseconds);
         }
 
         protected virtual void OnDccTransferStatus(DccTransferStatus e)
@@ -88,9 +95,9 @@ namespace AnimeXdcc.Core.Dcc.Clients
 
         private DccTransferStatus CalculateStatus()
         {
-            var bytesPerMillisecond = _transferredBytes/_timer.Interval;
             var downloadedBytes = _transferredBytes + _resumePosition;
             var elapsedTime = _timer.Interval*_elapsedEvents;
+            var bytesPerMillisecond = _transferredBytes / elapsedTime;
 
             return new DccTransferStatus(_fileSize, elapsedTime, downloadedBytes, bytesPerMillisecond);
         }

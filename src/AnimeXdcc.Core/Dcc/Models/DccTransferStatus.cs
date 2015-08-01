@@ -1,4 +1,4 @@
-namespace AnimeXdcc.Core.Dcc.Clients
+namespace AnimeXdcc.Core.Dcc.Models
 {
     public class DccTransferStatus
     {
