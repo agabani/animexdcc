@@ -1,11 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using AnimeXdcc.Core.Dcc.Clients;
 using AnimeXdcc.Core.Irc;
 using AnimeXdcc.Core.Logging;
 using Intel.Haruhichan.ApiClient.Clients;
+using Intel.Haruhichan.ApiClient.Models;
 
 namespace AnimeXdcc.Client
 {
@@ -65,21 +68,28 @@ namespace AnimeXdcc.Client
             {
                 xdccIrcClient.DccSendReceived += async (sender, message) =>
                 {
-                    var xdccDccClient = new XdccDccClient(_logger);
+                    var dccClient = new DccClient();
 
-                    xdccDccClient.DccTransferredPacket +=
+                    dccClient.TransferStatus +=
                         (o, status) =>
                         {
-                            _logger.Info(LogTag +
-                                         string.Format("[TRANSFER {0}] {1}/{2} @ {3}KB/s. ETA: {4} seconds.",
-                                             status.TransferId,
-                                             status.TransferedBytes, status.TotalBytes,
-                                             status.TransferSpeedBytesPerMillisecond,
-                                             status.RemainingTimeMilliseconds/1000));
+                            _logger.Info(string.Format("{0}/{1} @ {2}KB/s. ETA: {3} seconds.",
+                                status.DownloadedBytes,
+                                status.FileSize,
+                                status.BytesPerMillisecond,
+                                (status.FileSize - status.DownloadedBytes)/(status.BytesPerMillisecond*1000)));
                         };
 
-                    await
-                        xdccDccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, message.FileName);
+                    using (var fileStream = System.IO.File.OpenWrite(message.FileName))
+                    {
+                        await dccClient.DownloadAsync(
+                            fileStream,
+                            IPAddress.Parse(message.IpAddress),
+                            message.Port,
+                            message.FileSize,
+                            0);
+                    }
+
                     Environment.Exit(0);
                 };
 
