@@ -21,7 +21,7 @@ namespace AnimeXdcc.Core.Dcc.Clients
 
         public XdccDccClient()
         {
-            _timer = new Timer(50);
+            _timer = new Timer(250);
             _timer.Elapsed += TimerOnElapsed;
             _stopwatch = new Stopwatch();
         }

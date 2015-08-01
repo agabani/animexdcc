@@ -30,17 +30,20 @@ namespace AnimeXdcc.Core.Irc.Clients
         public async Task<string> RequestPackageAsync(string target, int packageId)
         {
             await ConnectAsync();
+
             var channel = await FindTargetChannel(target);
             await JoinChannel(channel);
+
             await RequestPackageTransfer(target, packageId);
             return await RecievePackageTransfer(target);
         }
 
         private async Task ConnectAsync()
         {
-            var isRegistered = false;
-
-            _standardIrcClient.Registered += (sender, args) => { isRegistered = true; };
+            if (_standardIrcClient.IsRegistered)
+            {
+                return;
+            }
 
             _standardIrcClient.Connect(_hostname, _port, false, new IrcUserRegistrationInfo
             {
@@ -50,7 +53,7 @@ namespace AnimeXdcc.Core.Irc.Clients
                 UserName = _nickname
             });
 
-            while (!isRegistered)
+            while (!_standardIrcClient.IsRegistered)
             {
                 await Delay();
             }
