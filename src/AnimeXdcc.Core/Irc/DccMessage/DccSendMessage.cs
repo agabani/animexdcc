@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AnimeXdcc.Core.Irc.Dcc
+namespace AnimeXdcc.Core.Irc.DccMessage
 {
     public class DccSendMessage : EventArgs
     {

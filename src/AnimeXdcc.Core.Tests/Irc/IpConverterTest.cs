@@ -1,4 +1,5 @@
 ﻿using AnimeXdcc.Core.Irc;
+using AnimeXdcc.Core.Utilities;
 using NUnit.Framework;
 
 namespace AnimeXdcc.Core.Tests.Irc

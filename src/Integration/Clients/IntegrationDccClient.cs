@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Integration.Clients
 {
-    public class DccClient
+    public class IntegrationDccClient
     {
         public async Task Send(int port, Stream stream, long size)
         {

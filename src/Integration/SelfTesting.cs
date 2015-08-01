@@ -12,8 +12,8 @@ namespace Integration
         private const string ObserverName = "ObserverIrcClient";
         private const string PractitionerName = "PractitionerIrcClient";
         private readonly string[] _channels = {"#speech", "#speechless"};
-        private IrcClient _observer;
-        private IrcClient _practitioner;
+        private IntegrationIrcClient _observer;
+        private IntegrationIrcClient _practitioner;
 
         [Test]
         public async Task Should_join_channel()
@@ -69,7 +69,7 @@ namespace Integration
 
             if (_observer == null)
             {
-                _observer = new IrcClient();
+                _observer = new IntegrationIrcClient();
 
                 await _observer.Connect(hostname, port, useSsl, ObserverName, null);
                 await _observer.Join(_channels);
@@ -77,7 +77,7 @@ namespace Integration
 
             if (_practitioner == null)
             {
-                _practitioner = new IrcClient();
+                _practitioner = new IntegrationIrcClient();
                 await _practitioner.Connect(hostname, port, useSsl, PractitionerName, null);
             }
         }

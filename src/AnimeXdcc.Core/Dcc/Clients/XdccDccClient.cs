@@ -10,7 +10,7 @@ using AnimeXdcc.Core.Dcc.Models;
 
 namespace AnimeXdcc.Core.Dcc.Clients
 {
-    public class DccClient : IDisposable
+    public class XdccDccClient : IDisposable
     {
         private readonly Stopwatch _stopwatch;
         private readonly Timer _timer;
@@ -19,7 +19,7 @@ namespace AnimeXdcc.Core.Dcc.Clients
         private long _resumePosition;
         private long _transferredBytes;
 
-        public DccClient()
+        public XdccDccClient()
         {
             _timer = new Timer(50);
             _timer.Elapsed += TimerOnElapsed;

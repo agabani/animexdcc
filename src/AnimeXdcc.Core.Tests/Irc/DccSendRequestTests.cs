@@ -1,5 +1,6 @@
 ﻿using AnimeXdcc.Core.Irc;
-using AnimeXdcc.Core.Irc.Dcc;
+using AnimeXdcc.Core.Irc.DccMessage;
+using AnimeXdcc.Core.Utilities;
 using NUnit.Framework;
 
 namespace AnimeXdcc.Core.Tests.Irc

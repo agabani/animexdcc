@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AnimeXdcc.Core.Utilities;
 
-namespace AnimeXdcc.Core.Irc.Dcc
+namespace AnimeXdcc.Core.Irc.DccMessage
 {
     public class DccMessageParser
     {

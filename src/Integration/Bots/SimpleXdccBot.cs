@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AnimeXdcc.Core.Irc;
+using AnimeXdcc.Core.Utilities;
 using Integration.Clients;
 using NUnit.Framework;
 
@@ -11,7 +12,7 @@ namespace Integration.Bots
     [TestFixture]
     public class SimpleXdccBot
     {
-        private readonly IrcClient _ircClient = new IrcClient();
+        private readonly IntegrationIrcClient _integrationIrcClient = new IntegrationIrcClient();
 
         [Test]
         public async Task HostFile()
@@ -19,33 +20,33 @@ namespace Integration.Bots
             const string nickname = "speechless";
             var port = 12345 + new Random().Next(10);
 
-            await Connect(_ircClient);
-            await JoinChannel(_ircClient);
-            await RecievePrivateMessage(_ircClient, nickname);
+            await Connect(_integrationIrcClient);
+            await JoinChannel(_integrationIrcClient);
+            await RecievePrivateMessage(_integrationIrcClient, nickname);
 
-            var dccClient = new DccClient();
+            var dccClient = new IntegrationDccClient();
 
             using (var file = OpenFileRead())
             {
                 var dccSendTask = dccClient.Send(port, file, file.Length);
-                await _ircClient.SendPrivateMessage(nickname, CreateDccSendMessage(file, port));
+                await _integrationIrcClient.SendPrivateMessage(nickname, CreateDccSendMessage(file, port));
                 await dccSendTask;
             }
         }
 
-        private static Task Connect(IrcClient ircClient)
+        private static Task Connect(IntegrationIrcClient integrationIrcClient)
         {
-            return ircClient.Connect("irc.rizon.net", 6667, false, "ObserverXdccServer", null);
+            return integrationIrcClient.Connect("irc.rizon.net", 6667, false, "ObserverXdccServer", null);
         }
 
-        private static Task JoinChannel(IrcClient ircClient)
+        private static Task JoinChannel(IntegrationIrcClient integrationIrcClient)
         {
-            return ircClient.Join(new[] {"#speechless"});
+            return integrationIrcClient.Join(new[] {"#speechless"});
         }
 
-        private static Task RecievePrivateMessage(IrcClient ircClient, string nickname)
+        private static Task RecievePrivateMessage(IntegrationIrcClient integrationIrcClient, string nickname)
         {
-            return ircClient.RecievePrivateMessage(nickname, "xdcc send #1");
+            return integrationIrcClient.RecievePrivateMessage(nickname, "xdcc send #1");
         }
 
         private static FileStream OpenFileRead()

@@ -6,11 +6,11 @@ using IrcDotNet;
 
 namespace Integration.Clients
 {
-    public class IrcClient : IDisposable
+    public class IntegrationIrcClient : IDisposable
     {
         private readonly StandardIrcClient _ircClient;
 
-        public IrcClient()
+        public IntegrationIrcClient()
         {
             _ircClient = new StandardIrcClient();
         }

@@ -12,7 +12,7 @@ namespace AnimeXdcc.Core.Tests.Dcc
         [Test]
         public void Should_be_able_to_download_file_async()
         {
-            var xdccDccClient = new DccClient();
+            var xdccDccClient = new XdccDccClient();
 
             var fileStream = File.OpenWrite("DanMachi.mkv");
 
