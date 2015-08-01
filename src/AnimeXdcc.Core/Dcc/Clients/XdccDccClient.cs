@@ -9,6 +9,7 @@ using AnimeXdcc.Core.SystemWrappers;
 
 namespace AnimeXdcc.Core.Dcc.Clients
 {
+    [Obsolete]
     public class XdccDccClient
     {
         private const string LogTag = "[XdccDccClient] ";
