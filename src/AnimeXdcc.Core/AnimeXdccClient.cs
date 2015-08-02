@@ -78,7 +78,7 @@ namespace AnimeXdcc.Core
         private static void Display(DccTransferStatus dccTransferStatus)
         {
             Console.WriteLine("Download complete...\n" +
-                              "{0:N0} @ {1:N0} KB/s [{2:N1} ms]",
+                              "{0:N0} @ {1:N0} KB/s [{2:N1} s]",
                 dccTransferStatus.FileSize,
                 dccTransferStatus.BytesPerMillisecond,
                 dccTransferStatus.ElapsedTime/1000);

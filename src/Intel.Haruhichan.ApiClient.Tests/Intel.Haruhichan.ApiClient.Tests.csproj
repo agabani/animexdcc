@@ -41,6 +41,8 @@
     <Compile Include="Characterization.cs" />
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegexTests.cs" />
+    <Compile Include="SeriesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

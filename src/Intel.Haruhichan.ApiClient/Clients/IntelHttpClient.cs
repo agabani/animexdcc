@@ -9,7 +9,7 @@ namespace Intel.Haruhichan.ApiClient.Clients
 {
     public class IntelHttpClient
     {
-        private const string LogTag = "[IntelHttpClient] ";
+        private readonly string _logTag;
         private readonly Uri _baseAddress;
         private readonly ILogger _logger;
 
@@ -17,6 +17,7 @@ namespace Intel.Haruhichan.ApiClient.Clients
         {
             _baseAddress = baseAddress;
             _logger = logger;
+            _logTag = GetType().FullName;
         }
 
         public async Task<Search> Search(string term)
@@ -41,7 +42,7 @@ namespace Intel.Haruhichan.ApiClient.Clients
 
         private async Task<HttpResponseMessage> Get(string relativeUri)
         {
-            _logger.Debug(LogTag + "[URI] " + relativeUri);
+            _logger.Debug(_logTag + "[URI] " + relativeUri);
             using (var httpClient = new HttpClient {BaseAddress = _baseAddress})
             {
                 return await httpClient.GetAsync(relativeUri);
@@ -51,7 +52,7 @@ namespace Intel.Haruhichan.ApiClient.Clients
         private async Task<Search> Parse(HttpResponseMessage httpResponseMessage)
         {
             var jsonResponseMessage = await httpResponseMessage.Content.ReadAsStringAsync();
-            _logger.Debug(LogTag + "[RESPONSE] " + jsonResponseMessage);
+            _logger.Debug(_logTag + "[RESPONSE] " + jsonResponseMessage);
             return JsonConvert.DeserializeObject<Search>(jsonResponseMessage);
         }
     }
