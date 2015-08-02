@@ -67,9 +67,8 @@ namespace AnimeXdcc.Core.Dcc.Clients
                     {
                         bytesReceived = await ReadAsync(networkStream, buffer);
 
-                        var writeAsyncTask = WriteAsync(stream, buffer, bytesReceived);
-                        await SendAcknowledgementAsync(networkStream, _transferredBytes += bytesReceived);
-                        await writeAsyncTask;
+                        await WriteAsync(stream, buffer, bytesReceived);
+                        SendAcknowledgementAsync(networkStream, _transferredBytes += bytesReceived).ConfigureAwait(false);
                     } while (bytesReceived > 0 && DownloadedBytes < fileSize);
 
                     _stopwatch.Stop();
