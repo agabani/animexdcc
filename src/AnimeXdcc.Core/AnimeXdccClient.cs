@@ -24,7 +24,7 @@ namespace AnimeXdcc.Core
             _xdccIrcClient.Dispose();
         }
 
-        public async Task DownloadPackage(string target, int packageId)
+        public async Task<DccTransferStatus> DownloadPackage(string target, int packageId)
         {
             var requestPackage = await RequestPackage(target, packageId);
             var dccMessage = new DccMessageParser(new IpConverter()).Parse(requestPackage);
@@ -38,6 +38,8 @@ namespace AnimeXdcc.Core
             }
 
             Display(dccTransferStatus);
+
+            return dccTransferStatus;
         }
 
         private static async Task<DccTransferStatus> DownloadAsync(Stream stream, DccSendMessage dccMessage)
