@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Console", "src\An
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Core.Tests.Unit", "src\AnimeXdcc.Core.Tests.Unit\AnimeXdcc.Core.Tests.Unit.csproj", "{50214FA2-CD23-4304-B77C-900C745F8AFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Core.Tests.Integration", "src\AnimeXdcc.Core.Tests.Integration\AnimeXdcc.Core.Tests.Integration.csproj", "{CA40044B-A4A9-4360-905A-24D3060F4B99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{50214FA2-CD23-4304-B77C-900C745F8AFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50214FA2-CD23-4304-B77C-900C745F8AFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50214FA2-CD23-4304-B77C-900C745F8AFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA40044B-A4A9-4360-905A-24D3060F4B99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA40044B-A4A9-4360-905A-24D3060F4B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA40044B-A4A9-4360-905A-24D3060F4B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA40044B-A4A9-4360-905A-24D3060F4B99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,5 +71,6 @@ Global
 		{F9A25B0D-FF7A-44FA-A139-BD05E0502F8E} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{110F29CB-32E2-479B-88D3-3A0F7136853D} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 		{50214FA2-CD23-4304-B77C-900C745F8AFA} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
+		{CA40044B-A4A9-4360-905A-24D3060F4B99} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
 	EndGlobalSection
 EndGlobal
