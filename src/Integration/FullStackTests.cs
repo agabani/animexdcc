@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Integration
 {
     [TestFixture]
-    public class ProgramTests
+    public class FullStackTests
     {
         private readonly AnimeXdccClient _animeXdccClient = new AnimeXdccClient("irc.rizon.net", 6667, "speechlessdown");
 
@@ -19,7 +19,7 @@ namespace Integration
             new ConsoleLogger(ConsoleLogger.Level.Debug));
 
         [Test]
-        public async Task DownloadTask()
+        public async Task Download_One_Piece_703()
         {
             var file = (await _intelHttpClient.Search("One Piece 703 1080p"))
                 .Files

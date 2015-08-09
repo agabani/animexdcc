@@ -15,10 +15,10 @@ namespace Integration.Bots
         private readonly string _nickname;
         private readonly string _filePath;
 
-        public SimpleXdccBot(string hostname, string nickname, string filePath)
+        public SimpleXdccBot(string nickname, string hostname, int port, string filePath)
         {
             _hostname = hostname;
-            _port = 6667;
+            _port = port;
             _nickname = nickname;
             _filePath = filePath;
         }
