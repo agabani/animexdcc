@@ -42,18 +42,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\FilesManager\FilesManagerServiceTests.cs" />
-    <Compile Include="Configuration\ConfigurationManager.cs" />
-    <Compile Include="Configuration\IrcConfiguration.cs" />
-    <Compile Include="Configuration\IrcServerConfiguration.cs" />
-    <Compile Include="Configuration\IrcUserConfiguration.cs" />
-    <Compile Include="Configuration\XdccConfiguration.cs" />
     <Compile Include="Components\Filters\RegexPatternBuilderTests.cs" />
     <Compile Include="Experiments\RegexPatternsTests.cs" />
     <Compile Include="Irc\DccSendRequestTests.cs" />
     <Compile Include="Irc\IpConverterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AnimeXdcc.Client\AnimeXdcc.Client.csproj">
       <Project>{FE398CF6-8A55-4466-90B2-ABEA013E543D}</Project>
