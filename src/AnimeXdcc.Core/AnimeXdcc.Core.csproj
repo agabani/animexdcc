@@ -41,6 +41,7 @@
     <Compile Include="Components\FilesManager\FilesManagerService.cs" />
     <Compile Include="Components\FilesManager\IFilesManagerService.cs" />
     <Compile Include="Components\Files\Services\IFileService.cs" />
+    <Compile Include="Components\Filters\RegexService.cs" />
     <Compile Include="Dcc\Clients\XdccDccClient.cs" />
     <Compile Include="Dcc\Models\DccTransferStatus.cs" />
     <Compile Include="Dcc\Models\TransferStatus.cs" />

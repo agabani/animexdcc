@@ -47,6 +47,7 @@
     <Compile Include="Configuration\IrcServerConfiguration.cs" />
     <Compile Include="Configuration\IrcUserConfiguration.cs" />
     <Compile Include="Configuration\XdccConfiguration.cs" />
+    <Compile Include="Experiments\RegexPatternsTests.cs" />
     <Compile Include="Irc\DccSendRequestTests.cs" />
     <Compile Include="Irc\IpConverterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
