@@ -41,6 +41,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\FilesManager\FilesManagerServiceTests.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\IrcConfiguration.cs" />
     <Compile Include="Configuration\IrcServerConfiguration.cs" />
