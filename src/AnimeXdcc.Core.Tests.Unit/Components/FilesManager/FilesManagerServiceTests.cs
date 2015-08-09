@@ -1,7 +1,7 @@
 ﻿using AnimeXdcc.Core.Components.FilesManager;
 using NUnit.Framework;
 
-namespace AnimeXdcc.Core.Tests.Components.FilesManager
+namespace AnimeXdcc.Core.Tests.Unit.Components.FilesManager
 {
     [TestFixture]
     public class FilesManagerServiceTests

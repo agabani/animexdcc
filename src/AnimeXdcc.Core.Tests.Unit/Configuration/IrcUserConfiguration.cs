@@ -1,4 +1,4 @@
-﻿namespace AnimeXdcc.Core.Tests.Configuration
+﻿namespace AnimeXdcc.Core.Tests.Unit.Configuration
 {
     public class IrcUserConfiguration
     {

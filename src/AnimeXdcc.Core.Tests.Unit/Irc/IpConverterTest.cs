@@ -1,8 +1,7 @@
-﻿using AnimeXdcc.Core.Irc;
-using AnimeXdcc.Core.Utilities;
+﻿using AnimeXdcc.Core.Utilities;
 using NUnit.Framework;
 
-namespace AnimeXdcc.Core.Tests.Irc
+namespace AnimeXdcc.Core.Tests.Unit.Irc
 {
     [TestFixture]
     public class IpConverterTest

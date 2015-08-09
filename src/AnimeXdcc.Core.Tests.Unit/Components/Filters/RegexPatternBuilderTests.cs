@@ -1,7 +1,7 @@
 ﻿using AnimeXdcc.Core.Components.Filters.Builders;
 using NUnit.Framework;
 
-namespace AnimeXdcc.Core.Tests.Components.Filters
+namespace AnimeXdcc.Core.Tests.Unit.Components.Filters
 {
     [TestFixture]
     public class RegexPatternBuilderTests

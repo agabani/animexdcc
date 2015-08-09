@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 
-namespace AnimeXdcc.Core.Tests.Experiments
+namespace AnimeXdcc.Core.Tests.Unit.Experiments
 {
     [TestFixture]
     public class RegexPatternsTests
