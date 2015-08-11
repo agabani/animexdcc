@@ -1,6 +1,6 @@
 ﻿namespace AnimeXdcc.Core.Components.Filters.Builders
 {
-    public class RegexPatternBuilder
+    public class RegexPatternBuilder : IEpisodeBuilder<RegexPatternBuilder>
     {
         private string _pattern;
 

@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Components\FilesManager\FilesManagerServiceTests.cs" />
     <Compile Include="Components\Filters\RegexPatternBuilderTests.cs" />
+    <Compile Include="Components\Filters\SearchTermBuilderTests.cs" />
     <Compile Include="Experiments\RegexPatternsTests.cs" />
     <Compile Include="Irc\DccSendRequestTests.cs" />
     <Compile Include="Utilities\IpConverterTest.cs" />
