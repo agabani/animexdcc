@@ -63,11 +63,16 @@ namespace AnimeXdcc.Core.Dcc.Clients
                         bytesReceived = await ReadAsync(networkStream, buffer);
 
                         await WriteAsync(stream, buffer, bytesReceived);
+
                         SendAcknowledgementAsync(networkStream, _transferredBytes += bytesReceived)
                             .ConfigureAwait(false);
 
                         _publisher.Update(bytesReceived);
-                    } while (bytesReceived > 0 && DownloadedBytes < fileSize);
+
+                    } while (
+                        DataReceived(bytesReceived) && 
+                        !TransferComplete(fileSize)
+                        );
 
                     _publisher.Start();
                     _stopwatch.Stop();
@@ -75,6 +80,16 @@ namespace AnimeXdcc.Core.Dcc.Clients
             }
 
             return DccTransferStatus(fileSize);
+        }
+
+        private bool TransferComplete(long fileSize)
+        {
+            return DownloadedBytes >= fileSize;
+        }
+
+        private static bool DataReceived(int bytesReceived)
+        {
+            return bytesReceived > 0;
         }
 
         private DccTransferStatus DccTransferStatus(long fileSize)
