@@ -6,21 +6,25 @@ namespace AnimeXdcc.Core.Components.Publishers.Download
 {
     public class DccDownloadStatusPublisher : IDownloadStatusPublisher
     {
-        private readonly long _fileSize;
-        private readonly long _resumePosition;
+        private long _fileSize;
+        private long _resumePosition;
         private readonly ITimer _timer;
         private long _elapsedEvents;
         private long _transferredBytes;
 
-        public DccDownloadStatusPublisher(ITimer timer, long fileSize, long resumePosition)
+        public DccDownloadStatusPublisher(ITimer timer)
         {
             _timer = timer;
-            _resumePosition = resumePosition;
-            _fileSize = fileSize;
             _timer.Elapsed += TimerOnElapsed;
         }
 
         public event EventHandler<DccTransferStatus> TransferStatus;
+
+        public void Setup(long fileSize, long resumePosition)
+        {
+            _fileSize = fileSize;
+            _resumePosition = resumePosition;
+        }
 
         public void Start()
         {

@@ -2,7 +2,9 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using AnimeXdcc.Core.Components.Publishers.Download;
 using AnimeXdcc.Core.Dcc.Clients;
+using AnimeXdcc.Core.SystemWrappers;
 using Integration.Clients;
 using NUnit.Framework;
 
@@ -19,7 +21,7 @@ namespace AnimeXdcc.Core.Tests.Integration.Components.Dcc
             var sendTask1 = new IntegrationDccClient().Send(12345, fileStream1, fileStream1.Length);
             var sendTask2 = new IntegrationDccClient().Send(12346, fileStream2, fileStream2.Length);
 
-            var xdccDccClient = new XdccDccClient();
+            var xdccDccClient = new XdccDccClient(new DccDownloadStatusPublisher(new TimerWrapper(1000)));
 
             xdccDccClient.TransferStatus += (sender, status) =>
             {

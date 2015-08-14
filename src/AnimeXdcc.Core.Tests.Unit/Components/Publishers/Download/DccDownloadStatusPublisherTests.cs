@@ -14,7 +14,7 @@ namespace AnimeXdcc.Core.Tests.Unit.Components.Publishers.Download
         {
             var mockTimer = new Mock<ITimer>();
 
-            new DccDownloadStatusPublisher(mockTimer.Object, 0, 0).Start();
+            new DccDownloadStatusPublisher(mockTimer.Object).Start();
 
             mockTimer
                 .Verify(m => m.Start(), Times.Once());
@@ -25,7 +25,7 @@ namespace AnimeXdcc.Core.Tests.Unit.Components.Publishers.Download
         {
             var mockTimer = new Mock<ITimer>();
 
-            new DccDownloadStatusPublisher(mockTimer.Object, 0, 0).Stop();
+            new DccDownloadStatusPublisher(mockTimer.Object).Stop();
 
             mockTimer
                 .Verify(m => m.Stop(), Times.Once());
@@ -36,7 +36,7 @@ namespace AnimeXdcc.Core.Tests.Unit.Components.Publishers.Download
         {
             var mockTimer = new Mock<ITimer>();
 
-            var publisher = new DccDownloadStatusPublisher(mockTimer.Object, 0, 0);
+            var publisher = new DccDownloadStatusPublisher(mockTimer.Object);
 
             var raised = false;
 
@@ -57,7 +57,9 @@ namespace AnimeXdcc.Core.Tests.Unit.Components.Publishers.Download
                 .Setup(p => p.Interval)
                 .Returns(10);
 
-            var publisher = new DccDownloadStatusPublisher(mockTimer.Object, 100, 0);
+            var publisher = new DccDownloadStatusPublisher(mockTimer.Object);
+
+            publisher.Setup(100, 0);
 
             DccTransferStatus s = null;
 

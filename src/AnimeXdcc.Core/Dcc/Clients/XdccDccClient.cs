@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Timers;
+using AnimeXdcc.Core.Components.Publishers.Download;
 using AnimeXdcc.Core.Dcc.Models;
 
 namespace AnimeXdcc.Core.Dcc.Clients
@@ -18,9 +19,11 @@ namespace AnimeXdcc.Core.Dcc.Clients
         private long _fileSize;
         private long _resumePosition;
         private long _transferredBytes;
+        private readonly IDownloadStatusPublisher _publisher;
 
-        public XdccDccClient()
+        public XdccDccClient(IDownloadStatusPublisher publisher)
         {
+            _publisher = publisher;
             _timer = new Timer(1000);
             _timer.Elapsed += TimerOnElapsed;
             _stopwatch = new Stopwatch();
@@ -44,6 +47,8 @@ namespace AnimeXdcc.Core.Dcc.Clients
         public async Task<DccTransferStatus> DownloadAsync(Stream stream, IPAddress ipAddress, int port, long fileSize,
             long resumePosition)
         {
+            _publisher.Setup(fileSize, resumePosition);
+
             Seek(stream, resumePosition);
 
             _transferredBytes = 0;

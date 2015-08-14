@@ -2,10 +2,12 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using AnimeXdcc.Core.Components.Publishers.Download;
 using AnimeXdcc.Core.Dcc.Clients;
 using AnimeXdcc.Core.Dcc.Models;
 using AnimeXdcc.Core.Irc.Clients;
 using AnimeXdcc.Core.Irc.DccMessage;
+using AnimeXdcc.Core.SystemWrappers;
 using AnimeXdcc.Core.Utilities;
 
 namespace AnimeXdcc.Core
@@ -56,7 +58,7 @@ namespace AnimeXdcc.Core
 
         private static XdccDccClient XdccDccClient()
         {
-            var xdccDccClient = new XdccDccClient();
+            var xdccDccClient = new XdccDccClient(new DccDownloadStatusPublisher(new TimerWrapper(1000)));
             xdccDccClient.TransferStatus += XdccDccClientOnTransferStatus;
             return xdccDccClient;
         }
