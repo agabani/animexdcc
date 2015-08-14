@@ -1,12 +1,12 @@
-﻿using System.Timers;
+﻿using System;
 
 namespace AnimeXdcc.Core.SystemWrappers
 {
-    public interface ITimer
+    public interface ITimer : IDisposable
     {
         double Interval { get; }
+        event EventHandler<TimeElapsedEventArgs> Elapsed;
         void Start();
         void Stop();
-        event ElapsedEventHandler Elapsed;
     }
 }

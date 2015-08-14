@@ -42,10 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\FilesManager\FilesManagerServiceTests.cs" />
-    <Compile Include="Components\Filters\RegexPatternBuilderTests.cs" />
-    <Compile Include="Components\Filters\SearchTermBuilderTests.cs" />
+    <Compile Include="Components\Filters\Builders\RegexPatternBuilderTests.cs" />
+    <Compile Include="Components\Filters\Builders\SearchTermBuilderTests.cs" />
+    <Compile Include="Components\Publishers\Download\DccDownloadStatusPublisherTests.cs" />
     <Compile Include="Experiments\RegexPatternsTests.cs" />
     <Compile Include="Irc\DccSendRequestTests.cs" />
+    <Compile Include="SystemWrappers\TimerWrapperTests.cs" />
     <Compile Include="Utilities\IpConverterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using System;
+using System.Timers;
 
 namespace AnimeXdcc.Core.SystemWrappers
 {
@@ -27,17 +28,22 @@ namespace AnimeXdcc.Core.SystemWrappers
             _timer.Stop();
         }
 
-        public event ElapsedEventHandler Elapsed;
+        public event EventHandler<TimeElapsedEventArgs> Elapsed;
 
         protected virtual void OnElapsed(ElapsedEventArgs e)
         {
             var handler = Elapsed;
-            if (handler != null) handler(this, e);
+            if (handler != null) handler(this, new TimeElapsedEventArgs(e.SignalTime));
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             OnElapsed(elapsedEventArgs);
+        }
+
+        public void Dispose()
+        {
+            ((IDisposable) _timer).Dispose();
         }
     }
 }

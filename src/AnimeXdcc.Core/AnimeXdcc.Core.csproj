@@ -45,6 +45,8 @@
     <Compile Include="Components\Filters\Builders\RegexPatternBuilder.cs" />
     <Compile Include="Components\Filters\Builders\SearchTermBuilder.cs" />
     <Compile Include="Components\Filters\RegexService.cs" />
+    <Compile Include="Components\Publishers\Download\DccDownloadStatusPublisher.cs" />
+    <Compile Include="Components\Publishers\Download\IDownloadStatusPublisher.cs" />
     <Compile Include="Dcc\Clients\XdccDccClient.cs" />
     <Compile Include="Dcc\Models\DccTransferStatus.cs" />
     <Compile Include="Dcc\Models\TransferStatus.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="Components\Files\Models\FileDetails.cs" />
     <Compile Include="Components\Files\Services\FileService.cs" />
     <Compile Include="Components\Files\Models\FileStrategy.cs" />
+    <Compile Include="SystemWrappers\TimeElapsedEventArgs.cs" />
     <Compile Include="Utilities\IpConverter.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
