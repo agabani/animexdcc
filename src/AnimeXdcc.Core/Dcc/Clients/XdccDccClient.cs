@@ -74,8 +74,8 @@ namespace AnimeXdcc.Core.Dcc.Clients
                         !TransferComplete(fileSize)
                         );
 
-                    _publisher.Start();
                     _stopwatch.Stop();
+                    _publisher.Start();
                 }
             }
 
