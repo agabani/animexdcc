@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AnimeXdcc.Core.Logging;
 using Intel.Haruhichan.ApiClient.Clients;
 using NUnit.Framework;
@@ -13,12 +14,12 @@ namespace Intel.Haruhichan.ApiClient.Tests
             new TraceLogger(TraceLogger.Level.Debug));
 
         [Test]
-        public void Should_search()
+        public async Task Should_search()
         {
             const string searchTerms = "Dan Machi 1080p";
 
             var regex = CreateRegex(searchTerms);
-            var result = _intelHttpClient.Search(searchTerms).GetAwaiter().GetResult();
+            var result = await _intelHttpClient.Search(searchTerms);
 
             Assert.That(result.Error, Is.False);
             Assert.That(result.Files.Any(), Is.True);
@@ -26,9 +27,9 @@ namespace Intel.Haruhichan.ApiClient.Tests
         }
 
         [Test]
-        public void Should_obtain_bot_list()
+        public async Task Should_obtain_bot_list()
         {
-            var result = _intelHttpClient.Bot(92).GetAwaiter().GetResult();
+            var result = await _intelHttpClient.Bot(92);
 
             Assert.That(result.Error, Is.False);
             Assert.That(result.Files.Any(), Is.True);

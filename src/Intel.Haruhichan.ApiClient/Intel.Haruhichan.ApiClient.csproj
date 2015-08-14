@@ -39,6 +39,7 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clients\IIntelHttpClient.cs" />
     <Compile Include="Clients\IntelHttpClient.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\Search.cs" />
