@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using IrcDotNet;
 
 namespace AnimeXdcc.Core.Irc.Clients
 {
-    public class XdccIrcClient : IDisposable
+    public class XdccIrcClient : IXdccIrcClient
     {
         private readonly string _hostname;
         private readonly string _nickname;
@@ -27,18 +28,18 @@ namespace AnimeXdcc.Core.Irc.Clients
             }
         }
 
-        public async Task<string> RequestPackageAsync(string target, int packageId)
+        public async Task<string> RequestPackageAsync(string target, int packageId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await ConnectAsync();
+            await ConnectAsync(cancellationToken);
 
-            var channel = await FindTargetChannel(target);
-            await JoinChannel(channel);
+            var channel = await FindTargetChannel(target, cancellationToken);
+            await JoinChannel(channel, cancellationToken);
 
-            await RequestPackageTransfer(target, packageId);
-            return await RecievePackageTransfer(target);
+            await RequestPackageTransfer(target, packageId, cancellationToken);
+            return await RecievePackageTransfer(target, cancellationToken);
         }
 
-        private async Task ConnectAsync()
+        private async Task ConnectAsync(CancellationToken cancellationToken)
         {
             if (_standardIrcClient.IsRegistered)
             {
@@ -53,13 +54,13 @@ namespace AnimeXdcc.Core.Irc.Clients
                 UserName = _nickname
             });
 
-            while (!_standardIrcClient.IsRegistered)
+            while (!_standardIrcClient.IsRegistered && !cancellationToken.IsCancellationRequested)
             {
-                await Delay();
+                await Delay(cancellationToken);
             }
         }
 
-        private async Task<string> FindTargetChannel(string target)
+        private async Task<string> FindTargetChannel(string target, CancellationToken cancellationToken)
         {
             string channel = null;
 
@@ -68,15 +69,15 @@ namespace AnimeXdcc.Core.Irc.Clients
 
             _standardIrcClient.QueryWhoIs(target);
 
-            while (channel == null)
+            while (channel == null && !cancellationToken.IsCancellationRequested)
             {
-                await Delay();
+                await Delay(cancellationToken);
             }
 
             return channel;
         }
 
-        private async Task JoinChannel(string channel)
+        private async Task JoinChannel(string channel, CancellationToken cancellationToken)
         {
             var joinedChannel = false;
 
@@ -90,13 +91,13 @@ namespace AnimeXdcc.Core.Irc.Clients
 
             _standardIrcClient.Channels.Join(channel);
 
-            while (!joinedChannel)
+            while (!joinedChannel && !cancellationToken.IsCancellationRequested)
             {
-                await Delay();
+                await Delay(cancellationToken);
             }
         }
 
-        private async Task RequestPackageTransfer(string target, int packageId)
+        private async Task RequestPackageTransfer(string target, int packageId, CancellationToken cancellationToken)
         {
             var privateMessageSent = false;
 
@@ -104,13 +105,13 @@ namespace AnimeXdcc.Core.Irc.Clients
 
             _standardIrcClient.LocalUser.SendMessage(target, string.Format("XDCC SEND #{0}", packageId));
 
-            while (!privateMessageSent)
+            while (!privateMessageSent && !cancellationToken.IsCancellationRequested)
             {
-                await Delay();
+                await Delay(cancellationToken);
             }
         }
 
-        private async Task<string> RecievePackageTransfer(string target)
+        private async Task<string> RecievePackageTransfer(string target, CancellationToken cancellationToken)
         {
             string messageReceived = null;
 
@@ -122,17 +123,17 @@ namespace AnimeXdcc.Core.Irc.Clients
                 }
             };
 
-            while (messageReceived == null)
+            while (messageReceived == null && !cancellationToken.IsCancellationRequested)
             {
-                await Delay();
+                await Delay(cancellationToken);
             }
 
             return messageReceived;
         }
 
-        private static Task Delay()
+        private static Task Delay(CancellationToken cancellationToken)
         {
-            return Task.Delay(100);
+            return Task.Delay(100, cancellationToken);
         }
     }
 }
