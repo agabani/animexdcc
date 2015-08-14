@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using System.Timers;
 using AnimeXdcc.Core.Components.Publishers.Download;
 using AnimeXdcc.Core.Dcc.Models;
 
@@ -14,9 +13,6 @@ namespace AnimeXdcc.Core.Dcc.Clients
     public class XdccDccClient : IDisposable
     {
         private readonly Stopwatch _stopwatch;
-        private readonly Timer _timer;
-        private long _elapsedEvents;
-        private long _fileSize;
         private long _resumePosition;
         private long _transferredBytes;
         private readonly IDownloadStatusPublisher _publisher;
@@ -24,22 +20,13 @@ namespace AnimeXdcc.Core.Dcc.Clients
         public XdccDccClient(IDownloadStatusPublisher publisher)
         {
             _publisher = publisher;
-            _timer = new Timer(1000);
-            _timer.Elapsed += TimerOnElapsed;
+            _publisher.TransferStatus += PublisherOnTransferStatus;
             _stopwatch = new Stopwatch();
         }
 
         private long DownloadedBytes
         {
             get { return _resumePosition + _transferredBytes; }
-        }
-
-        public void Dispose()
-        {
-            if (_timer != null)
-            {
-                _timer.Dispose();
-            }
         }
 
         public event EventHandler<DccTransferStatus> TransferStatus;
@@ -52,8 +39,6 @@ namespace AnimeXdcc.Core.Dcc.Clients
             Seek(stream, resumePosition);
 
             _transferredBytes = 0;
-            _elapsedEvents = 0;
-            _fileSize = fileSize;
             _resumePosition = resumePosition;
 
             using (var tcpClient = new TcpClient())
@@ -65,7 +50,7 @@ namespace AnimeXdcc.Core.Dcc.Clients
                     var buffer = new byte[1024];
                     int bytesReceived;
 
-                    _timer.Start();
+                    _publisher.Start();
                     _stopwatch.Restart();
 
                     do
@@ -74,13 +59,21 @@ namespace AnimeXdcc.Core.Dcc.Clients
 
                         await WriteAsync(stream, buffer, bytesReceived);
                         SendAcknowledgementAsync(networkStream, _transferredBytes += bytesReceived).ConfigureAwait(false);
+
+                        _publisher.Update(bytesReceived);
+
                     } while (bytesReceived > 0 && DownloadedBytes < fileSize);
 
+                    _publisher.Start();
                     _stopwatch.Stop();
-                    _timer.Stop();
                 }
             }
 
+            return DccTransferStatus(fileSize);
+        }
+
+        private DccTransferStatus DccTransferStatus(long fileSize)
+        {
             return new DccTransferStatus(fileSize, _stopwatch.ElapsedMilliseconds, DownloadedBytes,
                 _transferredBytes/(double) _stopwatch.ElapsedMilliseconds);
         }
@@ -91,19 +84,9 @@ namespace AnimeXdcc.Core.Dcc.Clients
             if (handler != null) handler(this, e);
         }
 
-        private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void PublisherOnTransferStatus(object sender, DccTransferStatus dccTransferStatus)
         {
-            _elapsedEvents++;
-            OnDccTransferStatus(CalculateStatus());
-        }
-
-        private DccTransferStatus CalculateStatus()
-        {
-            var downloadedBytes = _transferredBytes + _resumePosition;
-            var elapsedTime = _timer.Interval*_elapsedEvents;
-            var bytesPerMillisecond = _transferredBytes / elapsedTime;
-
-            return new DccTransferStatus(_fileSize, elapsedTime, downloadedBytes, bytesPerMillisecond);
+            OnDccTransferStatus(dccTransferStatus);
         }
 
         private static void Seek(Stream stream, long resumePosition)
@@ -130,6 +113,11 @@ namespace AnimeXdcc.Core.Dcc.Clients
         private static byte[] StandardiseEndian(byte[] bytes)
         {
             return BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes;
+        }
+
+        public void Dispose()
+        {
+            _publisher.Dispose();
         }
     }
 }
