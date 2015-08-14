@@ -12,10 +12,10 @@ namespace AnimeXdcc.Core.Dcc.Clients
 {
     public class XdccDccClient : IDisposable
     {
+        private readonly IDownloadStatusPublisher _publisher;
         private readonly Stopwatch _stopwatch;
         private long _resumePosition;
         private long _transferredBytes;
-        private readonly IDownloadStatusPublisher _publisher;
 
         public XdccDccClient(IDownloadStatusPublisher publisher)
         {
@@ -27,6 +27,11 @@ namespace AnimeXdcc.Core.Dcc.Clients
         private long DownloadedBytes
         {
             get { return _resumePosition + _transferredBytes; }
+        }
+
+        public void Dispose()
+        {
+            _publisher.Dispose();
         }
 
         public event EventHandler<DccTransferStatus> TransferStatus;
@@ -58,10 +63,10 @@ namespace AnimeXdcc.Core.Dcc.Clients
                         bytesReceived = await ReadAsync(networkStream, buffer);
 
                         await WriteAsync(stream, buffer, bytesReceived);
-                        SendAcknowledgementAsync(networkStream, _transferredBytes += bytesReceived).ConfigureAwait(false);
+                        SendAcknowledgementAsync(networkStream, _transferredBytes += bytesReceived)
+                            .ConfigureAwait(false);
 
                         _publisher.Update(bytesReceived);
-
                     } while (bytesReceived > 0 && DownloadedBytes < fileSize);
 
                     _publisher.Start();
@@ -113,11 +118,6 @@ namespace AnimeXdcc.Core.Dcc.Clients
         private static byte[] StandardiseEndian(byte[] bytes)
         {
             return BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes;
-        }
-
-        public void Dispose()
-        {
-            _publisher.Dispose();
         }
     }
 }
