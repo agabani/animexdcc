@@ -101,9 +101,9 @@ namespace AnimeXdcc.Core.Dcc.Clients
             return new DccTransferStatus(_fileSize, elapsedTime, downloadedBytes, bytesPerMillisecond);
         }
 
-        private static long Seek(Stream stream, long resumePosition)
+        private static void Seek(Stream stream, long resumePosition)
         {
-            return stream.Seek(resumePosition, SeekOrigin.Begin);
+            stream.Seek(resumePosition, SeekOrigin.Begin);
         }
 
         private static Task<int> ReadAsync(Stream stream, byte[] buffer)

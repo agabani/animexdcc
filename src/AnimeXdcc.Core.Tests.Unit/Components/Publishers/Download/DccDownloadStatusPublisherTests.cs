@@ -1,6 +1,4 @@
-﻿using System;
-using System.Timers;
-using AnimeXdcc.Core.Components.Publishers.Download;
+﻿using AnimeXdcc.Core.Components.Publishers.Download;
 using AnimeXdcc.Core.Dcc.Models;
 using AnimeXdcc.Core.SystemWrappers;
 using Moq;
