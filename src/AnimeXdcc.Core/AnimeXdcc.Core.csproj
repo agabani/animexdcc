@@ -47,6 +47,7 @@
     <Compile Include="Components\Filters\RegexService.cs" />
     <Compile Include="Components\Publishers\Download\DccDownloadStatusPublisher.cs" />
     <Compile Include="Components\Publishers\Download\IDownloadStatusPublisher.cs" />
+    <Compile Include="Dcc\Clients\IXdccDccClient.cs" />
     <Compile Include="Dcc\Clients\XdccDccClient.cs" />
     <Compile Include="Dcc\Models\DccTransferStatus.cs" />
     <Compile Include="Irc\Clients\IXdccIrcClient.cs" />

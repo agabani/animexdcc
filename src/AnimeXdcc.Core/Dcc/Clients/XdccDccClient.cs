@@ -4,13 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using AnimeXdcc.Core.Components.Publishers.Download;
 using AnimeXdcc.Core.Dcc.Models;
 
 namespace AnimeXdcc.Core.Dcc.Clients
 {
-    public class XdccDccClient : IDisposable
+    public class XdccDccClient : IXdccDccClient
     {
         private readonly IDownloadStatusPublisher _publisher;
         private readonly Stopwatch _stopwatch;
@@ -37,7 +38,7 @@ namespace AnimeXdcc.Core.Dcc.Clients
         public event EventHandler<DccTransferStatus> TransferStatus;
 
         public async Task<DccTransferStatus> DownloadAsync(Stream stream, IPAddress ipAddress, int port, long fileSize,
-            long resumePosition)
+            long resumePosition, CancellationToken cancellationToken = default (CancellationToken))
         {
             _publisher.Setup(fileSize, resumePosition);
 
@@ -60,18 +61,24 @@ namespace AnimeXdcc.Core.Dcc.Clients
 
                     do
                     {
-                        bytesReceived = await ReadAsync(networkStream, buffer);
+                        bytesReceived = await ReadAsync(networkStream, buffer, cancellationToken);
 
-                        await WriteAsync(stream, buffer, bytesReceived);
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            continue;
+                        }
 
-                        SendAcknowledgementAsync(networkStream, _transferredBytes += bytesReceived)
+                        await WriteAsync(stream, buffer, bytesReceived, cancellationToken);
+
+                        SendAcknowledgementAsync(networkStream, _transferredBytes += bytesReceived, cancellationToken)
                             .ConfigureAwait(false);
 
                         _publisher.Update(bytesReceived);
 
                     } while (
-                        DataReceived(bytesReceived) && 
-                        !TransferComplete(fileSize)
+                        DataReceived(bytesReceived) &&
+                        !TransferComplete(fileSize) &&
+                        !cancellationToken.IsCancellationRequested
                         );
 
                     _stopwatch.Stop();
@@ -114,20 +121,21 @@ namespace AnimeXdcc.Core.Dcc.Clients
             stream.Seek(resumePosition, SeekOrigin.Begin);
         }
 
-        private static Task<int> ReadAsync(Stream stream, byte[] buffer)
+        private static Task<int> ReadAsync(Stream stream, byte[] buffer, CancellationToken cancellationToken)
         {
-            return stream.ReadAsync(buffer, 0, buffer.Length);
+            return stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
         }
 
-        private static Task WriteAsync(Stream stream, byte[] buffer, int bytes)
+        private static Task WriteAsync(Stream stream, byte[] buffer, int bytes, CancellationToken cancellationToken)
         {
-            return stream.WriteAsync(buffer, 0, bytes);
+            return stream.WriteAsync(buffer, 0, bytes, cancellationToken);
         }
 
-        private static Task SendAcknowledgementAsync(Stream stream, long transferred)
+        private static Task SendAcknowledgementAsync(Stream stream, long transferred,
+            CancellationToken cancellationToken)
         {
             var sendBuffer = StandardiseEndian(BitConverter.GetBytes(transferred));
-            return stream.WriteAsync(sendBuffer, 0, sendBuffer.Length);
+            return stream.WriteAsync(sendBuffer, 0, sendBuffer.Length, cancellationToken);
         }
 
         private static byte[] StandardiseEndian(byte[] bytes)
