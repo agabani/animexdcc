@@ -21,13 +21,13 @@ namespace Intel.Haruhichan.ApiClient.Clients
             _logTag = GetType().FullName;
         }
 
-        public async Task<Search> Search(string term, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Search> SearchAsync(string term, CancellationToken cancellationToken = default(CancellationToken))
         {
             var requestUri = string.Format("ajax.php?a=s&t={0}", term);
             return await ExecuteQuery(requestUri, cancellationToken);
         }
 
-        public async Task<Search> Bot(int id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Search> BotAsync(int id, CancellationToken cancellationToken = default(CancellationToken))
         {
             var requestUri = string.Format("ajax.php?a=b&id={0}", id);
             return await ExecuteQuery(requestUri, cancellationToken);

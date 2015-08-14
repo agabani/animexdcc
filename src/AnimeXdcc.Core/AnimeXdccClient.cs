@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AnimeXdcc.Core.Components.Publishers.Download;
 using AnimeXdcc.Core.Dcc.Clients;
@@ -12,7 +13,7 @@ using AnimeXdcc.Core.Utilities;
 
 namespace AnimeXdcc.Core
 {
-    public class AnimeXdccClient : IDisposable
+    public class AnimeXdccClient : IAnimeXdccClient
     {
         private readonly XdccIrcClient _xdccIrcClient;
 
@@ -21,14 +22,10 @@ namespace AnimeXdcc.Core
             _xdccIrcClient = new XdccIrcClient(hostname, port, nickname);
         }
 
-        public void Dispose()
+        public async Task<DccTransferStatus> DownloadPackageAsync(string target, int packageId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            _xdccIrcClient.Dispose();
-        }
-
-        public async Task<DccTransferStatus> DownloadPackage(string target, int packageId)
-        {
-            var requestPackage = await RequestPackage(target, packageId);
+            var requestPackage = await RequestPackageAsync(target, packageId, cancellationToken);
             var dccMessage = new DccMessageParser(new IpConverter()).Parse(requestPackage);
             Display(dccMessage);
 
@@ -36,7 +33,7 @@ namespace AnimeXdcc.Core
 
             using (var fileStream = File.OpenWrite(dccMessage.FileName))
             {
-                dccTransferStatus = await DownloadAsync(fileStream, dccMessage);
+                dccTransferStatus = await DownloadAsync(fileStream, dccMessage, cancellationToken);
             }
 
             Display(dccTransferStatus);
@@ -44,14 +41,20 @@ namespace AnimeXdcc.Core
             return dccTransferStatus;
         }
 
-        private static async Task<DccTransferStatus> DownloadAsync(Stream stream, DccSendMessage dccMessage)
+        public void Dispose()
+        {
+            ((IDisposable) _xdccIrcClient).Dispose();
+        }
+
+        private static async Task<DccTransferStatus> DownloadAsync(Stream stream, DccSendMessage dccMessage,
+            CancellationToken cancellationToken)
         {
             DccTransferStatus dccTransferStatus;
             using (var xdccDccClient = XdccDccClient())
             {
                 dccTransferStatus = await xdccDccClient.DownloadAsync(stream,
                     IPAddress.Parse(dccMessage.IpAddress), dccMessage.Port,
-                    dccMessage.FileSize, 0);
+                    dccMessage.FileSize, 0, cancellationToken);
             }
             return dccTransferStatus;
         }
@@ -63,9 +66,9 @@ namespace AnimeXdcc.Core
             return xdccDccClient;
         }
 
-        private async Task<string> RequestPackage(string target, int packageId)
+        private async Task<string> RequestPackageAsync(string target, int packageId, CancellationToken cancellationToken)
         {
-            return await _xdccIrcClient.RequestPackageAsync(target, packageId);
+            return await _xdccIrcClient.RequestPackageAsync(target, packageId, cancellationToken);
         }
 
         private static void XdccDccClientOnTransferStatus(object sender, DccTransferStatus status)

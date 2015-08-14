@@ -50,6 +50,7 @@
     <Compile Include="Dcc\Clients\IXdccDccClient.cs" />
     <Compile Include="Dcc\Clients\XdccDccClient.cs" />
     <Compile Include="Dcc\Models\DccTransferStatus.cs" />
+    <Compile Include="IAnimeXdccClient.cs" />
     <Compile Include="Irc\Clients\IXdccIrcClient.cs" />
     <Compile Include="Irc\DccMessage\DccMessageParser.cs" />
     <Compile Include="Irc\DccMessage\DccSendMessage.cs" />

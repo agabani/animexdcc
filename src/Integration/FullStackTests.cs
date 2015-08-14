@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AnimeXdcc.Core;
 using AnimeXdcc.Core.Logging;
@@ -21,14 +22,14 @@ namespace Integration
         [Test]
         public async Task Download_One_Piece_703()
         {
-            var file = (await _intelHttpClient.Search("One Piece 703 1080p"))
+            var file = (await _intelHttpClient.SearchAsync("One Piece 703 1080p"))
                 .Files
                 .OrderByDescending(r => r.Requested)
                 .First();
 
             Display(file);
 
-            await _animeXdccClient.DownloadPackage(file.BotName, file.PackageNumber);
+            await _animeXdccClient.DownloadPackageAsync(file.BotName, file.PackageNumber);
         }
 
         private static void Display(File file)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AnimeXdcc.Core;
 using AnimeXdcc.Core.Dcc.Models;
@@ -18,6 +19,8 @@ namespace AnimeXdcc.Console
 
         private static async Task MainAsync()
         {
+            var cancellationTokenSource = new CancellationTokenSource();
+
             System.Console.WriteLine("Enter search term...");
 
             var searchTerm = System.Console.ReadLine();
@@ -27,7 +30,7 @@ namespace AnimeXdcc.Console
                 new ConsoleLogger(ConsoleLogger.Level.Debug));
 
             var file = (await intelHttpClient
-                .Search(searchTerm))
+                .SearchAsync(searchTerm, cancellationTokenSource.Token))
                 .Files.OrderByDescending(r => r.Requested)
                 .First();
 
@@ -39,7 +42,9 @@ namespace AnimeXdcc.Console
 
             var animeXdccClient = new AnimeXdccClient("irc.rizon.net", 6667, nickname);
 
-            var dccTransferStatus = await animeXdccClient.DownloadPackage(file.BotName, file.PackageNumber);
+            var dccTransferStatus =
+                await
+                    animeXdccClient.DownloadPackageAsync(file.BotName, file.PackageNumber, cancellationTokenSource.Token);
 
             await Finish(dccTransferStatus);
         }
@@ -63,17 +68,17 @@ namespace AnimeXdcc.Console
                 System.Console.WriteLine("Press any key to exit...");
                 System.Console.ReadKey();
             });
-            
+
             await Task.WhenAny(delayTask, task);
         }
 
         private static void Display(DccTransferStatus status)
         {
             System.Console.WriteLine("Download terminated:\n{0:N0}/{1:N0} [{2:N2}%] @ {3:N0} KB/s"
-                                     ,status.DownloadedBytes,
-                                     status.FileSize,
-                                     status.DownloadedBytes / (double)status.FileSize * 100,
-                                     status.BytesPerMillisecond);
+                , status.DownloadedBytes,
+                status.FileSize,
+                status.DownloadedBytes/(double) status.FileSize*100,
+                status.BytesPerMillisecond);
         }
     }
 }

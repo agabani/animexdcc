@@ -6,7 +6,7 @@ namespace Intel.Haruhichan.ApiClient.Clients
 {
     public interface IIntelHttpClient
     {
-        Task<Search> Search(string term, CancellationToken cancellationToken = default (CancellationToken));
-        Task<Search> Bot(int id, CancellationToken cancellationToken = default (CancellationToken));
+        Task<Search> SearchAsync(string term, CancellationToken cancellationToken = default (CancellationToken));
+        Task<Search> BotAsync(int id, CancellationToken cancellationToken = default (CancellationToken));
     }
 }

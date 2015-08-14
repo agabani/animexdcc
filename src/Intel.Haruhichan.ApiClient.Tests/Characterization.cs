@@ -19,7 +19,7 @@ namespace Intel.Haruhichan.ApiClient.Tests
             const string searchTerms = "Dan Machi 1080p";
 
             var regex = CreateRegex(searchTerms);
-            var result = await _intelHttpClient.Search(searchTerms);
+            var result = await _intelHttpClient.SearchAsync(searchTerms);
 
             Assert.That(result.Error, Is.False);
             Assert.That(result.Files.Any(), Is.True);
@@ -29,7 +29,7 @@ namespace Intel.Haruhichan.ApiClient.Tests
         [Test]
         public async Task Should_obtain_bot_list()
         {
-            var result = await _intelHttpClient.Bot(92);
+            var result = await _intelHttpClient.BotAsync(92);
 
             Assert.That(result.Error, Is.False);
             Assert.That(result.Files.Any(), Is.True);

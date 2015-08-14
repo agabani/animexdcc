@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AnimeXdcc.Core;
 using Integration.Bots;
@@ -26,7 +27,7 @@ namespace Integration
             await Task.Delay(5000);
 
             var animeXdccClient = new AnimeXdccClient(hostname, port, clientNick);
-            await animeXdccClient.DownloadPackage(serverNick, 1);
+            await animeXdccClient.DownloadPackageAsync(serverNick, 1);
 
             await hostTask;
         }
@@ -35,7 +36,7 @@ namespace Integration
         public async Task Should_be_able_to_download_package_from_external_bot()
         {
             var animeXdccClient = new AnimeXdccClient("irc.rizon.net", 6667, "client" + RandomString());
-            await animeXdccClient.DownloadPackage("CR-HOLLAND|NEW", 5054);
+            await animeXdccClient.DownloadPackageAsync("CR-HOLLAND|NEW", 5054);
         }
 
         private static string RandomString()
