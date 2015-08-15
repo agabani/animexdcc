@@ -17,6 +17,8 @@ namespace AnimeXdcc.Core
     {
         private readonly XdccIrcClient _xdccIrcClient;
 
+        public event EventHandler<DccTransferStatus> TransferStatusEvent;
+
         public AnimeXdccClient(string hostname, int port, string nickname)
         {
             _xdccIrcClient = new XdccIrcClient(hostname, port, nickname);
@@ -27,7 +29,6 @@ namespace AnimeXdcc.Core
         {
             var requestPackage = await RequestPackageAsync(target, packageId, cancellationToken);
             var dccMessage = new DccMessageParser(new IpConverter()).Parse(requestPackage);
-            Display(dccMessage);
 
             DccTransferStatus dccTransferStatus;
 
@@ -35,8 +36,6 @@ namespace AnimeXdcc.Core
             {
                 dccTransferStatus = await DownloadAsync(fileStream, dccMessage, cancellationToken);
             }
-
-            Display(dccTransferStatus);
 
             return dccTransferStatus;
         }
@@ -46,7 +45,7 @@ namespace AnimeXdcc.Core
             ((IDisposable) _xdccIrcClient).Dispose();
         }
 
-        private static async Task<DccTransferStatus> DownloadAsync(Stream stream, DccSendMessage dccMessage,
+        private async Task<DccTransferStatus> DownloadAsync(Stream stream, DccSendMessage dccMessage,
             CancellationToken cancellationToken)
         {
             DccTransferStatus dccTransferStatus;
@@ -59,10 +58,10 @@ namespace AnimeXdcc.Core
             return dccTransferStatus;
         }
 
-        private static XdccDccClient XdccDccClient()
+        private XdccDccClient XdccDccClient()
         {
-            var xdccDccClient = new XdccDccClient(new DccDownloadStatusPublisher(new TimerWrapper(1000)));
-            xdccDccClient.TransferStatus += XdccDccClientOnTransferStatus;
+            var xdccDccClient = new XdccDccClient(new DccDownloadStatusPublisher(new TimerWrapper(250)));
+            xdccDccClient.TransferStatus += (sender, status) => { OnTransferStatusEvent(status); };
             return xdccDccClient;
         }
 
@@ -71,33 +70,10 @@ namespace AnimeXdcc.Core
             return await _xdccIrcClient.RequestPackageAsync(target, packageId, cancellationToken);
         }
 
-        private static void XdccDccClientOnTransferStatus(object sender, DccTransferStatus status)
+        protected virtual void OnTransferStatusEvent(DccTransferStatus e)
         {
-            Console.WriteLine("{0:N0}/{1:N0} [{2:N2}%] @ {3:N0} KB/s [{4:N1}/{5:N1}]",
-                status.DownloadedBytes,
-                status.FileSize,
-                (double) status.DownloadedBytes/(double) status.FileSize*100,
-                status.BytesPerMillisecond,
-                status.ElapsedTime/1000,
-                (status.FileSize/status.BytesPerMillisecond)/1000);
-        }
-
-        private static void Display(DccTransferStatus dccTransferStatus)
-        {
-            Console.WriteLine("Download complete...\n" +
-                              "{0:N0} @ {1:N0} KB/s [{2:N1} s]",
-                dccTransferStatus.FileSize,
-                dccTransferStatus.BytesPerMillisecond,
-                dccTransferStatus.ElapsedTime/1000);
-        }
-
-        private static void Display(DccSendMessage dccMessage)
-        {
-            Console.WriteLine("IP Address: {0}\n" +
-                              "Port: {1}\n" +
-                              "File Name: {2}\n" +
-                              "File Size: {3:N0}",
-                dccMessage.IpAddress, dccMessage.Port, dccMessage.FileName, dccMessage.FileSize);
+            var handler = TransferStatusEvent;
+            if (handler != null) handler(this, e);
         }
     }
 }
