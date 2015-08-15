@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AnimeXdcc.Core.SystemWrappers;
+using AnimeXdcc.Core.SystemWrappers.Timer;
 using NUnit.Framework;
 
-namespace AnimeXdcc.Core.Tests.Unit.SystemWrappers
+namespace AnimeXdcc.Core.Tests.Unit.SystemWrappers.Timer
 {
     [TestFixture]
     public class TimerWrapperTests

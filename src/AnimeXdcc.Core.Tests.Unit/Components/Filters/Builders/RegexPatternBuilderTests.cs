@@ -22,14 +22,14 @@ namespace AnimeXdcc.Core.Tests.Unit.Components.Filters.Builders
         public void Static_with_episode_number_and_crc()
         {
             var pattern = new RegexPatternBuilder()
-                .WithStatic("[Commie] Log Horizon - ")
+                .WithStatic("[Commie] LogEvent Horizon - ")
                 .CaptureEpisode()
                 .WithStatic(" [")
                 .CaptureCrc()
                 .WithStatic("].mkv")
                 .Build();
 
-            Assert.That(pattern, Is.EqualTo(@"\[Commie\] Log Horizon - (\d+) \[([A-F0-9]{8})\].mkv"));
+            Assert.That(pattern, Is.EqualTo(@"\[Commie\] LogEvent Horizon - (\d+) \[([A-F0-9]{8})\].mkv"));
         }
 
         [Test]

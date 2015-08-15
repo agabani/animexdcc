@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AnimeXdcc.Core.Components.Publishers.Download;
 using AnimeXdcc.Core.Dcc.Clients;
-using AnimeXdcc.Core.SystemWrappers;
+using AnimeXdcc.Core.SystemWrappers.Timer;
 using Integration.Clients;
 using NUnit.Framework;
 

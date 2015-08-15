@@ -1,15 +1,15 @@
 ﻿using System;
 using AnimeXdcc.Core.Dcc.Models;
-using AnimeXdcc.Core.SystemWrappers;
+using AnimeXdcc.Core.SystemWrappers.Timer;
 
 namespace AnimeXdcc.Core.Components.Publishers.Download
 {
     public class DccDownloadStatusPublisher : IDownloadStatusPublisher
     {
+        private long _elapsedEvents;
         private long _fileSize;
         private long _resumePosition;
-        private readonly ITimer _timer;
-        private long _elapsedEvents;
+        private ITimer _timer;
         private long _transferredBytes;
 
         public DccDownloadStatusPublisher(ITimer timer)
@@ -41,6 +41,17 @@ namespace AnimeXdcc.Core.Components.Publishers.Download
             _transferredBytes += bytes;
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~DccDownloadStatusPublisher()
+        {
+            Dispose(false);
+        }
+
         protected virtual void OnTransferStatus(DccTransferStatus e)
         {
             var handler = TransferStatus;
@@ -62,9 +73,16 @@ namespace AnimeXdcc.Core.Components.Publishers.Download
             return new DccTransferStatus(_fileSize, elapsedTime, downloadedBytes, bytesPerMillisecond);
         }
 
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
-            _timer.Dispose();
+            if (disposing)
+            {
+                if (_timer != null)
+                {
+                    _timer.Dispose();
+                    _timer = null;
+                }
+            }
         }
     }
 }

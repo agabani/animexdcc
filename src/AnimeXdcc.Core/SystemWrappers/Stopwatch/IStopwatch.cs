@@ -1,4 +1,4 @@
-﻿namespace AnimeXdcc.Core.SystemWrappers
+﻿namespace AnimeXdcc.Core.SystemWrappers.Stopwatch
 {
     public interface IStopwatch
     {

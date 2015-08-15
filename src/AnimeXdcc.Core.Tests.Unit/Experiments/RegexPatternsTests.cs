@@ -51,11 +51,11 @@ namespace AnimeXdcc.Core.Tests.Unit.Experiments
         }
 
         [Test]
-        [TestCase(@"[Commie] Log Horizon - 06 [53AF6698].mkv", "06", "53AF6698")]
-        [TestCase(@"[Commie] Log Horizon - 21 [62388659].mkv", "21", "62388659")]
+        [TestCase(@"[Commie] LogEvent Horizon - 06 [53AF6698].mkv", "06", "53AF6698")]
+        [TestCase(@"[Commie] LogEvent Horizon - 21 [62388659].mkv", "21", "62388659")]
         public void Commie_Log_Horizon(string input, string episode, string crc)
         {
-            var match = Regex.Match(input, @"\[Commie\] Log Horizon - (\d+) \[([A-F0-9]{8})\].mkv",
+            var match = Regex.Match(input, @"\[Commie\] LogEvent Horizon - (\d+) \[([A-F0-9]{8})\].mkv",
                 RegexOptions.IgnoreCase);
 
             Assert.That(match.Success, Is.True);

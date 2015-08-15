@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace AnimeXdcc.Core.Logging
+﻿namespace AnimeXdcc.Core.Logging.Trace
 {
     public class TraceLogger : ILogger
     {
@@ -24,7 +22,7 @@ namespace AnimeXdcc.Core.Logging
         {
             if (_level >= Level.Debug)
             {
-                Trace.TraceInformation(message);
+                System.Diagnostics.Trace.TraceInformation(message);
             }
         }
 
@@ -32,7 +30,7 @@ namespace AnimeXdcc.Core.Logging
         {
             if (_level >= Level.Info)
             {
-                Trace.TraceInformation(message);
+                System.Diagnostics.Trace.TraceInformation(message);
             }
         }
 
@@ -40,7 +38,7 @@ namespace AnimeXdcc.Core.Logging
         {
             if (_level >= Level.Warn)
             {
-                Trace.TraceWarning(message);
+                System.Diagnostics.Trace.TraceWarning(message);
             }
         }
 
@@ -48,7 +46,7 @@ namespace AnimeXdcc.Core.Logging
         {
             if (_level >= Level.Error)
             {
-                Trace.TraceError(message);
+                System.Diagnostics.Trace.TraceError(message);
             }
         }
 
@@ -56,7 +54,7 @@ namespace AnimeXdcc.Core.Logging
         {
             if (_level >= Level.Fatal)
             {
-                Trace.TraceError(message);
+                System.Diagnostics.Trace.TraceError(message);
             }
         }
     }

@@ -6,7 +6,13 @@ namespace AnimeXdcc.Console
     {
         public static void Main()
         {
-            Task.Run(async () => await new Application().RunAsync()).Wait();
+            Task.Run(async () =>
+            {
+                using (var application = new Application())
+                {
+                    await application.RunAsync();
+                }
+            }).Wait();
         }
     }
 }

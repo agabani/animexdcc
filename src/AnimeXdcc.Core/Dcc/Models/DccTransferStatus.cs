@@ -1,6 +1,8 @@
+using System;
+
 namespace AnimeXdcc.Core.Dcc.Models
 {
-    public class DccTransferStatus
+    public class DccTransferStatus : EventArgs
     {
         public DccTransferStatus(long fileSize, double elapsedTime, long downloadedBytes, double bytesPerMillisecond)
         {

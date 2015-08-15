@@ -58,16 +58,19 @@
     <Compile Include="Components\Files\Models\FileDetails.cs" />
     <Compile Include="Components\Files\Services\FileService.cs" />
     <Compile Include="Components\Files\Models\FileStrategy.cs" />
-    <Compile Include="SystemWrappers\TimeElapsedEventArgs.cs" />
+    <Compile Include="Logging\Callback\CallbackLogger.cs" />
+    <Compile Include="Logging\Callback\LogEventArgs.cs" />
+    <Compile Include="Logging\Null\NullLogger.cs" />
+    <Compile Include="SystemWrappers\Timer\TimeElapsedEventArgs.cs" />
     <Compile Include="Utilities\IpConverter.cs" />
-    <Compile Include="Logging\ConsoleLogger.cs" />
+    <Compile Include="Logging\Console\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Logging\TraceLogger.cs" />
+    <Compile Include="Logging\Trace\TraceLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SystemWrappers\IStopwatch.cs" />
-    <Compile Include="SystemWrappers\ITimer.cs" />
-    <Compile Include="SystemWrappers\StopwatchWrapper.cs" />
-    <Compile Include="SystemWrappers\TimerWrapper.cs" />
+    <Compile Include="SystemWrappers\Stopwatch\IStopwatch.cs" />
+    <Compile Include="SystemWrappers\Timer\ITimer.cs" />
+    <Compile Include="SystemWrappers\Stopwatch\StopwatchWrapper.cs" />
+    <Compile Include="SystemWrappers\Timer\TimerWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,6 +1,6 @@
 ﻿using AnimeXdcc.Core.Components.Publishers.Download;
 using AnimeXdcc.Core.Dcc.Models;
-using AnimeXdcc.Core.SystemWrappers;
+using AnimeXdcc.Core.SystemWrappers.Timer;
 using Moq;
 using NUnit.Framework;
 

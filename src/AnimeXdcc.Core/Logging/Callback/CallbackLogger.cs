@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace AnimeXdcc.Core.Logging
+namespace AnimeXdcc.Core.Logging.Callback
 {
-    public class ConsoleLogger : ILogger
+    public class CallbackLogger : ILogger
     {
         public enum Level
         {
@@ -15,7 +15,7 @@ namespace AnimeXdcc.Core.Logging
 
         private readonly Level _level;
 
-        public ConsoleLogger(Level level)
+        public CallbackLogger(Level level)
         {
             _level = level;
         }
@@ -24,7 +24,7 @@ namespace AnimeXdcc.Core.Logging
         {
             if (_level >= Level.Debug)
             {
-                Console.WriteLine(message);
+                OnLogEvent(new LogEventArgs(message));
             }
         }
 
@@ -32,7 +32,7 @@ namespace AnimeXdcc.Core.Logging
         {
             if (_level >= Level.Info)
             {
-                Console.WriteLine(message);
+                OnLogEvent(new LogEventArgs(message));
             }
         }
 
@@ -40,7 +40,7 @@ namespace AnimeXdcc.Core.Logging
         {
             if (_level >= Level.Warn)
             {
-                Console.WriteLine(message);
+                OnLogEvent(new LogEventArgs(message));
             }
         }
 
@@ -48,7 +48,7 @@ namespace AnimeXdcc.Core.Logging
         {
             if (_level >= Level.Error)
             {
-                Console.WriteLine(message);
+                OnLogEvent(new LogEventArgs(message));
             }
         }
 
@@ -56,8 +56,16 @@ namespace AnimeXdcc.Core.Logging
         {
             if (_level >= Level.Fatal)
             {
-                Console.WriteLine(message);
+                OnLogEvent(new LogEventArgs(message));
             }
+        }
+
+        public event EventHandler<LogEventArgs> LogEvent;
+
+        protected virtual void OnLogEvent(LogEventArgs e)
+        {
+            var handler = LogEvent;
+            if (handler != null) handler(this, e);
         }
     }
 }

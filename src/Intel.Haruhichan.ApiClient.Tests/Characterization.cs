@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AnimeXdcc.Core.Logging;
+using AnimeXdcc.Core.Logging.Trace;
 using Intel.Haruhichan.ApiClient.Clients;
 using NUnit.Framework;
 

@@ -47,7 +47,7 @@
     <Compile Include="Components\Publishers\Download\DccDownloadStatusPublisherTests.cs" />
     <Compile Include="Experiments\RegexPatternsTests.cs" />
     <Compile Include="Irc\DccSendRequestTests.cs" />
-    <Compile Include="SystemWrappers\TimerWrapperTests.cs" />
+    <Compile Include="SystemWrappers\Timer\TimerWrapperTests.cs" />
     <Compile Include="Utilities\IpConverterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

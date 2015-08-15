@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Timers;
 
-namespace AnimeXdcc.Core.SystemWrappers
+namespace AnimeXdcc.Core.SystemWrappers.Timer
 {
     public class TimerWrapper : ITimer
     {
-        private readonly Timer _timer;
+        private System.Timers.Timer _timer;
 
         public TimerWrapper(double interval)
         {
-            _timer = new Timer(interval);
+            _timer = new System.Timers.Timer(interval);
             _timer.Elapsed += TimerOnElapsed;
         }
 
@@ -30,6 +30,17 @@ namespace AnimeXdcc.Core.SystemWrappers
 
         public event EventHandler<TimeElapsedEventArgs> Elapsed;
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~TimerWrapper()
+        {
+            Dispose(false);
+        }
+
         protected virtual void OnElapsed(ElapsedEventArgs e)
         {
             var handler = Elapsed;
@@ -41,9 +52,16 @@ namespace AnimeXdcc.Core.SystemWrappers
             OnElapsed(elapsedEventArgs);
         }
 
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
-            ((IDisposable) _timer).Dispose();
+            if (disposing)
+            {
+                if (_timer != null)
+                {
+                    _timer.Dispose();
+                    _timer = null;
+                }
+            }
         }
     }
 }

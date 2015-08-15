@@ -8,16 +8,14 @@ using AnimeXdcc.Core.Dcc.Clients;
 using AnimeXdcc.Core.Dcc.Models;
 using AnimeXdcc.Core.Irc.Clients;
 using AnimeXdcc.Core.Irc.DccMessage;
-using AnimeXdcc.Core.SystemWrappers;
+using AnimeXdcc.Core.SystemWrappers.Timer;
 using AnimeXdcc.Core.Utilities;
 
 namespace AnimeXdcc.Core
 {
     public class AnimeXdccClient : IAnimeXdccClient
     {
-        private readonly XdccIrcClient _xdccIrcClient;
-
-        public event EventHandler<DccTransferStatus> TransferStatusEvent;
+        private XdccIrcClient _xdccIrcClient;
 
         public AnimeXdccClient(string hostname, int port, string nickname)
         {
@@ -42,7 +40,27 @@ namespace AnimeXdcc.Core
 
         public void Dispose()
         {
-            ((IDisposable) _xdccIrcClient).Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public event EventHandler<DccTransferStatus> TransferStatusEvent;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_xdccIrcClient != null)
+                {
+                    _xdccIrcClient.Dispose();
+                    _xdccIrcClient = null;
+                }
+            }
+        }
+
+        ~AnimeXdccClient()
+        {
+            Dispose(false);
         }
 
         private async Task<DccTransferStatus> DownloadAsync(Stream stream, DccSendMessage dccMessage,

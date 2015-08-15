@@ -8,16 +8,34 @@ namespace Integration.Clients
 {
     public class IntegrationIrcClient : IDisposable
     {
-        private readonly StandardIrcClient _ircClient;
+        private StandardIrcClient _ircClient;
 
         public IntegrationIrcClient()
         {
             _ircClient = new StandardIrcClient();
         }
 
+        ~IntegrationIrcClient()
+        {
+            Dispose(false);
+        }
+
         public void Dispose()
         {
-            _ircClient.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_ircClient != null)
+                {
+                    _ircClient.Dispose();
+                    _ircClient = null;
+                }
+            }
         }
 
         public async Task Connect(string hostname, int port, bool useSsl, string name, string password)

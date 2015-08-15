@@ -4,18 +4,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using AnimeXdcc.Core;
 using AnimeXdcc.Core.Dcc.Models;
-using AnimeXdcc.Core.Logging;
+using AnimeXdcc.Core.Logging.Trace;
 using Intel.Haruhichan.ApiClient.Clients;
 using Intel.Haruhichan.ApiClient.Models;
 
 namespace AnimeXdcc.Console
 {
-    public class Application
+    public class Application : IDisposable
     {
-        private readonly AnimeXdccClient _animeXdccClient;
         private readonly IntelHttpClient _intelHttpClient;
         private readonly ConsoleRenderer _renderer;
-        private readonly CancellationTokenSource _tokenSource;
+        private AnimeXdccClient _animeXdccClient;
+        private CancellationTokenSource _tokenSource;
 
         public Application()
         {
@@ -31,6 +31,12 @@ namespace AnimeXdcc.Console
                 new RandomWord().GetString(10));
 
             _animeXdccClient.TransferStatusEvent += UpdateProgressBar;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public async Task RunAsync()
@@ -93,6 +99,29 @@ namespace AnimeXdcc.Console
                 (dccTransferStatus.FileSize - dccTransferStatus.DownloadedBytes)/
                 (dccTransferStatus.BytesPerMillisecond*1024)
                 );
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_animeXdccClient != null)
+                {
+                    _animeXdccClient.Dispose();
+                    _animeXdccClient = null;
+                }
+
+                if (_tokenSource != null)
+                {
+                    _tokenSource.Dispose();
+                    _tokenSource = null;
+                }
+            }
+        }
+
+        ~Application()
+        {
+            Dispose(false);
         }
     }
 }

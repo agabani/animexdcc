@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AnimeXdcc.Core.SystemWrappers
+namespace AnimeXdcc.Core.SystemWrappers.Timer
 {
     public class TimeElapsedEventArgs : EventArgs
     {

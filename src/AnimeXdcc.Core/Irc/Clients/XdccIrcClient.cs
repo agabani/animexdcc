@@ -11,7 +11,7 @@ namespace AnimeXdcc.Core.Irc.Clients
         private readonly string _hostname;
         private readonly string _nickname;
         private readonly int _port;
-        private readonly StandardIrcClient _standardIrcClient = new StandardIrcClient();
+        private StandardIrcClient _standardIrcClient = new StandardIrcClient();
 
         public XdccIrcClient(string hostname, int port, string nickname)
         {
@@ -22,13 +22,12 @@ namespace AnimeXdcc.Core.Irc.Clients
 
         public void Dispose()
         {
-            if (_standardIrcClient != null)
-            {
-                _standardIrcClient.Dispose();
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public async Task<string> RequestPackageAsync(string target, int packageId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<string> RequestPackageAsync(string target, int packageId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             await ConnectAsync(cancellationToken);
 
@@ -37,6 +36,23 @@ namespace AnimeXdcc.Core.Irc.Clients
 
             await RequestPackageTransfer(target, packageId, cancellationToken);
             return await RecievePackageTransfer(target, cancellationToken);
+        }
+
+        ~XdccIrcClient()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_standardIrcClient != null)
+                {
+                    _standardIrcClient.Dispose();
+                    _standardIrcClient = null;
+                }
+            }
         }
 
         private async Task ConnectAsync(CancellationToken cancellationToken)

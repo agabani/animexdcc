@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AnimeXdcc.Core;
-using AnimeXdcc.Core.Logging;
+using AnimeXdcc.Core.Logging.Console;
 using Intel.Haruhichan.ApiClient.Clients;
 using Intel.Haruhichan.ApiClient.Models;
 using NUnit.Framework;
@@ -13,23 +12,24 @@ namespace Integration
     [TestFixture]
     public class FullStackTests
     {
-        private readonly AnimeXdccClient _animeXdccClient = new AnimeXdccClient("irc.rizon.net", 6667, "speechlessdown");
-
-        private readonly IntelHttpClient _intelHttpClient = new IntelHttpClient(
-            new Uri("http://intel.haruhichan.com/"),
-            new ConsoleLogger(ConsoleLogger.Level.Debug));
-
         [Test]
         public async Task Download_One_Piece_703()
         {
-            var file = (await _intelHttpClient.SearchAsync("One Piece 703 1080p"))
+            var intelHttpClient = new IntelHttpClient(
+                new Uri("http://intel.haruhichan.com/"),
+                new ConsoleLogger(ConsoleLogger.Level.Debug));
+
+            var file = (await intelHttpClient.SearchAsync("One Piece 703 1080p"))
                 .Files
                 .OrderByDescending(r => r.Requested)
                 .First();
 
             Display(file);
 
-            await _animeXdccClient.DownloadPackageAsync(file.BotName, file.PackageNumber);
+            using (var animeXdccClient = new AnimeXdccClient("irc.rizon.net", 6667, "speechlessdown"))
+            {
+                await animeXdccClient.DownloadPackageAsync(file.BotName, file.PackageNumber);
+            }
         }
 
         private static void Display(File file)

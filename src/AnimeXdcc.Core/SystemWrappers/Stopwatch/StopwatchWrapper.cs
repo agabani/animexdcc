@@ -1,14 +1,12 @@
-﻿using System.Diagnostics;
-
-namespace AnimeXdcc.Core.SystemWrappers
+﻿namespace AnimeXdcc.Core.SystemWrappers.Stopwatch
 {
     public class StopwatchWrapper : IStopwatch
     {
-        private readonly Stopwatch _stopwatch;
+        private readonly System.Diagnostics.Stopwatch _stopwatch;
 
         public StopwatchWrapper()
         {
-            _stopwatch = new Stopwatch();
+            _stopwatch = new System.Diagnostics.Stopwatch();
         }
 
         public long ElapsedMilliseconds

@@ -13,8 +13,8 @@ namespace AnimeXdcc.Core.Dcc.Clients
 {
     public class XdccDccClient : IXdccDccClient
     {
-        private readonly IDownloadStatusPublisher _publisher;
         private readonly Stopwatch _stopwatch;
+        private IDownloadStatusPublisher _publisher;
         private long _resumePosition;
         private long _transferredBytes;
 
@@ -32,7 +32,8 @@ namespace AnimeXdcc.Core.Dcc.Clients
 
         public void Dispose()
         {
-            _publisher.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public event EventHandler<DccTransferStatus> TransferStatus;
@@ -74,7 +75,6 @@ namespace AnimeXdcc.Core.Dcc.Clients
                             .ConfigureAwait(false);
 
                         _publisher.Update(bytesReceived);
-
                     } while (
                         DataReceived(bytesReceived) &&
                         !TransferComplete(fileSize) &&
@@ -87,6 +87,23 @@ namespace AnimeXdcc.Core.Dcc.Clients
             }
 
             return DccTransferStatus(fileSize);
+        }
+
+        ~XdccDccClient()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_publisher != null)
+                {
+                    _publisher.Dispose();
+                    _publisher = null;
+                }
+            }
         }
 
         private bool TransferComplete(long fileSize)

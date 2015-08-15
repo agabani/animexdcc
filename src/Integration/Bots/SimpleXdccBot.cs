@@ -7,13 +7,13 @@ using Integration.Clients;
 
 namespace Integration.Bots
 {
-    public class SimpleXdccBot
+    public class SimpleXdccBot : IDisposable
     {
-        private readonly IntegrationIrcClient _integrationIrcClient = new IntegrationIrcClient();
-        private readonly string _hostname;
-        private readonly int _port;
-        private readonly string _nickname;
         private readonly string _filePath;
+        private readonly string _hostname;
+        private readonly string _nickname;
+        private readonly int _port;
+        private IntegrationIrcClient _integrationIrcClient = new IntegrationIrcClient();
 
         public SimpleXdccBot(string nickname, string hostname, int port, string filePath)
         {
@@ -21,6 +21,12 @@ namespace Integration.Bots
             _port = port;
             _nickname = nickname;
             _filePath = filePath;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public async Task HostFile(string nickname)
@@ -75,6 +81,23 @@ namespace Integration.Bots
         private static string GetFileName(FileStream file)
         {
             return string.Format("\"{0}\"", file.Name.Split('\\').Last());
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_integrationIrcClient != null)
+                {
+                    _integrationIrcClient.Dispose();
+                    _integrationIrcClient = null;
+                }
+            }
+        }
+
+        ~SimpleXdccBot()
+        {
+            Dispose(false);
         }
     }
 }
