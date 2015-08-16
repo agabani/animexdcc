@@ -30,9 +30,9 @@ namespace AnimeXdcc.Core.Components.Versions.Models
                 return 1;
             }
 
-            var version = obj as SoftwareVersion;
+            var softwareVersion = obj as SoftwareVersion;
 
-            return CompareTo(version);
+            return CompareTo(softwareVersion);
         }
 
         public int CompareTo(SoftwareVersion other)
@@ -79,6 +79,14 @@ namespace AnimeXdcc.Core.Components.Versions.Models
             return Major == other.Major && Minor == other.Minor && Patch == other.Patch;
         }
 
+        public override bool Equals(Object other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (other.GetType() != GetType()) return false;
+            return Equals((SoftwareVersion) other);
+        }
+
         public override int GetHashCode()
         {
             long hashCode = 0;
@@ -90,39 +98,47 @@ namespace AnimeXdcc.Core.Components.Versions.Models
             return (int) hashCode;
         }
 
-        public override bool Equals(Object other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (other.GetType() != GetType()) return false;
-            return Equals((SoftwareVersion) other);
-        }
-
         public override string ToString()
         {
             return string.Format("{0}.{1}.{2}", Major, Minor, Patch);
         }
 
+        public static SoftwareVersion Parse(string input)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+
+            var softwareVersionResult = new SoftwareVersionResult();
+            softwareVersionResult.Init("input", true);
+            if (!TryParseSoftwareVersion(input, ref softwareVersionResult))
+            {
+                throw softwareVersionResult.GetSoftwareVersionParseException();
+            }
+            return softwareVersionResult.ParsedSoftwareVersion;
+        }
+
         public static bool TryParse(string input, out SoftwareVersion result)
         {
-            var versionResult = new VersionResult();
+            var versionResult = new SoftwareVersionResult();
             versionResult.Init("input", false);
-            var success = TryParseVersion(input, ref versionResult);
+            var success = TryParseSoftwareVersion(input, ref versionResult);
             result = versionResult.ParsedSoftwareVersion;
             return success;
         }
 
-        private static bool TryParseVersion(string version, ref VersionResult result)
+        private static bool TryParseSoftwareVersion(string softwareVersion, ref SoftwareVersionResult result)
         {
             long major, minor, patch = 0;
 
-            if (version == null)
+            if (softwareVersion == null)
             {
                 result.SetFailure(ParseFailureKind.ArgumentNullException);
                 return false;
             }
 
-            var parsedComponents = version.Split(SeparatorArray);
+            var parsedComponents = softwareVersion.Split(SeparatorArray);
             var parsedComponentsLength = parsedComponents.Length;
             if (parsedComponentsLength < 2 || parsedComponentsLength > 3)
             {
@@ -153,7 +169,7 @@ namespace AnimeXdcc.Core.Components.Versions.Models
             return true;
         }
 
-        private static bool TryParseComponent(string component, string componentName, ref VersionResult result,
+        private static bool TryParseComponent(string component, string componentName, ref SoftwareVersionResult result,
             out long parsedComponent)
         {
             if (!long.TryParse(component, NumberStyles.Integer, CultureInfo.InvariantCulture, out parsedComponent))
@@ -169,22 +185,6 @@ namespace AnimeXdcc.Core.Components.Versions.Models
             }
 
             return true;
-        }
-
-        public static SoftwareVersion Parse(string input)
-        {
-            if (input == null)
-            {
-                throw new ArgumentNullException("input");
-            }
-
-            var versionResult = new VersionResult();
-            versionResult.Init("input", true);
-            if (!TryParseVersion(input, ref versionResult))
-            {
-                throw versionResult.GetVersionParseException();
-            }
-            return versionResult.ParsedSoftwareVersion;
         }
 
         public static bool operator ==(SoftwareVersion v1, SoftwareVersion v2)
@@ -240,7 +240,7 @@ namespace AnimeXdcc.Core.Components.Versions.Models
             FormatException
         }
 
-        internal struct VersionResult
+        internal struct SoftwareVersionResult
         {
             internal string ArgumentName;
             internal bool CanThrow;
@@ -265,11 +265,11 @@ namespace AnimeXdcc.Core.Components.Versions.Models
                 ExceptionArgument = argument;
                 if (CanThrow)
                 {
-                    throw GetVersionParseException();
+                    throw GetSoftwareVersionParseException();
                 }
             }
 
-            internal Exception GetVersionParseException()
+            internal Exception GetSoftwareVersionParseException()
             {
                 switch (Failure)
                 {
