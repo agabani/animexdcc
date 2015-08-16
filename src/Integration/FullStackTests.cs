@@ -19,7 +19,7 @@ namespace Integration
                 new Uri("http://intel.haruhichan.com/"),
                 new ConsoleLogger(ConsoleLogger.Level.Debug));
 
-            var file = (await intelHttpClient.SearchAsync("One Piece 703 1080p"))
+            var file = (await intelHttpClient.SearchAsync("One Piece 703 480p"))
                 .Files
                 .OrderByDescending(r => r.Requested)
                 .First();
