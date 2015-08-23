@@ -1,5 +1,5 @@
 ﻿using AnimeXdcc.Wpf.Infrastructure.Bindable;
-using Intel.Haruhichan.ApiClient.Clients;
+using AnimeXdcc.Wpf.Services;
 
 namespace AnimeXdcc.Wpf.Search
 {
@@ -8,11 +8,11 @@ namespace AnimeXdcc.Wpf.Search
     /// </summary>
     internal class EpisodeSearchViewModel : BindableBase
     {
-        private IIntelHttpClient _intelHttpClient;
+        private IIntelService _intelService;
 
-        public EpisodeSearchViewModel(IIntelHttpClient intelHttpClient)
+        public EpisodeSearchViewModel(IIntelService intelService)
         {
-            _intelHttpClient = intelHttpClient;
+            _intelService = intelService;
         }
     }
 }

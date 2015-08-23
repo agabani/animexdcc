@@ -2,6 +2,7 @@
 using AnimeXdcc.Core.Logging;
 using AnimeXdcc.Core.Logging.Trace;
 using AnimeXdcc.Wpf.Search;
+using AnimeXdcc.Wpf.Services;
 using Intel.Haruhichan.ApiClient.Clients;
 using Microsoft.Practices.Unity;
 
@@ -14,7 +15,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             var unityContainer = new UnityContainer();
 
             RegisterLogger(unityContainer);
-            RegisterIntelHttpClient(unityContainer);
+            RegisterIntel(unityContainer);
             RegisterViewModels(unityContainer);
 
             return new UnityResolver(unityContainer);
@@ -27,19 +28,22 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
                 new InjectionConstructor(TraceLogger.Level.Debug));
         }
 
-        public static void RegisterIntelHttpClient(IUnityContainer unityContainer)
+        public static void RegisterIntel(IUnityContainer unityContainer)
         {
             unityContainer.RegisterType<Uri, Uri>("intel", new InjectionConstructor("http://intel.haruhichan.com"));
 
             unityContainer.RegisterType<IIntelHttpClient, IntelHttpClient>(
                 new ContainerControlledLifetimeManager(),
                 new InjectionConstructor(unityContainer.Resolve<Uri>("intel"), unityContainer.Resolve<ILogger>()));
+
+            unityContainer.RegisterType<IIntelService, IntelService>(new ContainerControlledLifetimeManager(),
+                new InjectionConstructor(unityContainer.Resolve<IIntelHttpClient>()));
         }
 
         private static void RegisterViewModels(IUnityContainer unityContainer)
         {
             unityContainer.RegisterType<EpisodeSearchViewModel, EpisodeSearchViewModel>(
-                new InjectionConstructor(unityContainer.Resolve<IIntelHttpClient>()));
+                new InjectionConstructor(unityContainer.Resolve<IIntelService>()));
         }
     }
 }
