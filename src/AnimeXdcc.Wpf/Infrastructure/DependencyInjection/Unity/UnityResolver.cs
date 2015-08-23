@@ -22,6 +22,18 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             GC.SuppressFinalize(this);
         }
 
+        public T GetSerivce<T>()
+        {
+            try
+            {
+                return _container.Resolve<T>();
+            }
+            catch (Exception)
+            {
+                return default(T);
+            }
+        }
+
         ~UnityResolver()
         {
             Dispose(false);
@@ -33,18 +45,6 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             {
                 _container.Dispose();
                 _container = null;
-            }
-        }
-
-        public object GetService(Type serviceType)
-        {
-            try
-            {
-                return _container.Resolve(serviceType);
-            }
-            catch (Exception)
-            {
-                return null;
             }
         }
     }
