@@ -26,10 +26,12 @@
                 <ColumnDefinition Width="0.05*" />
             </Grid.ColumnDefinitions>
             <Grid x:Name="SearchBard" Column="1">
-                <TextBox HorizontalAlignment="Stretch"  />
+                <TextBox HorizontalAlignment="Stretch"
+                         Text="{Binding SearchTerm}" />
             </Grid>
             <Grid x:Name="SearchButton" Column="2">
-                <Button Content="Search" />
+                <Button Content="Search"
+                        Command="{Binding SearchCommand}"/>
             </Grid>
         </Grid>
         <Grid x:Name="AutoComplete" Row="2" />

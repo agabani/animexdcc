@@ -13,6 +13,9 @@
         <DataTemplate DataType="{x:Type search:EpisodeSearchViewModel}">
             <search:EpisodeSearchView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type search:EpisodeSearchResultsViewModel}">
+            <search:EpisodeSearchResultsView />
+        </DataTemplate>
     </Window.Resources>
     <Grid x:Name="MainContent">
         <ContentControl Content="{Binding CurrentViewModel}" />

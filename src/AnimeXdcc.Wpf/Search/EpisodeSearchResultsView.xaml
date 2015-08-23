@@ -16,7 +16,8 @@
             <TextBlock Text="Episode"
                        HorizontalAlignment="Center"
                        FontFamily="{DynamicResource HeaderFontFamily}"
-                       FontSize="20" />
+                       FontSize="20"
+                       Margin="13"/>
         </Grid>
         <Grid x:Name="SearchBar" Row="1">
             <Grid.ColumnDefinitions>
@@ -26,7 +27,7 @@
                 <ColumnDefinition Width="0.05*" />
             </Grid.ColumnDefinitions>
             <Grid Column="1">
-                <TextBox HorizontalAlignment="Stretch" />
+                <TextBox HorizontalAlignment="Stretch" Text="{Binding SearchTerm}" />
             </Grid>
             <Grid Column="2">
                 <Button Content="Search" />

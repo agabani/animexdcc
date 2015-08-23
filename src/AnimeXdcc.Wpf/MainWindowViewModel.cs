@@ -1,4 +1,5 @@
-﻿using AnimeXdcc.Wpf.Infrastructure.Bindable;
+﻿using System;
+using AnimeXdcc.Wpf.Infrastructure.Bindable;
 using AnimeXdcc.Wpf.Infrastructure.DependencyInjection;
 using AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity;
 using AnimeXdcc.Wpf.Infrastructure.Relay;
@@ -10,6 +11,7 @@ namespace AnimeXdcc.Wpf
     {
         private readonly IDependencyResolver _dependencyResolver = new UnityFactory().Create();
         private readonly EpisodeSearchViewModel _episodeSearchViewModel;
+        private readonly EpisodeSearchResultsViewModel _episodeSearchResultsViewModel;
         private BindableBase _currentViewModel;
 
         public MainWindowViewModel()
@@ -17,8 +19,17 @@ namespace AnimeXdcc.Wpf
             NavigationCommand = new RelayCommand<string>(OnNavigation);
 
             _episodeSearchViewModel = _dependencyResolver.GetSerivce<EpisodeSearchViewModel>();
+            _episodeSearchResultsViewModel = new EpisodeSearchResultsViewModel();
+
+            _episodeSearchViewModel.SearchRequested += OnSearchRequested;
 
             _currentViewModel = _episodeSearchViewModel;
+        }
+
+        private void OnSearchRequested(string searchTerm)
+        {
+            _episodeSearchResultsViewModel.SearchTerm = searchTerm;
+            CurrentViewModel = _episodeSearchResultsViewModel;
         }
 
         public BindableBase CurrentViewModel
