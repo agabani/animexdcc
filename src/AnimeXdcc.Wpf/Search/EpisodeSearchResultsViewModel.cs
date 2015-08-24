@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using AnimeXdcc.Wpf.Infrastructure.Bindable;
 using AnimeXdcc.Wpf.Infrastructure.Relay;
@@ -18,6 +19,7 @@ namespace AnimeXdcc.Wpf.Search
             _searchListing = new ObservableCollection<Package>();
 
             SearchCommand = new RelayCommand(SearchAsync);
+            DownloadCommand = new RelayCommand<Package>(Download);
         }
 
         public string SearchTerm
@@ -37,10 +39,19 @@ namespace AnimeXdcc.Wpf.Search
         }
 
         public RelayCommand SearchCommand { get; private set; }
+        public RelayCommand<Package> DownloadCommand { get; private set; }
 
         private async void SearchAsync()
         {
-            SearchListing = new ObservableCollection<Package>((await _intelService.SearchAsync(SearchTerm)).Take(5).ToArray());
+            SearchListing =
+                new ObservableCollection<Package>((await _intelService.SearchAsync(SearchTerm)).Take(5).ToArray());
         }
+
+        private void Download(Package package)
+        {
+            DownloadRequested(package);
+        }
+
+        public event Action<Package> DownloadRequested = delegate { };
     }
 }

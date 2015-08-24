@@ -44,16 +44,36 @@
                 <ItemsControl ItemsSource="{Binding SearchListing}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="10">
-                                <TextBlock Text="{Binding FileName}"
-                                           FontFamily="{DynamicResource HeaderFontFamily}"
-                                           FontSize="15" />
-                            </Grid>
+                            <Button Margin="10"
+                                    BorderBrush="Black"
+                                    BorderThickness="0"
+                                    Command="{Binding DataContext.DownloadCommand, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}"
+                                    CommandParameter="{Binding}">
+                                <Grid HorizontalAlignment="Left">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Row="0">
+                                        <TextBlock Text="{Binding FileName}"
+                                                   FontFamily="{DynamicResource HeaderFontFamily}"
+                                                   FontSize="15"
+                                                   TextWrapping="Wrap" />
+                                    </Grid>
+                                    <Grid Row="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="File Size: "
+                                                       FontFamily="{DynamicResource ContentFontFamily}" />
+                                            <TextBlock Text="{Binding FileSize}"
+                                                       FontFamily="{DynamicResource ContentFontFamily}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </Grid>
         </Grid>
     </Grid>
-
 </UserControl>

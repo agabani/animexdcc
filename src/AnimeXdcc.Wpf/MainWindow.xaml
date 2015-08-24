@@ -3,9 +3,14 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       xmlns:local="clr-namespace:AnimeXdcc.Wpf"
+                      xmlns:download="clr-namespace:AnimeXdcc.Wpf.Download"
                       xmlns:search="clr-namespace:AnimeXdcc.Wpf.Search"
-                      Title="AnimeXdcc" Height="350" Width="525" TitleCaps="False"
-                      GlowBrush="{StaticResource AccentColorBrush}">
+                      Title="AnimeXdcc"
+                      Height="600" Width="400"
+                      ResizeMode="NoResize"
+                      TitleCaps="False"
+                      GlowBrush="Black"
+                      BorderThickness="0">
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>
@@ -15,6 +20,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type search:EpisodeSearchResultsViewModel}">
             <search:EpisodeSearchResultsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type download:DownloadEpisodeViewModel}">
+            <download:DownloadEpisodeView />
         </DataTemplate>
     </Window.Resources>
     <Grid x:Name="MainContent">

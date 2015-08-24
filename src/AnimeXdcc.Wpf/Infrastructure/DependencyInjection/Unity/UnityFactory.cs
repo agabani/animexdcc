@@ -1,6 +1,7 @@
 ﻿using System;
 using AnimeXdcc.Core.Logging;
 using AnimeXdcc.Core.Logging.Trace;
+using AnimeXdcc.Wpf.Download;
 using AnimeXdcc.Wpf.Search;
 using AnimeXdcc.Wpf.Services;
 using Intel.Haruhichan.ApiClient.Clients;
@@ -47,6 +48,8 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
             unityContainer.RegisterType<EpisodeSearchResultsViewModel, EpisodeSearchResultsViewModel>(
                 new InjectionConstructor(unityContainer.Resolve<IIntelService>()));
+
+            unityContainer.RegisterType<DownloadEpisodeViewModel, DownloadEpisodeViewModel>();
         }
     }
 }

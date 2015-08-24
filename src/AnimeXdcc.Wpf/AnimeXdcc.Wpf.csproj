@@ -69,6 +69,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Download\DownloadEpisodeView.xaml.cs">
+      <DependentUpon>DownloadEpisodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Download\DownloadEpisodeViewModel.cs" />
     <Compile Include="Search\EpisodeSearchResultsView.xaml.cs">
       <DependentUpon>EpisodeSearchResultsView.xaml</DependentUpon>
     </Compile>
@@ -79,6 +83,10 @@
     <Compile Include="Search\EpisodeSearchViewModel.cs" />
     <Compile Include="Services\IIntelService.cs" />
     <Compile Include="Services\IntelService.cs" />
+    <Page Include="Download\DownloadEpisodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

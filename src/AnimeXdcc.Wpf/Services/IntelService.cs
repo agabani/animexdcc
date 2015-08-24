@@ -27,7 +27,10 @@ namespace AnimeXdcc.Wpf.Services
                 var file = grouping.OrderByDescending(f => f.Requested).First();
                 result.Add(new Package
                 {
-                    FileName = file.FileName.Replace("\r", "")
+                    BotName = file.BotName,
+                    FileName = file.FileName.Replace("\r", ""),
+                    FileSize = file.Size,
+                    Id = file.Requested
                 });
             }
 
@@ -37,6 +40,9 @@ namespace AnimeXdcc.Wpf.Services
 
     internal class Package
     {
+        public string BotName { get; set; }
         public string FileName { get; set; }
+        public string FileSize { get; set; }
+        public int Id { get; set; }
     }
 }
