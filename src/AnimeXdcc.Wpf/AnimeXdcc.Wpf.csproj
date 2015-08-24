@@ -73,6 +73,7 @@
       <DependentUpon>DownloadEpisodeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Download\DownloadEpisodeViewModel.cs" />
+    <Compile Include="Infrastructure\Input\InputBindingManager.cs" />
     <Compile Include="Search\EpisodeSearchResultsView.xaml.cs">
       <DependentUpon>EpisodeSearchResultsView.xaml</DependentUpon>
     </Compile>
@@ -81,6 +82,8 @@
       <DependentUpon>EpisodeSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Search\EpisodeSearchViewModel.cs" />
+    <Compile Include="Services\AnimeXdccService.cs" />
+    <Compile Include="Services\IAnimeXdccService.cs" />
     <Compile Include="Services\IIntelService.cs" />
     <Compile Include="Services\IntelService.cs" />
     <Page Include="Download\DownloadEpisodeView.xaml">

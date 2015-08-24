@@ -1,4 +1,5 @@
 ﻿using System;
+using AnimeXdcc.Core;
 using AnimeXdcc.Core.Logging;
 using AnimeXdcc.Core.Logging.Trace;
 using AnimeXdcc.Wpf.Download;
@@ -17,6 +18,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
             RegisterLogger(unityContainer);
             RegisterIntel(unityContainer);
+            RegisterDownload(unityContainer);
             RegisterViewModels(unityContainer);
 
             return new UnityResolver(unityContainer);
@@ -39,6 +41,15 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
             unityContainer.RegisterType<IIntelService, IntelService>(new ContainerControlledLifetimeManager(),
                 new InjectionConstructor(unityContainer.Resolve<IIntelHttpClient>()));
+        }
+
+        private void RegisterDownload(UnityContainer unityContainer)
+        {
+            unityContainer.RegisterType<IAnimeXdccClient, AnimeXdccClient>(
+                new InjectionConstructor("irc.rizon.net", 6667, "speech"));
+
+            unityContainer.RegisterType<IAnimeXdccService, AnimeXdccService>(
+                new InjectionConstructor(unityContainer.Resolve<IAnimeXdccClient>()));
         }
 
         private static void RegisterViewModels(IUnityContainer unityContainer)

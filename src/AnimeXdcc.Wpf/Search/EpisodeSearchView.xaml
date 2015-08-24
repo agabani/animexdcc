@@ -25,13 +25,15 @@
                 <ColumnDefinition Width="0.15*" />
                 <ColumnDefinition Width="0.05*" />
             </Grid.ColumnDefinitions>
-            <Grid x:Name="SearchBard" Column="1">
-                <TextBox HorizontalAlignment="Stretch"
-                         Text="{Binding SearchTerm}" />
+            <Grid x:Name="SearchBar" Column="1">
+                <TextBox Name="SearchBarTextBox"
+                         HorizontalAlignment="Stretch"
+                         Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
             <Grid x:Name="SearchButton" Column="2">
                 <Button Content="Search"
-                        Command="{Binding SearchCommand}"/>
+                        Command="{Binding SearchCommand}"
+                        IsDefault="{Binding ElementName=SearchBarTextBox, Path=IsKeyboardFocused}"/>
             </Grid>
         </Grid>
         <Grid x:Name="AutoComplete" Row="2" />

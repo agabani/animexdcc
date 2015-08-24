@@ -30,7 +30,7 @@ namespace AnimeXdcc.Wpf.Services
                     BotName = file.BotName,
                     FileName = file.FileName.Replace("\r", ""),
                     FileSize = file.Size,
-                    Id = file.Requested
+                    Id = file.PackageNumber
                 });
             }
 
