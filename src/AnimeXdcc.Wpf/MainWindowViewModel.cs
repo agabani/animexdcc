@@ -19,7 +19,7 @@ namespace AnimeXdcc.Wpf
             NavigationCommand = new RelayCommand<string>(OnNavigation);
 
             _episodeSearchViewModel = _dependencyResolver.GetSerivce<EpisodeSearchViewModel>();
-            _episodeSearchResultsViewModel = new EpisodeSearchResultsViewModel();
+            _episodeSearchResultsViewModel = _dependencyResolver.GetSerivce<EpisodeSearchResultsViewModel>();
 
             _episodeSearchViewModel.SearchRequested += OnSearchRequested;
 

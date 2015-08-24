@@ -44,6 +44,9 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
         {
             unityContainer.RegisterType<EpisodeSearchViewModel, EpisodeSearchViewModel>(
                 new InjectionConstructor(unityContainer.Resolve<IIntelService>()));
+
+            unityContainer.RegisterType<EpisodeSearchResultsViewModel, EpisodeSearchResultsViewModel>(
+                new InjectionConstructor(unityContainer.Resolve<IIntelService>()));
         }
     }
 }
