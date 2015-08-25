@@ -33,6 +33,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid Row="0">
                 <ProgressBar Value="{Binding DownloadProgress.PercentageComplete}" />
@@ -42,6 +43,9 @@
                     <TextBlock Text="{Binding DownloadProgress.PercentageComplete}" />
                     <TextBlock Text="%" />
                 </StackPanel>
+            </Grid>
+            <Grid Row="2">
+                <TextBlock></TextBlock>
             </Grid>
         </Grid>
     </Grid>

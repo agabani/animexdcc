@@ -1,5 +1,5 @@
-﻿using System;
-using AnimeXdcc.Wpf.Infrastructure.Bindable;
+﻿using AnimeXdcc.Wpf.Infrastructure.Bindable;
+using AnimeXdcc.Wpf.Models;
 using AnimeXdcc.Wpf.Services;
 
 namespace AnimeXdcc.Wpf.Download
@@ -7,9 +7,7 @@ namespace AnimeXdcc.Wpf.Download
     internal class DownloadEpisodeViewModel : BindableBase
     {
         private readonly IAnimeXdccService _animeXdccService;
-
         private DownloadProgress _downloadProgress = new DownloadProgress();
-
         private Package _package;
 
         public DownloadEpisodeViewModel(IAnimeXdccService animeXdccService)
@@ -17,11 +15,6 @@ namespace AnimeXdcc.Wpf.Download
             _animeXdccService = animeXdccService;
 
             _animeXdccService.DownloadProgressEvent += OnDownloadProgressEvent;
-        }
-
-        private void OnDownloadProgressEvent(object sender, DownloadProgress downloadProgress)
-        {
-            DownloadProgress = downloadProgress;
         }
 
         public Package Package
@@ -40,11 +33,14 @@ namespace AnimeXdcc.Wpf.Download
             set { SetProperty(ref _downloadProgress, value); }
         }
 
+        private void OnDownloadProgressEvent(object sender, DownloadProgress downloadProgress)
+        {
+            DownloadProgress = downloadProgress;
+        }
+
         public async void DownloadAsync()
         {
             await _animeXdccService.DownloadAsync(Package.BotName, Package.Id);
         }
     }
-
-    
 }

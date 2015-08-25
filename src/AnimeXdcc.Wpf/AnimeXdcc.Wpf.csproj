@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Search\EpisodeSearchViewModel.cs" />
     <Compile Include="Services\AnimeXdccService.cs" />
+    <Compile Include="Models\DownloadProgress.cs" />
     <Compile Include="Services\IAnimeXdccService.cs" />
     <Compile Include="Services\IIntelService.cs" />
     <Compile Include="Services\IntelService.cs" />

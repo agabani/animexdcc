@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AnimeXdcc.Core;
 using AnimeXdcc.Core.Dcc.Models;
+using AnimeXdcc.Wpf.Models;
 
 namespace AnimeXdcc.Wpf.Services
 {
@@ -21,6 +22,8 @@ namespace AnimeXdcc.Wpf.Services
             OnTransferStatusEvent(Calculate(result));
         }
 
+        public event EventHandler<DownloadProgress> DownloadProgressEvent;
+
         private void OnTransferStatusEvent(object sender, DccTransferStatus dccTransferStatus)
         {
             var progress = Calculate(dccTransferStatus);
@@ -29,29 +32,36 @@ namespace AnimeXdcc.Wpf.Services
 
         private DownloadProgress Calculate(DccTransferStatus status)
         {
+            var totalBytes = status.FileSize;
+
+            var downloadedBytes = status.DownloadedBytes;
+
+            var transferSpeed = (long)(status.BytesPerMillisecond * 1000);
+
+            var remainingBytes = status.FileSize - status.DownloadedBytes;
+
+            var percentageComplete = (int)(status.DownloadedBytes * 100 / status.FileSize);
+
+            var timeElapsed = new TimeSpan(0, 0, 0, (int)status.ElapsedTime);
+
+            var timeRemaining = new TimeSpan(0, 0, 0,(int)(remainingBytes / transferSpeed));
+
             return new DownloadProgress
             {
-                PercentageComplete = (int)(status.DownloadedBytes * 100 / status.FileSize)
+                PercentageComplete = percentageComplete,
+                TimeElapsed = timeElapsed,
+                TimeRemaining = timeRemaining,
+                RemainingBytes = remainingBytes,
+                TotalBytes = totalBytes,
+                TransferedBytes = downloadedBytes,
+                TransferSpeed = transferSpeed
             };
         }
-
-        public event EventHandler<DownloadProgress> DownloadProgressEvent;
 
         protected virtual void OnTransferStatusEvent(DownloadProgress e)
         {
             var handler = DownloadProgressEvent;
             if (handler != null) handler(this, e);
         }
-    }
-
-    internal class DownloadProgress
-    {
-        public int PercentageComplete { get; set; }
-        public string TimeRemaining { get; set; }
-        public string TimeElapsed { get; set; }
-        public string TransferSpeed { get; set; }
-        public string TransferedBytes { get; set; }
-        public string RemainingBytes { get; set; }
-        public string TotalBytes { get; set; }
     }
 }

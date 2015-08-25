@@ -1,5 +1,7 @@
 ﻿using System;
 using AnimeXdcc.Core;
+using AnimeXdcc.Core.Components.HumanReadable;
+using AnimeXdcc.Core.Components.UserName;
 using AnimeXdcc.Core.Logging;
 using AnimeXdcc.Core.Logging.Trace;
 using AnimeXdcc.Wpf.Download;
@@ -17,6 +19,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             var unityContainer = new UnityContainer();
 
             RegisterLogger(unityContainer);
+            RegisterUtilities(unityContainer);
             RegisterIntel(unityContainer);
             RegisterDownload(unityContainer);
             RegisterViewModels(unityContainer);
@@ -29,6 +32,12 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             unityContainer.RegisterType<ILogger, TraceLogger>(
                 new ContainerControlledLifetimeManager(),
                 new InjectionConstructor(TraceLogger.Level.Debug));
+        }
+
+        private void RegisterUtilities(UnityContainer unityContainer)
+        {
+            unityContainer.RegisterType<IUserNameGenerator, UserNameGenerator>();
+            unityContainer.RegisterType<IBytesConvertor, BytesConvertor>();
         }
 
         public static void RegisterIntel(IUnityContainer unityContainer)
@@ -46,7 +55,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
         private void RegisterDownload(UnityContainer unityContainer)
         {
             unityContainer.RegisterType<IAnimeXdccClient, AnimeXdccClient>(
-                new InjectionConstructor("irc.rizon.net", 6667, "speech"));
+                new InjectionConstructor("irc.rizon.net", 6667, unityContainer.Resolve<IUserNameGenerator>().Create(10)));
 
             unityContainer.RegisterType<IAnimeXdccService, AnimeXdccService>(
                 new InjectionConstructor(unityContainer.Resolve<IAnimeXdccClient>()));
