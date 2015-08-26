@@ -1,5 +1,5 @@
-﻿using System;
-using AnimeXdcc.Wpf.Download;
+﻿using AnimeXdcc.Wpf.Download;
+using AnimeXdcc.Wpf.General;
 using AnimeXdcc.Wpf.Infrastructure.Bindable;
 using AnimeXdcc.Wpf.Infrastructure.DependencyInjection;
 using AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity;
@@ -12,23 +12,26 @@ namespace AnimeXdcc.Wpf
     internal class MainWindowViewModel : BindableBase
     {
         private readonly IDependencyResolver _dependencyResolver = new UnityFactory().Create();
-        private readonly EpisodeSearchViewModel _episodeSearchViewModel;
-        private readonly EpisodeSearchResultsViewModel _episodeSearchResultsViewModel;
         private readonly DownloadEpisodeViewModel _downloadEpisodeViewModel;
+        private readonly EpisodeSearchResultsViewModel _episodeSearchResultsViewModel;
+        private readonly EpisodeSearchViewModel _episodeSearchViewModel;
+        private readonly HomeViewModel _homeViewModel;
         private BindableBase _currentViewModel;
 
         public MainWindowViewModel()
         {
             NavigationCommand = new RelayCommand<string>(OnNavigation);
 
+            _homeViewModel = _dependencyResolver.GetSerivce<HomeViewModel>();
             _episodeSearchViewModel = _dependencyResolver.GetSerivce<EpisodeSearchViewModel>();
             _episodeSearchResultsViewModel = _dependencyResolver.GetSerivce<EpisodeSearchResultsViewModel>();
             _downloadEpisodeViewModel = _dependencyResolver.GetSerivce<DownloadEpisodeViewModel>();
 
+            _homeViewModel.EpisodeNavigationRequested += () => OnNavigation("SearchEpisode");
             _episodeSearchViewModel.SearchRequested += OnSearchRequested;
             _episodeSearchResultsViewModel.DownloadRequested += OnDownloadRequested;
 
-            _currentViewModel = _episodeSearchViewModel;
+            CurrentViewModel = _homeViewModel;
         }
 
         public BindableBase CurrentViewModel
@@ -43,8 +46,14 @@ namespace AnimeXdcc.Wpf
         {
             switch (destination)
             {
-                default:
+                case "Home":
+                    CurrentViewModel = _homeViewModel;
+                    break;
+                case "SearchEpisode":
                     CurrentViewModel = _episodeSearchViewModel;
+                    break;
+                default:
+                    CurrentViewModel = _homeViewModel;
                     break;
             }
         }

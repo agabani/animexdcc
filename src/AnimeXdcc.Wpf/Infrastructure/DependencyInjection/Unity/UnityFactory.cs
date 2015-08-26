@@ -5,6 +5,7 @@ using AnimeXdcc.Core.Components.UserName;
 using AnimeXdcc.Core.Logging;
 using AnimeXdcc.Core.Logging.Trace;
 using AnimeXdcc.Wpf.Download;
+using AnimeXdcc.Wpf.General;
 using AnimeXdcc.Wpf.Search;
 using AnimeXdcc.Wpf.Services;
 using Intel.Haruhichan.ApiClient.Clients;
@@ -63,6 +64,8 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
         private static void RegisterViewModels(IUnityContainer unityContainer)
         {
+            unityContainer.RegisterType<HomeViewModel, HomeViewModel>();
+
             unityContainer.RegisterType<EpisodeSearchViewModel, EpisodeSearchViewModel>(
                 new InjectionConstructor(unityContainer.Resolve<IIntelService>()));
 

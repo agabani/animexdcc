@@ -2,11 +2,12 @@
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:general="clr-namespace:AnimeXdcc.Wpf.General"
                       xmlns:local="clr-namespace:AnimeXdcc.Wpf"
                       xmlns:download="clr-namespace:AnimeXdcc.Wpf.Download"
                       xmlns:search="clr-namespace:AnimeXdcc.Wpf.Search"
                       Title="AnimeXdcc"
-                      Height="600" Width="400"
+                      Width="600" Height="400"
                       ResizeMode="NoResize"
                       TitleCaps="False"
                       GlowBrush="Black"
@@ -15,6 +16,9 @@
         <local:MainWindowViewModel />
     </Window.DataContext>
     <Window.Resources>
+        <DataTemplate DataType="{x:Type general:HomeViewModel}">
+            <general:HomeView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type search:EpisodeSearchViewModel}">
             <search:EpisodeSearchView />
         </DataTemplate>
@@ -25,7 +29,31 @@
             <download:DownloadEpisodeView />
         </DataTemplate>
     </Window.Resources>
-    <Grid x:Name="MainContent">
-        <ContentControl Content="{Binding CurrentViewModel}" />
+    <Grid x:Name="MainWindowGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="NavigationBar">
+            <StackPanel Orientation="Vertical">
+                <Button Style="{DynamicResource {x:Type Button}}"
+                        Command="{Binding NavigationCommand}"
+                        CommandParameter="Home">
+                    <StaticResource ResourceKey="HomeButton" />
+                </Button>
+                <Button IsEnabled="False">
+                    <StaticResource ResourceKey="DownloadButton"></StaticResource>
+                </Button>
+                <Button IsEnabled="False">
+                    <StaticResource ResourceKey="SettingButton"></StaticResource>
+                </Button>
+                <Button IsEnabled="False">
+                    <StaticResource ResourceKey="AboutButton"></StaticResource>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="MainContent" Column="1">
+            <ContentControl Content="{Binding CurrentViewModel}" />
+        </Grid>
     </Grid>
 </controls:MetroWindow>
