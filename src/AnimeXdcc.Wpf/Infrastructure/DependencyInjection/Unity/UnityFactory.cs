@@ -66,6 +66,8 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
         {
             unityContainer.RegisterType<HomeViewModel, HomeViewModel>();
 
+            unityContainer.RegisterType<AboutViewModel, AboutViewModel>();
+
             unityContainer.RegisterType<EpisodeSearchViewModel, EpisodeSearchViewModel>(
                 new InjectionConstructor(unityContainer.Resolve<IIntelService>()));
 

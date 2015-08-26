@@ -16,6 +16,7 @@ namespace AnimeXdcc.Wpf
         private readonly EpisodeSearchResultsViewModel _episodeSearchResultsViewModel;
         private readonly EpisodeSearchViewModel _episodeSearchViewModel;
         private readonly HomeViewModel _homeViewModel;
+        private readonly AboutViewModel _aboutViewModel;
         private BindableBase _currentViewModel;
 
         public MainWindowViewModel()
@@ -23,6 +24,7 @@ namespace AnimeXdcc.Wpf
             NavigationCommand = new RelayCommand<string>(OnNavigation);
 
             _homeViewModel = _dependencyResolver.GetSerivce<HomeViewModel>();
+            _aboutViewModel = _dependencyResolver.GetSerivce<AboutViewModel>();
             _episodeSearchViewModel = _dependencyResolver.GetSerivce<EpisodeSearchViewModel>();
             _episodeSearchResultsViewModel = _dependencyResolver.GetSerivce<EpisodeSearchResultsViewModel>();
             _downloadEpisodeViewModel = _dependencyResolver.GetSerivce<DownloadEpisodeViewModel>();
@@ -48,6 +50,12 @@ namespace AnimeXdcc.Wpf
             {
                 case "Home":
                     CurrentViewModel = _homeViewModel;
+                    break;
+                case "About":
+                    CurrentViewModel = _aboutViewModel;
+                    break;
+                case "Download":
+                    CurrentViewModel = _downloadEpisodeViewModel;
                     break;
                 case "SearchEpisode":
                     CurrentViewModel = _episodeSearchViewModel;

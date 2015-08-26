@@ -19,6 +19,9 @@
         <DataTemplate DataType="{x:Type general:HomeViewModel}">
             <general:HomeView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type general:AboutViewModel}">
+            <general:AboutView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type search:EpisodeSearchViewModel}">
             <search:EpisodeSearchView />
         </DataTemplate>
@@ -41,14 +44,16 @@
                         CommandParameter="Home">
                     <StaticResource ResourceKey="HomeButton" />
                 </Button>
-                <Button IsEnabled="False">
-                    <StaticResource ResourceKey="DownloadButton"></StaticResource>
+                <Button Command="{Binding NavigationCommand}"
+                        CommandParameter="Download">
+                    <StaticResource ResourceKey="DownloadButton" />
                 </Button>
                 <Button IsEnabled="False">
-                    <StaticResource ResourceKey="SettingButton"></StaticResource>
+                    <StaticResource ResourceKey="SettingButton" />
                 </Button>
-                <Button IsEnabled="False">
-                    <StaticResource ResourceKey="AboutButton"></StaticResource>
+                <Button Command="{Binding NavigationCommand}"
+                        CommandParameter="About">
+                    <StaticResource ResourceKey="AboutButton" />
                 </Button>
             </StackPanel>
         </Grid>

@@ -73,6 +73,10 @@
       <DependentUpon>DownloadEpisodeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Download\DownloadEpisodeViewModel.cs" />
+    <Compile Include="General\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="General\AboutViewModel.cs" />
     <Compile Include="General\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
@@ -91,6 +95,10 @@
     <Compile Include="Services\IAnimeXdccService.cs" />
     <Compile Include="Services\IIntelService.cs" />
     <Compile Include="Services\IntelService.cs" />
+    <Page Include="General\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="General\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
