@@ -44,7 +44,7 @@ namespace AnimeXdcc.Wpf.Search
         private async void SearchAsync()
         {
             SearchListing =
-                new ObservableCollection<Package>((await _intelService.SearchAsync(SearchTerm)).Take(5).ToArray());
+                new ObservableCollection<Package>((await _intelService.SearchAsync(SearchTerm)).ToArray());
         }
 
         private void Download(Package package)
