@@ -45,8 +45,11 @@
     <Compile Include="Components\Filters\Builders\RegexPatternBuilder.cs" />
     <Compile Include="Components\Filters\Builders\SearchTermBuilder.cs" />
     <Compile Include="Components\Filters\RegexService.cs" />
+    <Compile Include="Components\HumanReadable\BytesConvertor.cs" />
+    <Compile Include="Components\HumanReadable\IBytesConvertor.cs" />
     <Compile Include="Components\Publishers\Download\DccDownloadStatusPublisher.cs" />
     <Compile Include="Components\Publishers\Download\IDownloadStatusPublisher.cs" />
+    <Compile Include="Components\UserName\IUserNameGenerator.cs" />
     <Compile Include="Components\Versions\Models\SoftwareVersion.cs" />
     <Compile Include="Dcc\Clients\IXdccDccClient.cs" />
     <Compile Include="Dcc\Clients\XdccDccClient.cs" />
@@ -72,10 +75,12 @@
     <Compile Include="SystemWrappers\Timer\ITimer.cs" />
     <Compile Include="SystemWrappers\Stopwatch\StopwatchWrapper.cs" />
     <Compile Include="SystemWrappers\Timer\TimerWrapper.cs" />
+    <Compile Include="Components\UserName\UsernameGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

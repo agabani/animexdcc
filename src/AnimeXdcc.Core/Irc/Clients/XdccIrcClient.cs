@@ -97,6 +97,12 @@ namespace AnimeXdcc.Core.Irc.Clients
         {
             var joinedChannel = false;
 
+            if (_standardIrcClient.Channels.Any(c => c.Name == channel) &&
+                _standardIrcClient.Channels.First(c => c.Name == channel).Users.Any(u => u.User.NickName == _standardIrcClient.LocalUser.NickName))
+            {
+                return;
+            }
+
             _standardIrcClient.LocalUser.JoinedChannel += (sender, args) =>
             {
                 if (channel.Equals(args.Channel.Name, StringComparison.OrdinalIgnoreCase))

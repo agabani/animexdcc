@@ -9,5 +9,7 @@ namespace AnimeXdcc.Core
     {
         Task<DccTransferStatus> DownloadPackageAsync(string target, int packageId,
             CancellationToken cancellationToken = default(CancellationToken));
+
+        event EventHandler<DccTransferStatus> TransferStatusEvent;
     }
 }
