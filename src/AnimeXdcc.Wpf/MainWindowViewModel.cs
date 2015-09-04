@@ -14,7 +14,6 @@ namespace AnimeXdcc.Wpf
         private readonly IDependencyResolver _dependencyResolver = new UnityFactory().Create();
         private readonly DownloadEpisodeViewModel _downloadEpisodeViewModel;
         private readonly EpisodeSearchResultsViewModel _episodeSearchResultsViewModel;
-        private readonly EpisodeSearchViewModel _episodeSearchViewModel;
         private readonly HomeViewModel _homeViewModel;
         private readonly AboutViewModel _aboutViewModel;
         private BindableBase _currentViewModel;
@@ -25,12 +24,10 @@ namespace AnimeXdcc.Wpf
 
             _homeViewModel = _dependencyResolver.GetSerivce<HomeViewModel>();
             _aboutViewModel = _dependencyResolver.GetSerivce<AboutViewModel>();
-            _episodeSearchViewModel = _dependencyResolver.GetSerivce<EpisodeSearchViewModel>();
             _episodeSearchResultsViewModel = _dependencyResolver.GetSerivce<EpisodeSearchResultsViewModel>();
             _downloadEpisodeViewModel = _dependencyResolver.GetSerivce<DownloadEpisodeViewModel>();
 
             _homeViewModel.EpisodeNavigationRequested += () => OnNavigation("SearchEpisode");
-            _episodeSearchViewModel.SearchRequested += OnSearchRequested;
             _episodeSearchResultsViewModel.DownloadRequested += OnDownloadRequested;
 
             CurrentViewModel = _homeViewModel;
@@ -58,7 +55,7 @@ namespace AnimeXdcc.Wpf
                     CurrentViewModel = _downloadEpisodeViewModel;
                     break;
                 case "SearchEpisode":
-                    CurrentViewModel = _episodeSearchViewModel;
+                    CurrentViewModel = _episodeSearchResultsViewModel;
                     break;
                 default:
                     CurrentViewModel = _homeViewModel;

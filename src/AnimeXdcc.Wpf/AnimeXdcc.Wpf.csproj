@@ -86,10 +86,6 @@
       <DependentUpon>EpisodeSearchResultsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Search\EpisodeSearchResultsViewModel.cs" />
-    <Compile Include="Search\EpisodeSearchView.xaml.cs">
-      <DependentUpon>EpisodeSearchView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Search\EpisodeSearchViewModel.cs" />
     <Compile Include="Services\AnimeXdccService.cs" />
     <Compile Include="Models\DownloadProgress.cs" />
     <Compile Include="Services\IAnimeXdccService.cs" />
@@ -130,10 +126,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Search\EpisodeSearchResultsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Search\EpisodeSearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
