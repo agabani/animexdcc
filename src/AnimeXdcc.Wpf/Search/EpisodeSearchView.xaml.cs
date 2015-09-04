@@ -3,9 +3,9 @@
     /// <summary>
     ///     Interaction logic for EpisodeSearchResultsView.xaml
     /// </summary>
-    public partial class EpisodeSearchResultsView
+    public partial class EpisodeSearchView
     {
-        public EpisodeSearchResultsView()
+        public EpisodeSearchView()
         {
             InitializeComponent();
         }

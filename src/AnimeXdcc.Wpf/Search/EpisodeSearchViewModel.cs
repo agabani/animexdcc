@@ -7,13 +7,13 @@ using AnimeXdcc.Wpf.Services;
 
 namespace AnimeXdcc.Wpf.Search
 {
-    internal class EpisodeSearchResultsViewModel : BindableBase
+    internal class EpisodeSearchViewModel : BindableBase
     {
         private readonly IIntelService _intelService;
         private ObservableCollection<Package> _searchListing;
         private string _searchTerm;
 
-        public EpisodeSearchResultsViewModel(IIntelService intelService)
+        public EpisodeSearchViewModel(IIntelService intelService)
         {
             _intelService = intelService;
             _searchListing = new ObservableCollection<Package>();
