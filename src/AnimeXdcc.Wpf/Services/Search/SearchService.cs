@@ -46,14 +46,17 @@ namespace AnimeXdcc.Wpf.Services.Search
         private static List<DccSearchResults> GroupResults(IEnumerable<DccPackage> packages)
         {
             return packages
-                .GroupBy(f => Uniform(f.FileName))
-                .Select(g =>
+                .GroupBy(file => Uniform(file.FileName))
+                .Select(group =>
                     new DccSearchResults(
-                        Sanitize(g.First().FileName),
-                        g.First().FileSize,
-                        g.GroupBy(p => new {p.BotName, p.PackageId}).Select(p => p.First()).ToList()
-                        )
-                ).ToList();
+                        Sanitize(group.First().FileName),
+                        group.First().FileSize,
+                        group
+                            .GroupBy(p => new {p.BotName, p.PackageId})
+                            .Select(p => p.First())
+                            .OrderByDescending(p => p.Requested)
+                            .ToList()
+                        )).ToList();
         }
 
         private static string Sanitize(string text)
@@ -67,19 +70,5 @@ namespace AnimeXdcc.Wpf.Services.Search
         {
             return Sanitize(text).ToUpper();
         }
-    }
-
-    public class DccSearchResults
-    {
-        public DccSearchResults(string fileName, string fileSize, List<DccPackage> dccPackages)
-        {
-            FileName = fileName;
-            FileSize = fileSize;
-            DccPackages = dccPackages;
-        }
-
-        public string FileName { get; private set; }
-        public string FileSize { get; private set; }
-        public List<DccPackage> DccPackages { get; private set; }
     }
 }

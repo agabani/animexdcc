@@ -92,7 +92,9 @@
     <Compile Include="Services\IIntelService.cs" />
     <Compile Include="Services\IntelService.cs" />
     <Compile Include="Models\DccPackage.cs" />
+    <Compile Include="Models\DccSearchResults.cs" />
     <Compile Include="Services\Search\ISearchable.cs" />
+    <Compile Include="Services\Search\Searchable\IntelSearchable.cs" />
     <Compile Include="Services\Search\SearchService.cs" />
     <Page Include="General\AboutView.xaml">
       <SubType>Designer</SubType>
