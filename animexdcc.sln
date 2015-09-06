@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9788634B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Wpf", "src\AnimeXdcc.Wpf\AnimeXdcc.Wpf.csproj", "{ED53487C-8B3A-4DDF-8652-4121327C052C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeXdcc.Wpf.Tests.Unit", "src\AnimeXdcc.Wpf.Tests.Unit\AnimeXdcc.Wpf.Tests.Unit.csproj", "{7C80A25B-FD97-490F-9947-940F19851E60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{ED53487C-8B3A-4DDF-8652-4121327C052C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED53487C-8B3A-4DDF-8652-4121327C052C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED53487C-8B3A-4DDF-8652-4121327C052C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C80A25B-FD97-490F-9947-940F19851E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C80A25B-FD97-490F-9947-940F19851E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C80A25B-FD97-490F-9947-940F19851E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C80A25B-FD97-490F-9947-940F19851E60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,5 +80,6 @@ Global
 		{50214FA2-CD23-4304-B77C-900C745F8AFA} = {9788634B-F1B7-493D-8605-B5BA1135178E}
 		{CA40044B-A4A9-4360-905A-24D3060F4B99} = {9788634B-F1B7-493D-8605-B5BA1135178E}
 		{ED53487C-8B3A-4DDF-8652-4121327C052C} = {208FE7C0-3E74-4DDF-92C7-D70E90A3AF7A}
+		{7C80A25B-FD97-490F-9947-940F19851E60} = {9788634B-F1B7-493D-8605-B5BA1135178E}
 	EndGlobalSection
 EndGlobal
