@@ -67,5 +67,40 @@ namespace AnimeXdcc.Wpf.Tests.Unit.Services.Search.Searchable
             Assert.That(packages.Any(b => b.PackageId == 2));
             Assert.That(packages.Any(b => b.PackageId == 3));
         }
+
+        [Test]
+        public async Task Should_map_intel_results_to_generic_results()
+        {
+            var mock = new Mock<IIntelHttpClient>();
+
+            mock
+                .Setup(m => m.SearchAsync("term", new CancellationToken()))
+                .ReturnsAsync(
+                    new Intel.Haruhichan.ApiClient.Models.Search
+                    {
+                        Error = false,
+                        Files = new List<File>
+                        {
+                            new File
+                            {
+                                BotId = 1,
+                                BotName = "bot name",
+                                FileName = "file name",
+                                PackageNumber = 2,
+                                Requested = 3,
+                                Size = "1M"
+                            }
+                        }
+                    }
+                );
+
+            var package = (await new IntelSearchable(mock.Object).SearchAsync("term")).First();
+
+            Assert.That(package.BotName, Is.EqualTo("bot name"));
+            Assert.That(package.FileName, Is.EqualTo("file name"));
+            Assert.That(package.FileSize, Is.EqualTo("1M"));
+            Assert.That(package.PackageId, Is.EqualTo(2));
+            Assert.That(package.Requested, Is.EqualTo(3));
+        }
     }
 }
