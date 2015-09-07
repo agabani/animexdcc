@@ -8,6 +8,14 @@ namespace AnimeXdcc.Core.Irc.Clients
 {
     public class XdccIrcClient : IXdccIrcClient
     {
+        public enum IrcFailureKind
+        {
+            None,
+            TaskCancelled,
+            ServerNotFound,
+            SourceNotFound
+        }
+
         private readonly string _hostname;
         private readonly string _nickname;
         private readonly int _port;
@@ -29,13 +37,42 @@ namespace AnimeXdcc.Core.Irc.Clients
         public async Task<string> RequestPackageAsync(string target, int packageId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            await ConnectAsync(cancellationToken);
+            var connectResult = await ConnectAsync(cancellationToken);
 
-            var channel = await FindTargetChannel(target, cancellationToken);
-            await JoinChannel(channel, cancellationToken);
+            if (!connectResult.Successful)
+            {
+                return null;
+            }
 
-            await RequestPackageTransfer(target, packageId, cancellationToken);
-            return await RecievePackageTransfer(target, cancellationToken);
+            var channelResult = await FindTargetChannel(target, cancellationToken);
+
+            if (!channelResult.Successful)
+            {
+                return null;
+            }
+
+            var joinResult = await JoinChannel(channelResult.Result, cancellationToken);
+
+            if (!joinResult.Successful)
+            {
+                return null;
+            }
+
+            var requestResult = await RequestPackageTransfer(target, packageId, cancellationToken);
+
+            if (!requestResult.Successful)
+            {
+                return null;
+            }
+
+            var recieveResult = await RecievePackageTransfer(target, cancellationToken);
+
+            if (!recieveResult.Successful)
+            {
+                return null;
+            }
+
+            return recieveResult.Result;
         }
 
         ~XdccIrcClient()
@@ -55,11 +92,11 @@ namespace AnimeXdcc.Core.Irc.Clients
             }
         }
 
-        private async Task ConnectAsync(CancellationToken cancellationToken)
+        private async Task<IrcResult> ConnectAsync(CancellationToken token)
         {
             if (_standardIrcClient.IsRegistered)
             {
-                return;
+                return new IrcResult(true, string.Format("{0}:{1}", _hostname, _port));
             }
 
             _standardIrcClient.Connect(_hostname, _port, false, new IrcUserRegistrationInfo
@@ -70,92 +107,153 @@ namespace AnimeXdcc.Core.Irc.Clients
                 UserName = _nickname
             });
 
-            while (!_standardIrcClient.IsRegistered && !cancellationToken.IsCancellationRequested)
+            while (!_standardIrcClient.IsRegistered && !token.IsCancellationRequested)
             {
-                await Delay(cancellationToken);
+                await Delay(token);
             }
+
+            if (_standardIrcClient.IsRegistered == false)
+            {
+                return new IrcResult(false, null, IrcFailureKind.ServerNotFound);
+            }
+
+            if (token.IsCancellationRequested)
+            {
+                return new IrcResult(false, null, IrcFailureKind.TaskCancelled);
+            }
+
+            return new IrcResult(true, string.Format("{0}:{1}", _hostname, _port));
         }
 
-        private async Task<string> FindTargetChannel(string target, CancellationToken cancellationToken)
+        private async Task<IrcResult> FindTargetChannel(string target, CancellationToken token)
         {
-            string channel = null;
+            IrcResult result = null;
 
             _standardIrcClient.WhoIsReplyReceived +=
-                (sender, args) => { channel = args.User.Client.Channels.First().Name; };
+                (sender, args) =>
+                {
+                    var ircChannel = args.User.Client.Channels.FirstOrDefault();
+
+                    result = ircChannel == null
+                        ? new IrcResult(false, target, IrcFailureKind.SourceNotFound)
+                        : new IrcResult(true, ircChannel.Name);
+                };
 
             _standardIrcClient.QueryWhoIs(target);
 
-            while (channel == null && !cancellationToken.IsCancellationRequested)
+            while (result == null && !token.IsCancellationRequested)
             {
-                await Delay(cancellationToken);
+                await Delay(token);
             }
 
-            return channel;
+            if (token.IsCancellationRequested)
+            {
+                return new IrcResult(false, target, IrcFailureKind.TaskCancelled);
+            }
+
+            return result;
         }
 
-        private async Task JoinChannel(string channel, CancellationToken cancellationToken)
+        private async Task<IrcResult> JoinChannel(string channel, CancellationToken token)
         {
-            var joinedChannel = false;
+            IrcResult result = null;
 
             if (_standardIrcClient.Channels.Any(c => c.Name == channel) &&
-                _standardIrcClient.Channels.First(c => c.Name == channel).Users.Any(u => u.User.NickName == _standardIrcClient.LocalUser.NickName))
+                _standardIrcClient.Channels.First(c => c.Name == channel)
+                    .Users.Any(u => u.User.NickName == _standardIrcClient.LocalUser.NickName))
             {
-                return;
+                return new IrcResult(true, channel);
             }
 
             _standardIrcClient.LocalUser.JoinedChannel += (sender, args) =>
             {
                 if (channel.Equals(args.Channel.Name, StringComparison.OrdinalIgnoreCase))
                 {
-                    joinedChannel = true;
+                    result = new IrcResult(true, channel);
                 }
             };
 
             _standardIrcClient.Channels.Join(channel);
 
-            while (!joinedChannel && !cancellationToken.IsCancellationRequested)
+            while (result == null && !token.IsCancellationRequested)
             {
-                await Delay(cancellationToken);
+                await Delay(token);
             }
+
+            if (token.IsCancellationRequested)
+            {
+                return new IrcResult(false, channel, IrcFailureKind.TaskCancelled);
+            }
+
+            return new IrcResult(true, channel);
         }
 
-        private async Task RequestPackageTransfer(string target, int packageId, CancellationToken cancellationToken)
+        private async Task<IrcResult> RequestPackageTransfer(string target, int packageId, CancellationToken token)
         {
-            var privateMessageSent = false;
+            IrcResult result = null;
 
-            _standardIrcClient.LocalUser.MessageSent += (sender, args) => { privateMessageSent = true; };
+            _standardIrcClient.LocalUser.MessageSent += (sender, args) =>
+            {
+                result = new IrcResult(true, string.Format("{0} {1}", target, packageId));
+            };
 
             _standardIrcClient.LocalUser.SendMessage(target, string.Format("XDCC SEND #{0}", packageId));
 
-            while (!privateMessageSent && !cancellationToken.IsCancellationRequested)
+            while (result == null && !token.IsCancellationRequested)
             {
-                await Delay(cancellationToken);
+                await Delay(token);
             }
+
+            if (token.IsCancellationRequested)
+            {
+                return new IrcResult(false, string.Format("{0} {1}", target, packageId), IrcFailureKind.TaskCancelled);
+            }
+
+            return result;
         }
 
-        private async Task<string> RecievePackageTransfer(string target, CancellationToken cancellationToken)
+        private async Task<IrcResult> RecievePackageTransfer(string target, CancellationToken token)
         {
-            string messageReceived = null;
+            IrcResult result = null;
 
             _standardIrcClient.LocalUser.MessageReceived += (sender, args) =>
             {
                 if (args.Source.Name.Equals(target, StringComparison.OrdinalIgnoreCase))
                 {
-                    messageReceived = args.Text;
+                    result = new IrcResult(true, args.Text);
                 }
             };
 
-            while (messageReceived == null && !cancellationToken.IsCancellationRequested)
+            while (result == null && !token.IsCancellationRequested)
             {
-                await Delay(cancellationToken);
+                await Delay(token);
             }
 
-            return messageReceived;
+            if (token.IsCancellationRequested)
+            {
+                return new IrcResult(false, target, IrcFailureKind.TaskCancelled);
+            }
+
+            return result;
         }
 
         private static Task Delay(CancellationToken cancellationToken)
         {
             return Task.Delay(100, cancellationToken);
+        }
+
+        public class IrcResult
+        {
+            public IrcResult(bool successful, string result, IrcFailureKind failureKind = IrcFailureKind.None)
+            {
+                Successful = successful;
+                Result = result;
+                FailureKind = failureKind;
+            }
+
+            public bool Successful { get; private set; }
+            public string Result { get; private set; }
+            public IrcFailureKind FailureKind { get; private set; }
         }
     }
 }

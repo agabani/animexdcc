@@ -88,6 +88,9 @@
     <Compile Include="Search\SearchEpisodeViewModel.cs" />
     <Compile Include="Services\AnimeXdccService.cs" />
     <Compile Include="Models\DownloadProgress.cs" />
+    <Compile Include="Services\Download\DownloadClient.cs" />
+    <Compile Include="Services\Download\DownloadService.cs" />
+    <Compile Include="Services\Download\IDownloadClient.cs" />
     <Compile Include="Services\IAnimeXdccService.cs" />
     <Compile Include="Models\DccPackage.cs" />
     <Compile Include="Models\DccSearchResults.cs" />
