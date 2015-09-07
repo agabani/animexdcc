@@ -20,7 +20,7 @@ namespace AnimeXdcc.Wpf.Services.Search.Searchable
         {
             var search = await _intel.SearchAsync(searchTerm, token);
 
-            return search.Files.Select(p => new DccPackage(p.FileName, p.BotName, p.BotId, p.Size, p.Requested)).ToList();
+            return search.Files.Select(p => new DccPackage(p.FileName, p.BotName, p.PackageNumber, p.Size, p.Requested)).ToList();
         }
     }
 }

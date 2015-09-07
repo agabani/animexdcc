@@ -53,9 +53,6 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
                 new ContainerControlledLifetimeManager(),
                 new InjectionConstructor(unityContainer.Resolve<Uri>("intel"), unityContainer.Resolve<ILogger>()));
 
-            unityContainer.RegisterType<IIntelService, IntelService>(new ContainerControlledLifetimeManager(),
-                new InjectionConstructor(unityContainer.Resolve<IIntelHttpClient>()));
-
             unityContainer.RegisterType<ISearchable, IntelSearchable>("intel",
                 new InjectionConstructor(unityContainer.Resolve<IIntelHttpClient>()));
         }
@@ -80,9 +77,6 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             unityContainer.RegisterType<HomeViewModel, HomeViewModel>();
 
             unityContainer.RegisterType<AboutViewModel, AboutViewModel>();
-
-            unityContainer.RegisterType<EpisodeSearchViewModel, EpisodeSearchViewModel>(
-                new InjectionConstructor(unityContainer.Resolve<IIntelService>()));
 
             unityContainer.RegisterType<SearchEpisodeViewModel, SearchEpisodeViewModel>(
                 new InjectionConstructor(unityContainer.Resolve<ISearchService>()));

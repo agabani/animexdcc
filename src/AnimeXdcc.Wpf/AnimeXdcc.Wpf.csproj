@@ -82,10 +82,6 @@
     </Compile>
     <Compile Include="General\HomeViewModel.cs" />
     <Compile Include="Infrastructure\Input\InputBindingManager.cs" />
-    <Compile Include="Search\EpisodeSearchView.xaml.cs">
-      <DependentUpon>EpisodeSearchView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Search\EpisodeSearchViewModel.cs" />
     <Compile Include="Search\SearchEpisodeView.xaml.cs">
       <DependentUpon>SearchEpisodeView.xaml</DependentUpon>
     </Compile>
@@ -93,10 +89,9 @@
     <Compile Include="Services\AnimeXdccService.cs" />
     <Compile Include="Models\DownloadProgress.cs" />
     <Compile Include="Services\IAnimeXdccService.cs" />
-    <Compile Include="Services\IIntelService.cs" />
-    <Compile Include="Services\IntelService.cs" />
     <Compile Include="Models\DccPackage.cs" />
     <Compile Include="Models\DccSearchResults.cs" />
+    <Compile Include="Models\Package.cs" />
     <Compile Include="Services\Search\ISearchable.cs" />
     <Compile Include="Services\Search\ISearchService.cs" />
     <Compile Include="Services\Search\Searchable\IntelSearchable.cs" />
@@ -135,10 +130,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Search\EpisodeSearchView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Search\SearchEpisodeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
