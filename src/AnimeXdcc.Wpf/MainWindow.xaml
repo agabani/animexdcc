@@ -23,8 +23,8 @@
         <DataTemplate DataType="{x:Type general:AboutViewModel}">
             <general:AboutView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type search:EpisodeSearchViewModel}">
-            <search:EpisodeSearchView />
+        <DataTemplate DataType="{x:Type search:SearchEpisodeViewModel}">
+            <search:SearchEpisodeView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type download:DownloadEpisodeViewModel}">
             <download:DownloadEpisodeView />

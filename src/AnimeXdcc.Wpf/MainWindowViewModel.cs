@@ -1,9 +1,11 @@
-﻿using AnimeXdcc.Wpf.Download;
+﻿using System.Linq;
+using AnimeXdcc.Wpf.Download;
 using AnimeXdcc.Wpf.General;
 using AnimeXdcc.Wpf.Infrastructure.Bindable;
 using AnimeXdcc.Wpf.Infrastructure.DependencyInjection;
 using AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity;
 using AnimeXdcc.Wpf.Infrastructure.Relay;
+using AnimeXdcc.Wpf.Models;
 using AnimeXdcc.Wpf.Search;
 using AnimeXdcc.Wpf.Services;
 
@@ -13,7 +15,7 @@ namespace AnimeXdcc.Wpf
     {
         private readonly IDependencyResolver _dependencyResolver = new UnityFactory().Create();
         private readonly DownloadEpisodeViewModel _downloadEpisodeViewModel;
-        private readonly EpisodeSearchViewModel _episodeSearchResultsViewModel;
+        private readonly SearchEpisodeViewModel _searchEpisodeViewModel;
         private readonly HomeViewModel _homeViewModel;
         private readonly AboutViewModel _aboutViewModel;
         private BindableBase _currentViewModel;
@@ -24,11 +26,11 @@ namespace AnimeXdcc.Wpf
 
             _homeViewModel = _dependencyResolver.GetSerivce<HomeViewModel>();
             _aboutViewModel = _dependencyResolver.GetSerivce<AboutViewModel>();
-            _episodeSearchResultsViewModel = _dependencyResolver.GetSerivce<EpisodeSearchViewModel>();
             _downloadEpisodeViewModel = _dependencyResolver.GetSerivce<DownloadEpisodeViewModel>();
+            _searchEpisodeViewModel = _dependencyResolver.GetSerivce<SearchEpisodeViewModel>();
 
             _homeViewModel.EpisodeNavigationRequested += () => OnNavigation("SearchEpisode");
-            _episodeSearchResultsViewModel.DownloadRequested += OnDownloadRequested;
+            _searchEpisodeViewModel.DownloadRequested += OnDownloadRequested;
 
             CurrentViewModel = _homeViewModel;
         }
@@ -55,7 +57,7 @@ namespace AnimeXdcc.Wpf
                     CurrentViewModel = _downloadEpisodeViewModel;
                     break;
                 case "SearchEpisode":
-                    CurrentViewModel = _episodeSearchResultsViewModel;
+                    CurrentViewModel = _searchEpisodeViewModel;
                     break;
                 default:
                     CurrentViewModel = _homeViewModel;
@@ -63,15 +65,15 @@ namespace AnimeXdcc.Wpf
             }
         }
 
-        private void OnSearchRequested(string searchTerm)
+        private void OnDownloadRequested(DccSearchResults package)
         {
-            _episodeSearchResultsViewModel.SearchTerm = searchTerm;
-            CurrentViewModel = _episodeSearchResultsViewModel;
-        }
+            var dccPackage = package.DccPackages.First();
 
-        private void OnDownloadRequested(Package package)
-        {
-            _downloadEpisodeViewModel.Package = package;
+            _downloadEpisodeViewModel.Package = new Package
+            {
+                BotName = dccPackage.BotName, FileName = dccPackage.FileName, FileSize = dccPackage.FileSize, Id = dccPackage.PackageId
+            };
+
             CurrentViewModel = _downloadEpisodeViewModel;
         }
     }

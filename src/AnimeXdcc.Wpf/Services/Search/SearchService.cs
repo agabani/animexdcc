@@ -7,7 +7,7 @@ using AnimeXdcc.Wpf.Models;
 
 namespace AnimeXdcc.Wpf.Services.Search
 {
-    public class SearchService
+    public class SearchService : ISearchService
     {
         private readonly List<ISearchable> _searchables;
 

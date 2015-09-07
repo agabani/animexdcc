@@ -86,6 +86,10 @@
       <DependentUpon>EpisodeSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Search\EpisodeSearchViewModel.cs" />
+    <Compile Include="Search\SearchEpisodeView.xaml.cs">
+      <DependentUpon>SearchEpisodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Search\SearchEpisodeViewModel.cs" />
     <Compile Include="Services\AnimeXdccService.cs" />
     <Compile Include="Models\DownloadProgress.cs" />
     <Compile Include="Services\IAnimeXdccService.cs" />
@@ -94,6 +98,7 @@
     <Compile Include="Models\DccPackage.cs" />
     <Compile Include="Models\DccSearchResults.cs" />
     <Compile Include="Services\Search\ISearchable.cs" />
+    <Compile Include="Services\Search\ISearchService.cs" />
     <Compile Include="Services\Search\Searchable\IntelSearchable.cs" />
     <Compile Include="Services\Search\SearchService.cs" />
     <Page Include="General\AboutView.xaml">
@@ -133,6 +138,10 @@
     <Page Include="Search\EpisodeSearchView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Search\SearchEpisodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
