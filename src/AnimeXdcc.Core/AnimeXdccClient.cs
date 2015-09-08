@@ -85,7 +85,7 @@ namespace AnimeXdcc.Core
 
         private async Task<string> RequestPackageAsync(string target, int packageId, CancellationToken cancellationToken)
         {
-            return await _xdccIrcClient.RequestPackageAsync(target, packageId, cancellationToken);
+            return (await _xdccIrcClient.RequestPackageAsync(target, packageId, cancellationToken)).Result;
         }
 
         protected virtual void OnTransferStatusEvent(DccTransferStatus e)

@@ -6,6 +6,6 @@ namespace AnimeXdcc.Core.Irc.Clients
 {
     public interface IXdccIrcClient : IDisposable
     {
-        Task<string> RequestPackageAsync(string target, int packageId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<XdccIrcClient.IrcResult> RequestPackageAsync(string botName, int packageId, CancellationToken token = default(CancellationToken));
     }
 }

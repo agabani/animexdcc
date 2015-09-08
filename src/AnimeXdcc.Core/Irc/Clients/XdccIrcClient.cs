@@ -34,45 +34,44 @@ namespace AnimeXdcc.Core.Irc.Clients
             GC.SuppressFinalize(this);
         }
 
-        public async Task<string> RequestPackageAsync(string target, int packageId,
-            CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IrcResult> RequestPackageAsync(string botName, int packageId, CancellationToken token = default(CancellationToken))
         {
-            var connectResult = await ConnectAsync(cancellationToken);
+            var connectResult = await ConnectAsync(token);
 
             if (!connectResult.Successful)
             {
                 return null;
             }
 
-            var channelResult = await FindTargetChannel(target, cancellationToken);
+            var channelResult = await FindTargetChannel(botName, token);
 
             if (!channelResult.Successful)
             {
                 return null;
             }
 
-            var joinResult = await JoinChannel(channelResult.Result, cancellationToken);
+            var joinResult = await JoinChannel(channelResult.Result, token);
 
             if (!joinResult.Successful)
             {
                 return null;
             }
 
-            var requestResult = await RequestPackageTransfer(target, packageId, cancellationToken);
+            var requestResult = await RequestPackageTransfer(botName, packageId, token);
 
             if (!requestResult.Successful)
             {
                 return null;
             }
 
-            var recieveResult = await RecievePackageTransfer(target, cancellationToken);
+            var recieveResult = await RecievePackageTransfer(botName, token);
 
             if (!recieveResult.Successful)
             {
                 return null;
             }
 
-            return recieveResult.Result;
+            return recieveResult;
         }
 
         ~XdccIrcClient()

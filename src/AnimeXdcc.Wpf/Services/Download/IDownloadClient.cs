@@ -5,6 +5,6 @@ namespace AnimeXdcc.Wpf.Services.Download
 {
     public interface IDownloadClient
     {
-        Task<DownloadClient.DownloadResult> DownloadAsync(DccPackage dccPackage);
+        Task<DownloadClient.DownloadResult> DownloadAsync(DccPackage package);
     }
 }

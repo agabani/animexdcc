@@ -7,16 +7,38 @@ namespace AnimeXdcc.Wpf.Services.Download
 {
     public class DownloadClient : IDownloadClient
     {
-        private XdccIrcClient _ircClient;
+        public enum DownloadFailureKind
+        {
+            None,
+            ServerNotAvailable,
+            SourceNotAvailable,
+            DownloadTerminated
+        }
 
-        public DownloadClient(XdccIrcClient ircClient)
+        private readonly IXdccIrcClient _ircClient;
+
+        public DownloadClient(IXdccIrcClient ircClient)
         {
             _ircClient = ircClient;
         }
 
-        public Task<DownloadResult> DownloadAsync(DccPackage dccPackage)
+        public async Task<DownloadResult> DownloadAsync(DccPackage package)
         {
-            throw new NotImplementedException();
+            var ircResult = await _ircClient.RequestPackageAsync(package.BotName, package.PackageId);
+
+            switch (ircResult.FailureKind)
+            {
+                case XdccIrcClient.IrcFailureKind.None:
+                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.None);
+                case XdccIrcClient.IrcFailureKind.TaskCancelled:
+                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.DownloadTerminated);
+                case XdccIrcClient.IrcFailureKind.ServerNotFound:
+                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.ServerNotAvailable);
+                case XdccIrcClient.IrcFailureKind.SourceNotFound:
+                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.SourceNotAvailable);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public class DownloadResult
@@ -29,13 +51,6 @@ namespace AnimeXdcc.Wpf.Services.Download
 
             internal bool Successful { get; private set; }
             internal DownloadFailureKind Failure { get; private set; }
-        }
-
-        public enum DownloadFailureKind
-        {
-            ServerNotAvailable,
-            SourceNotAvailable,
-            DownloadTerminated
         }
     }
 }
