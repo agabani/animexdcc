@@ -38,6 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Dcc\DccTransferTests.cs" />
     <Compile Include="Components\Dcc\XdccDccClientTest.cs" />
     <Compile Include="Components\Files\FileServiceTests.cs" />
     <Compile Include="Components\Irc\XdccIrcClientTest.cs" />

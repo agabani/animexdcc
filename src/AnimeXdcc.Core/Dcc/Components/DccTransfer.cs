@@ -1,51 +1,31 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Integration.Clients;
-using NUnit.Framework;
+using AnimeXdcc.Core.Dcc.Models;
 
-namespace Integration.Development
+namespace AnimeXdcc.Core.Dcc.Components
 {
-    [TestFixture]
-    public class DccTransferTests
-    {
-        [Test]
-        public async Task Should_transfer_file()
-        {
-            var integration = new IntegrationDccClient();
-
-            var inputFileStream = File.OpenRead(@"Data\17 - Nintendo - Mute City Ver. 3.mp3");
-
-            Task.Run(() => integration.Send(12345, inputFileStream, inputFileStream.Length)).GetAwaiter();
-
-            var outputFileStream = File.OpenWrite(@"output.mp3");
-
-            var dccTransfer = new DccTransfer("127.0.0.1", 12345);
-
-            dccTransfer.TransferBegun += (sender, args) => Console.WriteLine("Transfer Begun");
-            dccTransfer.TransferFailed += (sender, args) => Console.WriteLine("Transfer Failed");
-            dccTransfer.TransferComplete += (sender, args) => Console.WriteLine("Transfer Complete");
-            dccTransfer.TransferProgress += (sender, args) => Console.WriteLine("{0}/{1}", args.Transferred, args.Size);
-
-            await dccTransfer.Accept(outputFileStream, 0, inputFileStream.Length);
-        }
-    }
-
-    public class DccTransfer
+    public class DccTransfer : IDccTransfer
     {
         public delegate void DccTransferEventHandler(DccTransfer sender, EventArgs args);
 
         public delegate void DccTransferProgressEventHandler(DccTransfer sender, DccTransferProgressEventArgs args);
 
-        private readonly TcpClient _client;
         private readonly byte[] _recvBuffer = new byte[1024];
+        private TcpClient _client;
         private byte[] _sendBuffer;
 
         public DccTransfer(string hostname, int port)
         {
             _client = new TcpClient(hostname, port);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public async Task Accept(Stream stream, long offset, long size)
@@ -127,17 +107,22 @@ namespace Integration.Development
             var handler = TransferProgress;
             if (handler != null) handler(this, args);
         }
-    }
 
-    public class DccTransferProgressEventArgs : EventArgs
-    {
-        public DccTransferProgressEventArgs(long transferred, long size)
+        protected virtual void Dispose(bool disposing)
         {
-            Transferred = transferred;
-            Size = size;
+            if (disposing)
+            {
+                if (_client != null)
+                {
+                    _client.Close();
+                    _client = null;
+                }
+            }
         }
 
-        public long Transferred { get; private set; }
-        public long Size { get; private set; }
+        ~DccTransfer()
+        {
+            Dispose(false);
+        }
     }
 }
