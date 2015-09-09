@@ -38,6 +38,8 @@ namespace AnimeXdcc.Core.Irc.Clients
         {
             var connectResult = await ConnectAsync(token);
 
+            // TODO: change null results to actual results...
+
             if (!connectResult.Successful)
             {
                 return null;

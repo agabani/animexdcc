@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using AnimeXdcc.Core.Components.Files;
 using AnimeXdcc.Core.Dcc.Components;
+using AnimeXdcc.Core.Dcc.Models;
 using AnimeXdcc.Core.Irc.Clients;
 using AnimeXdcc.Core.Irc.DccMessage;
 using AnimeXdcc.Core.Utilities;
@@ -10,6 +12,8 @@ namespace AnimeXdcc.Wpf.Services.Download
 {
     public class DownloadClient : IDownloadClient
     {
+        public delegate void TransferProgressEventHandler(DccClient sender, DccClientTransferProgressEventArgs args);
+
         public enum DownloadFailureKind
         {
             None,
@@ -18,8 +22,8 @@ namespace AnimeXdcc.Wpf.Services.Download
             DownloadTerminated
         }
 
-        private readonly IXdccIrcClient _ircClient;
         private readonly IDccClient _dccClient;
+        private readonly IXdccIrcClient _ircClient;
 
         public DownloadClient(IXdccIrcClient ircClient, IDccClient dccClient)
         {
@@ -27,29 +31,71 @@ namespace AnimeXdcc.Wpf.Services.Download
             _dccClient = dccClient;
         }
 
-        public async Task<DownloadResult> DownloadAsync(DccPackage package/*, IStreamProvider provider*/)
+        public async Task<DownloadResult> DownloadAsync(DccPackage package, IStreamProvider provider)
         {
             var ircResult = await _ircClient.RequestPackageAsync(package.BotName, package.PackageId);
 
-            switch (ircResult.FailureKind)
+            if (!ircResult.Successful)
             {
-                case XdccIrcClient.IrcFailureKind.None:
-                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.None);
-                case XdccIrcClient.IrcFailureKind.TaskCancelled:
-                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.DownloadTerminated);
-                case XdccIrcClient.IrcFailureKind.ServerNotFound:
-                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.ServerNotAvailable);
-                case XdccIrcClient.IrcFailureKind.SourceNotFound:
-                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.SourceNotAvailable);
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (ircResult.FailureKind)
+                {
+                    case XdccIrcClient.IrcFailureKind.None:
+                        return new DownloadResult(ircResult.Successful, DownloadFailureKind.None);
+                    case XdccIrcClient.IrcFailureKind.TaskCancelled:
+                        return new DownloadResult(ircResult.Successful, DownloadFailureKind.DownloadTerminated);
+                    case XdccIrcClient.IrcFailureKind.ServerNotFound:
+                        return new DownloadResult(ircResult.Successful, DownloadFailureKind.ServerNotAvailable);
+                    case XdccIrcClient.IrcFailureKind.SourceNotFound:
+                        return new DownloadResult(ircResult.Successful, DownloadFailureKind.SourceNotAvailable);
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
-            var dccMessage = new DccMessageParser(new IpConverter()).Parse(ircResult.Result);
+            var message = new DccMessageParser(new IpConverter()).Parse(ircResult.Result);
 
-            //TODO: How to give location of where to save file...
+            DccTransferStatistic statistic = null;
 
-            //_dccClient.DownloadAsync(dccMessage.IpAddress, dccMessage.Port, dccMessage.FileSize, provider.GetStream(dccMessage.FileName) );
+            _dccClient.TransferProgress += (sender, args) =>
+            {
+                DccClientTransferProgressEventArgs a = args;
+                statistic = args.Statistic;
+            };
+
+            await _dccClient.DownloadAsync(
+                message.IpAddress,
+                message.Port,
+                message.FileSize,
+                provider.GetStream(package.FileName, StreamProvider.Strategy.Overwrite));
+
+            return CreateResult(statistic);
+        }
+
+        private static DownloadResult CreateResult(DccTransferStatistic statistic)
+        {
+            DownloadResult result;
+
+            if (statistic == null)
+            {
+                result = new DownloadResult(false, DownloadFailureKind.SourceNotAvailable);
+            }
+            else
+            {
+                if (statistic.BytesTransferred == statistic.FileSize)
+                {
+                    result = new DownloadResult(true, DownloadFailureKind.None);
+                }
+                else if (statistic.BytesTransferred > 0)
+                {
+                    result = new DownloadResult(false, DownloadFailureKind.DownloadTerminated);
+                }
+                else
+                {
+                    result = new DownloadResult(false, DownloadFailureKind.SourceNotAvailable);
+                }
+            }
+
+            return result;
         }
 
         public class DownloadResult

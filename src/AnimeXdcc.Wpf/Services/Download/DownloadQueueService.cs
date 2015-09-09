@@ -7,13 +7,13 @@ namespace AnimeXdcc.Wpf.Services.Download
     public class DownloadQueueService
     {
         private readonly List<DownloadJob> _activeDownloads;
-        private readonly IDownloadClient _client;
+        private readonly IDownloadService _service;
         private readonly Queue<DownloadJob> _queuedDownloads;
         private bool _processing;
 
-        public DownloadQueueService(IDownloadClient client)
+        public DownloadQueueService(IDownloadService service)
         {
-            _client = client;
+            _service = service;
             _processing = false;
             _activeDownloads = new List<DownloadJob>();
             _queuedDownloads = new Queue<DownloadJob>();
@@ -64,7 +64,7 @@ namespace AnimeXdcc.Wpf.Services.Download
 
             foreach (var package in sources)
             {
-                var result = await _client.DownloadAsync(package);
+                var result = await _service.DownloadAsync(package);
 
                 if (result.Successful)
                 {

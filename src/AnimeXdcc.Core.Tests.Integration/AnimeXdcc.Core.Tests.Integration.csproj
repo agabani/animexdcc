@@ -41,6 +41,7 @@
     <Compile Include="Components\Dcc\DccTransferTests.cs" />
     <Compile Include="Components\Dcc\XdccDccClientTest.cs" />
     <Compile Include="Components\Files\FileServiceTests.cs" />
+    <Compile Include="Components\Files\StreamProviderTests.cs" />
     <Compile Include="Components\Irc\XdccIrcClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration.cs" />

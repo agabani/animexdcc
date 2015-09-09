@@ -19,18 +19,18 @@ namespace AnimeXdcc.Core.Dcc.Components
             RemoteHostNotReachable
         }
 
-        private readonly IDccTransferFactory _factory;
+        private readonly IDccTransferFactory _transferFactory;
         private readonly IDccTransferStatistics _statistics;
         private readonly IStopwatch _stopwatch;
         private readonly ITimer _timer;
         private long _bytesTransferred;
 
-        public DccClient(ITimer timer, IStopwatch stopwatch, IDccTransferFactory factory,
+        public DccClient(ITimer timer, IStopwatch stopwatch, IDccTransferFactory transferFactory,
             IDccTransferStatistics statistics)
         {
             _timer = timer;
             _stopwatch = stopwatch;
-            _factory = factory;
+            _transferFactory = transferFactory;
             _statistics = statistics;
 
             _timer.Elapsed += TimerOnElapsed;
@@ -38,14 +38,15 @@ namespace AnimeXdcc.Core.Dcc.Components
 
         public async Task DownloadAsync(string hostname, int port, long size, Stream stream)
         {
-            var dccTransfer = _factory.Create(hostname, port);
+            using (var dccTransfer = _transferFactory.Create(hostname, port))
+            {
+                dccTransfer.TransferBegun += DccTransferOnTransferBegun;
+                dccTransfer.TransferFailed += DccTransferOnTransferFailed;
+                dccTransfer.TransferComplete += DccTransferOnTransferComplete;
+                dccTransfer.TransferProgress += DccTransferOnTransferProgress;
 
-            dccTransfer.TransferBegun += DccTransferOnTransferBegun;
-            dccTransfer.TransferFailed += DccTransferOnTransferFailed;
-            dccTransfer.TransferComplete += DccTransferOnTransferComplete;
-            dccTransfer.TransferProgress += DccTransferOnTransferProgress;
-
-            await dccTransfer.Accept(stream, 0, size);
+                await dccTransfer.Accept(stream, 0, size);
+            }
         }
 
         public event TransferProgressEventHandler TransferProgress;

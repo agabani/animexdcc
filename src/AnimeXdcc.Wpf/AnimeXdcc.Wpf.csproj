@@ -92,7 +92,7 @@
     <Compile Include="Services\Download\DownloadQueueService.cs" />
     <Compile Include="Services\Download\DownloadService.cs" />
     <Compile Include="Services\Download\IDownloadClient.cs" />
-    <Compile Include="Services\Download\IStreamProvider.cs" />
+    <Compile Include="Services\Download\IDownloadService.cs" />
     <Compile Include="Services\IAnimeXdccService.cs" />
     <Compile Include="Models\DccPackage.cs" />
     <Compile Include="Models\DccSearchResults.cs" />

@@ -40,7 +40,9 @@
     <Compile Include="AnimeXdccClient.cs" />
     <Compile Include="Components\FilesManager\FilesManagerService.cs" />
     <Compile Include="Components\FilesManager\IFilesManagerService.cs" />
+    <Compile Include="Components\Files\IStreamProvider.cs" />
     <Compile Include="Components\Files\Services\IFileService.cs" />
+    <Compile Include="Components\Files\StreamProvider.cs" />
     <Compile Include="Components\Filters\Builders\IEpisodeBuilder.cs" />
     <Compile Include="Components\Filters\Builders\RegexPatternBuilder.cs" />
     <Compile Include="Components\Filters\Builders\SearchTermBuilder.cs" />
