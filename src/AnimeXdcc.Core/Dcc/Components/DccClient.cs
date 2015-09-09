@@ -7,8 +7,10 @@ using AnimeXdcc.Core.SystemWrappers.Timer;
 
 namespace AnimeXdcc.Core.Dcc.Components
 {
-    public class DccClient
+    public class DccClient : IDccClient
     {
+        public delegate void TransferProgressEventHandler(DccClient sender, DccClientTransferProgressEventArgs args);
+
         public enum DccFailureKind
         {
             None,
@@ -18,14 +20,20 @@ namespace AnimeXdcc.Core.Dcc.Components
         }
 
         private readonly IDccTransferFactory _factory;
+        private readonly IDccTransferStatistics _statistics;
         private readonly IStopwatch _stopwatch;
         private readonly ITimer _timer;
+        private long _bytesTransferred;
 
-        public DccClient(ITimer timer, IStopwatch stopwatch, IDccTransferFactory factory)
+        public DccClient(ITimer timer, IStopwatch stopwatch, IDccTransferFactory factory,
+            IDccTransferStatistics statistics)
         {
             _timer = timer;
             _stopwatch = stopwatch;
             _factory = factory;
+            _statistics = statistics;
+
+            _timer.Elapsed += TimerOnElapsed;
         }
 
         public async Task DownloadAsync(string hostname, int port, long size, Stream stream)
@@ -39,6 +47,8 @@ namespace AnimeXdcc.Core.Dcc.Components
 
             await dccTransfer.Accept(stream, 0, size);
         }
+
+        public event TransferProgressEventHandler TransferProgress;
 
         private void DccTransferOnTransferBegun(DccTransfer sender, EventArgs args)
         {
@@ -60,6 +70,19 @@ namespace AnimeXdcc.Core.Dcc.Components
 
         private void DccTransferOnTransferProgress(DccTransfer sender, DccTransferProgressEventArgs args)
         {
+            _bytesTransferred = args.Transferred;
+        }
+
+        private void TimerOnElapsed(object sender, TimeElapsedEventArgs timeElapsedEventArgs)
+        {
+            _statistics.AddDataSet(_bytesTransferred);
+            OnTransferProgress(new DccClientTransferProgressEventArgs(_statistics.GetStatistics()));
+        }
+
+        protected virtual void OnTransferProgress(DccClientTransferProgressEventArgs args)
+        {
+            var handler = TransferProgress;
+            if (handler != null) handler(this, args);
         }
 
         public class DccResult
@@ -72,37 +95,6 @@ namespace AnimeXdcc.Core.Dcc.Components
 
             public bool Successful { get; private set; }
             public DccFailureKind Failure { get; private set; }
-        }
-    }
-
-    public class DccTransferStatistics
-    {
-        private readonly long _fileSize;
-        private readonly long _interval;
-
-        public DccTransferStatistics(long fileSize, long interval)
-        {
-            _fileSize = fileSize;
-            _interval = interval;
-        }
-
-        public void AddDataSet(long transferred)
-        {
-        }
-
-        public void GetStatistics()
-        {
-        }
-
-        public class DccTransferStatistic
-        {
-            public long FileSize { get; private set; }
-            public long BytesTransferred { get; private set; }
-            public long BytesRemaining { get; private set; }
-            public long SecondsElapsed { get; private set; }
-            public long SecondsRemainging { get; private set; }
-            public double BytesPerSecond { get; private set; }
-            public double PercentageComplete { get; private set; }
         }
     }
 }

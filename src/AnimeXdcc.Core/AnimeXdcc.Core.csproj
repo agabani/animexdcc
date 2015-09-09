@@ -56,8 +56,13 @@
     <Compile Include="Dcc\Components\DccClient.cs" />
     <Compile Include="Dcc\Components\DccTransfer.cs" />
     <Compile Include="Dcc\Components\DccTransferFactory.cs" />
+    <Compile Include="Dcc\Models\DccTransferStatistic.cs" />
+    <Compile Include="Dcc\Components\DccTransferStatistics.cs" />
+    <Compile Include="Dcc\Components\IDccClient.cs" />
     <Compile Include="Dcc\Components\IDccTransfer.cs" />
     <Compile Include="Dcc\Components\IDccTransferFactory.cs" />
+    <Compile Include="Dcc\Components\IDccTransferStatistics.cs" />
+    <Compile Include="Dcc\Models\DccClientTransferProgressEventArgs.cs" />
     <Compile Include="Dcc\Models\DccTransferProgressEventArgs.cs" />
     <Compile Include="Dcc\Models\DccTransferStatus.cs" />
     <Compile Include="IAnimeXdccClient.cs" />

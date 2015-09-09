@@ -13,7 +13,6 @@ namespace AnimeXdcc.Wpf
 {
     internal class MainWindowViewModel : BindableBase
     {
-        private readonly IDependencyResolver _dependencyResolver = new UnityFactory().Create();
         private readonly DownloadEpisodeViewModel _downloadEpisodeViewModel;
         private readonly SearchEpisodeViewModel _searchEpisodeViewModel;
         private readonly HomeViewModel _homeViewModel;
@@ -22,12 +21,14 @@ namespace AnimeXdcc.Wpf
 
         public MainWindowViewModel()
         {
+            IDependencyResolver dependencyResolver = new UnityFactory().Create();
+
             NavigationCommand = new RelayCommand<string>(OnNavigation);
 
-            _homeViewModel = _dependencyResolver.GetSerivce<HomeViewModel>();
-            _aboutViewModel = _dependencyResolver.GetSerivce<AboutViewModel>();
-            _downloadEpisodeViewModel = _dependencyResolver.GetSerivce<DownloadEpisodeViewModel>();
-            _searchEpisodeViewModel = _dependencyResolver.GetSerivce<SearchEpisodeViewModel>();
+            _homeViewModel = dependencyResolver.GetSerivce<HomeViewModel>();
+            _aboutViewModel = dependencyResolver.GetSerivce<AboutViewModel>();
+            _downloadEpisodeViewModel = dependencyResolver.GetSerivce<DownloadEpisodeViewModel>();
+            _searchEpisodeViewModel = dependencyResolver.GetSerivce<SearchEpisodeViewModel>();
 
             _homeViewModel.EpisodeNavigationRequested += () => OnNavigation("SearchEpisode");
             _searchEpisodeViewModel.DownloadRequested += OnDownloadRequested;
