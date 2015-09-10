@@ -56,8 +56,10 @@
     <Compile Include="Dcc\Clients\IXdccDccClient.cs" />
     <Compile Include="Dcc\Clients\XdccDccClient.cs" />
     <Compile Include="Dcc\Components\DccClient.cs" />
+    <Compile Include="Dcc\Components\DccClientFactory.cs" />
     <Compile Include="Dcc\Components\DccTransfer.cs" />
     <Compile Include="Dcc\Components\DccTransferFactory.cs" />
+    <Compile Include="Dcc\Components\IDccClientFactory.cs" />
     <Compile Include="Dcc\Models\DccTransferStatistic.cs" />
     <Compile Include="Dcc\Components\DccTransferStatistics.cs" />
     <Compile Include="Dcc\Components\IDccClient.cs" />

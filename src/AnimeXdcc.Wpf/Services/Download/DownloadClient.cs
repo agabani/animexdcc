@@ -12,7 +12,7 @@ namespace AnimeXdcc.Wpf.Services.Download
 {
     public class DownloadClient : IDownloadClient
     {
-        public delegate void TransferProgressEventHandler(DccClient sender, DccClientTransferProgressEventArgs args);
+        public delegate void TransferProgressEventHandler(object sender, DccClientTransferProgressEventArgs args);
 
         public enum DownloadFailureKind
         {
@@ -22,13 +22,13 @@ namespace AnimeXdcc.Wpf.Services.Download
             DownloadTerminated
         }
 
-        private readonly IDccClient _dccClient;
+        private readonly IDccClientFactory _dccClientFactory;
         private readonly IXdccIrcClient _ircClient;
 
-        public DownloadClient(IXdccIrcClient ircClient, IDccClient dccClient)
+        public DownloadClient(IXdccIrcClient ircClient, IDccClientFactory dccClientFactory)
         {
             _ircClient = ircClient;
-            _dccClient = dccClient;
+            _dccClientFactory = dccClientFactory;
         }
 
         public async Task<DownloadResult> DownloadAsync(DccPackage package, IStreamProvider provider)
@@ -54,15 +54,17 @@ namespace AnimeXdcc.Wpf.Services.Download
 
             var message = new DccMessageParser(new IpConverter()).Parse(ircResult.Result);
 
+            var dccClient = _dccClientFactory.Create(message.FileSize);
+
             DccTransferStatistic statistic = null;
 
-            _dccClient.TransferProgress += (sender, args) =>
+            dccClient.TransferProgress += (sender, args) =>
             {
-                DccClientTransferProgressEventArgs a = args;
                 statistic = args.Statistic;
+                OnTransferProgress(args);
             };
 
-            await _dccClient.DownloadAsync(
+            await dccClient.DownloadAsync(
                 message.IpAddress,
                 message.Port,
                 message.FileSize,
@@ -70,6 +72,8 @@ namespace AnimeXdcc.Wpf.Services.Download
 
             return CreateResult(statistic);
         }
+
+        public event TransferProgressEventHandler TransferProgress;
 
         private static DownloadResult CreateResult(DccTransferStatistic statistic)
         {
@@ -98,6 +102,12 @@ namespace AnimeXdcc.Wpf.Services.Download
             return result;
         }
 
+        protected virtual void OnTransferProgress(DccClientTransferProgressEventArgs args)
+        {
+            var handler = TransferProgress;
+            if (handler != null) handler(this, args);
+        }
+
         public class DownloadResult
         {
             public DownloadResult(bool successful, DownloadFailureKind failure)
@@ -108,6 +118,21 @@ namespace AnimeXdcc.Wpf.Services.Download
 
             internal bool Successful { get; private set; }
             internal DownloadFailureKind Failure { get; private set; }
+        }
+    }
+
+    public class NotificationListener<T>
+    {
+        private Action<T> _action;
+
+        public NotificationListener(Action<T> action)
+        {
+            _action = action;
+        }
+
+        public void Notify()
+        {
+            
         }
     }
 }
