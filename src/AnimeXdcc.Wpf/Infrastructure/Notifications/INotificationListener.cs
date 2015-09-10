@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
+
 namespace AnimeXdcc.Wpf.Infrastructure.Notifications
 {
     public interface INotificationListener<in T>
     {
-        void Notify(T obj);
+        Task Notify(T obj);
     }
 }

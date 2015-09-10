@@ -1,19 +1,20 @@
 using System;
+using System.Threading.Tasks;
 
 namespace AnimeXdcc.Wpf.Infrastructure.Notifications
 {
     public class NotificationListener<T> : INotificationListener<T>
     {
-        private readonly Action<T> _action;
+        private readonly Func<T, Task> _executeAsync;
 
-        public NotificationListener(Action<T> action)
+        public NotificationListener(Func<T, Task> executeAsync)
         {
-            _action = action;
+            _executeAsync = executeAsync;
         }
 
-        public void Notify(T obj)
+        public Task Notify(T obj)
         {
-            _action(obj);
+            return _executeAsync(obj);
         }
     }
 }

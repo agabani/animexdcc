@@ -6,14 +6,13 @@ using AnimeXdcc.Core.Dcc.Models;
 using AnimeXdcc.Core.Irc.Clients;
 using AnimeXdcc.Core.Irc.DccMessage;
 using AnimeXdcc.Core.Utilities;
+using AnimeXdcc.Wpf.Infrastructure.Notifications;
 using AnimeXdcc.Wpf.Models;
 
 namespace AnimeXdcc.Wpf.Services.Download
 {
     public class DownloadClient : IDownloadClient
     {
-        public delegate void TransferProgressEventHandler(object sender, DccClientTransferProgressEventArgs args);
-
         public enum DownloadFailureKind
         {
             None,
@@ -31,7 +30,7 @@ namespace AnimeXdcc.Wpf.Services.Download
             _dccClientFactory = dccClientFactory;
         }
 
-        public async Task<DownloadResult> DownloadAsync(DccPackage package, IStreamProvider provider)
+        public async Task<DownloadResult> DownloadAsync(DccPackage package, IStreamProvider provider, INotificationListener<DccTransferStatistic> listener)
         {
             var ircResult = await _ircClient.RequestPackageAsync(package.BotName, package.PackageId);
 
@@ -61,7 +60,7 @@ namespace AnimeXdcc.Wpf.Services.Download
             dccClient.TransferProgress += (sender, args) =>
             {
                 statistic = args.Statistic;
-                OnTransferProgress(args);
+                listener.Notify(args.Statistic);
             };
 
             await dccClient.DownloadAsync(
@@ -72,8 +71,6 @@ namespace AnimeXdcc.Wpf.Services.Download
 
             return CreateResult(statistic);
         }
-
-        public event TransferProgressEventHandler TransferProgress;
 
         private static DownloadResult CreateResult(DccTransferStatistic statistic)
         {
@@ -102,12 +99,6 @@ namespace AnimeXdcc.Wpf.Services.Download
             return result;
         }
 
-        protected virtual void OnTransferProgress(DccClientTransferProgressEventArgs args)
-        {
-            var handler = TransferProgress;
-            if (handler != null) handler(this, args);
-        }
-
         public class DownloadResult
         {
             public DownloadResult(bool successful, DownloadFailureKind failure)
@@ -118,21 +109,6 @@ namespace AnimeXdcc.Wpf.Services.Download
 
             internal bool Successful { get; private set; }
             internal DownloadFailureKind Failure { get; private set; }
-        }
-    }
-
-    public class NotificationListener<T>
-    {
-        private Action<T> _action;
-
-        public NotificationListener(Action<T> action)
-        {
-            _action = action;
-        }
-
-        public void Notify()
-        {
-            
         }
     }
 }

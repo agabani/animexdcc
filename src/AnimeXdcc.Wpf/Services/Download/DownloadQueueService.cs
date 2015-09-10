@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AnimeXdcc.Core.Dcc.Models;
+using AnimeXdcc.Wpf.Infrastructure.Notifications;
 using AnimeXdcc.Wpf.Models;
 
 namespace AnimeXdcc.Wpf.Services.Download
 {
-    public class DownloadQueueService
+    public class DownloadQueueService : IDownloadQueueService
     {
         private readonly List<DownloadJob> _activeDownloads;
         private readonly IDownloadService _service;
@@ -19,9 +21,9 @@ namespace AnimeXdcc.Wpf.Services.Download
             _queuedDownloads = new Queue<DownloadJob>();
         }
 
-        public void AddToQueue(string fileName, List<DccPackage> sources)
+        public void AddToQueue(string fileName, List<DccPackage> sources, INotificationListener<DccTransferStatistic> listener)
         {
-            _queuedDownloads.Enqueue(new DownloadJob(fileName, sources));
+            _queuedDownloads.Enqueue(new DownloadJob(fileName, sources, listener));
             Process();
         }
 
@@ -64,7 +66,7 @@ namespace AnimeXdcc.Wpf.Services.Download
 
             foreach (var package in sources)
             {
-                var result = await _service.DownloadAsync(package);
+                var result = await _service.DownloadAsync(package, downloadJob.Listener);
 
                 if (result.Successful)
                 {
@@ -77,14 +79,16 @@ namespace AnimeXdcc.Wpf.Services.Download
 
         internal class DownloadJob
         {
-            internal DownloadJob(string fileName, List<DccPackage> dccPackageSources)
+            internal DownloadJob(string fileName, List<DccPackage> dccPackageSources, INotificationListener<DccTransferStatistic> listener)
             {
                 FileName = fileName;
                 DccPackageSources = dccPackageSources;
+                Listener = listener;
             }
 
             internal string FileName { get; private set; }
             internal List<DccPackage> DccPackageSources { get; private set; }
+            public INotificationListener<DccTransferStatistic> Listener { get; set; }
         }
     }
 }

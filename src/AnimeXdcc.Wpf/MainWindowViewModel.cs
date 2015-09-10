@@ -14,6 +14,7 @@ namespace AnimeXdcc.Wpf
     internal class MainWindowViewModel : BindableBase
     {
         private readonly DownloadEpisodeViewModel _downloadEpisodeViewModel;
+        private readonly DownloadQueueViewModel _downloadQueueViewModel;
         private readonly SearchEpisodeViewModel _searchEpisodeViewModel;
         private readonly HomeViewModel _homeViewModel;
         private readonly AboutViewModel _aboutViewModel;
@@ -24,6 +25,9 @@ namespace AnimeXdcc.Wpf
             IDependencyResolver dependencyResolver = new UnityFactory().Create();
 
             NavigationCommand = new RelayCommand<string>(OnNavigation);
+
+            // EXPERIMENT
+            _downloadQueueViewModel = dependencyResolver.GetSerivce<DownloadQueueViewModel>();
 
             _homeViewModel = dependencyResolver.GetSerivce<HomeViewModel>();
             _aboutViewModel = dependencyResolver.GetSerivce<AboutViewModel>();
@@ -68,14 +72,19 @@ namespace AnimeXdcc.Wpf
 
         private void OnDownloadRequested(DccSearchResults package)
         {
-            var dccPackage = package.DccPackages.First();
+/*            var dccPackage = package.DccPackages.First();
 
             _downloadEpisodeViewModel.Package = new Package
             {
                 BotName = dccPackage.BotName, FileName = dccPackage.FileName, FileSize = dccPackage.FileSize, Id = dccPackage.PackageId
             };
 
-            CurrentViewModel = _downloadEpisodeViewModel;
+            CurrentViewModel = _downloadEpisodeViewModel;*/
+
+            // EXPERIMENT
+
+            _downloadQueueViewModel.AddToDownloadQueue(package.FileName, package.DccPackages);
+            CurrentViewModel = _downloadQueueViewModel;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace AnimeXdcc.Core.Dcc.Components
 {
     public class DccClientFactory : IDccClientFactory
     {
-        private int _interval;
+        private readonly int _interval;
 
         public DccClientFactory(int interval)
         {
@@ -14,7 +14,6 @@ namespace AnimeXdcc.Core.Dcc.Components
 
         public IDccClient Create(long fileSize)
         {
-            _interval = 1000;
             return new DccClient(
                 new TimerWrapper(_interval),
                 new StopwatchWrapper(),

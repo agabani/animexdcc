@@ -73,6 +73,10 @@
       <DependentUpon>DownloadEpisodeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Download\DownloadEpisodeViewModel.cs" />
+    <Compile Include="Download\DownloadQueueView.xaml.cs">
+      <DependentUpon>DownloadQueueView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Download\DownloadQueueViewModel.cs" />
     <Compile Include="General\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
@@ -82,6 +86,7 @@
     </Compile>
     <Compile Include="General\HomeViewModel.cs" />
     <Compile Include="Infrastructure\Input\InputBindingManager.cs" />
+    <Compile Include="Infrastructure\Notifications\INotificationListener.cs" />
     <Compile Include="Search\SearchEpisodeView.xaml.cs">
       <DependentUpon>SearchEpisodeView.xaml</DependentUpon>
     </Compile>
@@ -92,7 +97,9 @@
     <Compile Include="Services\Download\DownloadQueueService.cs" />
     <Compile Include="Services\Download\DownloadService.cs" />
     <Compile Include="Services\Download\IDownloadClient.cs" />
+    <Compile Include="Services\Download\IDownloadQueueService.cs" />
     <Compile Include="Services\Download\IDownloadService.cs" />
+    <Compile Include="Infrastructure\Notifications\NotificationListener.cs" />
     <Compile Include="Services\IAnimeXdccService.cs" />
     <Compile Include="Models\DccPackage.cs" />
     <Compile Include="Models\DccSearchResults.cs" />
@@ -101,6 +108,10 @@
     <Compile Include="Services\Search\ISearchService.cs" />
     <Compile Include="Services\Search\Searchable\IntelSearchable.cs" />
     <Compile Include="Services\Search\SearchService.cs" />
+    <Page Include="Download\DownloadQueueView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="General\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

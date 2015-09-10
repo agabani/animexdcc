@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using AnimeXdcc.Core;
+using AnimeXdcc.Core.Components.Files;
 using AnimeXdcc.Core.Components.HumanReadable;
 using AnimeXdcc.Core.Components.UserName;
+using AnimeXdcc.Core.Dcc.Components;
+using AnimeXdcc.Core.Irc.Clients;
 using AnimeXdcc.Core.Logging;
 using AnimeXdcc.Core.Logging.Trace;
 using AnimeXdcc.Wpf.Download;
 using AnimeXdcc.Wpf.General;
 using AnimeXdcc.Wpf.Search;
 using AnimeXdcc.Wpf.Services;
+using AnimeXdcc.Wpf.Services.Download;
 using AnimeXdcc.Wpf.Services.Search;
 using AnimeXdcc.Wpf.Services.Search.Searchable;
 using Intel.Haruhichan.ApiClient.Clients;
@@ -70,6 +74,39 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
             unityContainer.RegisterType<IAnimeXdccService, AnimeXdccService>(
                 new InjectionConstructor(unityContainer.Resolve<IAnimeXdccClient>()));
+
+            // EXPERIEMENT
+
+            
+
+            
+
+            
+
+            
+
+            
+
+            unityContainer.RegisterType<IDccClientFactory, DccClientFactory>(
+                new InjectionConstructor(1000)); // needs to be completed
+
+            unityContainer.RegisterType<IXdccIrcClient, XdccIrcClient>(
+                new InjectionConstructor("irc.rizon.net", 6667, unityContainer.Resolve<IUserNameGenerator>().Create(10)));
+
+            unityContainer.RegisterType<IStreamProvider, StreamProvider>(
+                new InjectionConstructor());
+
+            unityContainer.RegisterType<IDownloadClient, DownloadClient>(
+                new InjectionConstructor(unityContainer.Resolve<IXdccIrcClient>(), unityContainer.Resolve<IDccClientFactory>()));
+
+            unityContainer.RegisterType<IDownloadService, DownloadService>(
+                new InjectionConstructor(unityContainer.Resolve<IDownloadClient>(), unityContainer.Resolve<IStreamProvider>()));
+
+            unityContainer.RegisterType<IDownloadQueueService, DownloadQueueService>(
+                new InjectionConstructor(unityContainer.Resolve<IDownloadService>()));
+
+            unityContainer.RegisterType<DownloadQueueViewModel, DownloadQueueViewModel>(
+                new InjectionConstructor(unityContainer.Resolve<IDownloadQueueService>()));
         }
 
         private static void RegisterViewModels(IUnityContainer unityContainer)
