@@ -28,7 +28,12 @@ namespace AnimeXdcc.Core.Dcc.Components
             GC.SuppressFinalize(this);
         }
 
-        public async Task Accept(Stream stream, long offset, long size)
+        public async Task AcceptAsync(Stream stream, long offset, long size)
+        {
+            await Task.Run(() => Accept(stream, offset, size));
+        }
+
+        public void Accept(Stream stream, long offset, long size)
         {
             Seek(stream, offset);
 
@@ -41,8 +46,8 @@ namespace AnimeXdcc.Core.Dcc.Components
 
             do
             {
-                bytesTransferred += bytesRead = await ProcessPacket(networkStream, stream);
-                SendAcknowledgement(bytesTransferred, networkStream).GetAwaiter();
+                bytesTransferred += bytesRead = ProcessPacket(networkStream, stream);
+                SendAcknowledgement(bytesTransferred, networkStream);
                 OnTransferProgress(new DccTransferProgressEventArgs(bytesTransferred, size));
             } while (bytesRead > 0 && bytesTransferred < size);
 
@@ -61,17 +66,17 @@ namespace AnimeXdcc.Core.Dcc.Components
             stream.Seek(offset, SeekOrigin.Begin);
         }
 
-        private async Task<int> ProcessPacket(NetworkStream networkStream, Stream stream)
+        private  int ProcessPacket(NetworkStream networkStream, Stream stream)
         {
-            var bytesRead = await networkStream.ReadAsync(_recvBuffer, 0, _recvBuffer.Length);
-            await stream.WriteAsync(_recvBuffer, 0, bytesRead);
+            var bytesRead = networkStream.Read(_recvBuffer, 0, _recvBuffer.Length);
+            stream.Write(_recvBuffer, 0, bytesRead);
             return bytesRead;
         }
 
-        private async Task SendAcknowledgement(long bytesTransferred, NetworkStream networkStream)
+        private void SendAcknowledgement(long bytesTransferred, NetworkStream networkStream)
         {
             _sendBuffer = StandardiseEndian(BitConverter.GetBytes(bytesTransferred));
-            await networkStream.WriteAsync(_sendBuffer, 0, _sendBuffer.Length);
+            networkStream.Write(_sendBuffer, 0, _sendBuffer.Length);
         }
 
         private static byte[] StandardiseEndian(byte[] bytes)

@@ -1,23 +1,47 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AnimeXdcc.Core.Components.HumanReadable;
+using AnimeXdcc.Core.Dcc.Models;
 using AnimeXdcc.Wpf.Infrastructure.Bindable;
+using AnimeXdcc.Wpf.Infrastructure.Notifications;
 using AnimeXdcc.Wpf.Models;
-using AnimeXdcc.Wpf.Services;
+using AnimeXdcc.Wpf.Services.Download;
 
 namespace AnimeXdcc.Wpf.Download
 {
     internal class DownloadEpisodeViewModel : BindableBase
     {
-        private readonly IAnimeXdccService _animeXdccService;
         private DownloadProgress _downloadProgress = new DownloadProgress();
         private DownloadProgressHumanReadable _downloadProgressHumanReadable = new DownloadProgressHumanReadable(new DownloadProgress());
         private Package _package;
 
-        public DownloadEpisodeViewModel(IAnimeXdccService animeXdccService)
-        {
-            _animeXdccService = animeXdccService;
+        private readonly IDownloadService _service;
+        private readonly INotificationListener<DccTransferStatistic> _notificationListener;
 
-            _animeXdccService.DownloadProgressEvent += OnDownloadProgressEvent;
+        public DownloadEpisodeViewModel(IDownloadService service)
+        {
+            _service = service;
+            _notificationListener = new NotificationListener<DccTransferStatistic>(ExecuteAsync);
+        }
+
+        private Task ExecuteAsync(DccTransferStatistic statistic)
+        {
+            var downloadProgress = new DownloadProgress
+            {
+                PercentageComplete = (int)statistic.PercentageComplete,
+                RemainingBytes = statistic.BytesRemaining,
+                TimeElapsed = TimeSpan.FromSeconds(statistic.SecondsElapsed),
+                TimeRemaining = TimeSpan.FromSeconds(statistic.BytesRemaining),
+                TotalBytes = statistic.FileSize,
+                TransferedBytes = statistic.BytesTransferred,
+                TransferSpeed = (long)statistic.BytesPerSecond
+            };
+
+            DownloadProgress = downloadProgress;
+
+            DownloadProgressHumanReadable = new DownloadProgressHumanReadable(DownloadProgress);
+
+            return Task.FromResult<object>(null);
         }
 
         public Package Package
@@ -26,8 +50,20 @@ namespace AnimeXdcc.Wpf.Download
             set
             {
                 SetProperty(ref _package, value);
-                DownloadAsync();
             }
+        }
+
+        public void Download(DccPackage dccPackage)
+        {
+            _service.DownloadAsync(dccPackage, _notificationListener).GetAwaiter();
+
+            Package = new Package
+            {
+                BotName = dccPackage.BotName,
+                FileName = dccPackage.FileName,
+                FileSize = dccPackage.FileSize,
+                Id = dccPackage.PackageId
+            };
         }
 
         public DownloadProgress DownloadProgress
@@ -45,17 +81,6 @@ namespace AnimeXdcc.Wpf.Download
             get { return _downloadProgressHumanReadable; }
             set { SetProperty(ref _downloadProgressHumanReadable, value); }
         }
-
-        private void OnDownloadProgressEvent(object sender, DownloadProgress downloadProgress)
-        {
-            DownloadProgress = downloadProgress;
-        }
-
-        public async void DownloadAsync()
-        {
-            await _animeXdccService.DownloadAsync(Package.BotName, Package.Id);
-        }
-
     }
 
     internal class DownloadProgressHumanReadable

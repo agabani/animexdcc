@@ -72,19 +72,23 @@ namespace AnimeXdcc.Wpf
 
         private void OnDownloadRequested(DccSearchResults package)
         {
-/*            var dccPackage = package.DccPackages.First();
+            var dccPackage = package.DccPackages.First();
 
-            _downloadEpisodeViewModel.Package = new Package
-            {
-                BotName = dccPackage.BotName, FileName = dccPackage.FileName, FileSize = dccPackage.FileSize, Id = dccPackage.PackageId
-            };
+//            _downloadEpisodeViewModel.Package = new Package
+//            {
+//                BotName = dccPackage.BotName, FileName = dccPackage.FileName, FileSize = dccPackage.FileSize, Id = dccPackage.PackageId
+//            };
 
-            CurrentViewModel = _downloadEpisodeViewModel;*/
+            _downloadEpisodeViewModel.Download(dccPackage);
+
+            CurrentViewModel = _downloadEpisodeViewModel;
+
+
 
             // EXPERIMENT
 
-            _downloadQueueViewModel.AddToDownloadQueue(package.FileName, package.DccPackages);
-            CurrentViewModel = _downloadQueueViewModel;
+            /*_downloadQueueViewModel.AddToDownloadQueue(package.FileName, package.DccPackages);
+            CurrentViewModel = _downloadQueueViewModel;*/
         }
     }
 }

@@ -28,7 +28,7 @@ namespace AnimeXdcc.Core.Tests.Integration.Components.Dcc
             dccTransfer.TransferComplete += (sender, args) => Console.WriteLine("Transfer Complete");
             dccTransfer.TransferProgress += (sender, args) => Console.WriteLine("{0}/{1}", args.Transferred, args.Size);
 
-            await dccTransfer.Accept(outputFileStream, 0, inputFileStream.Length);
+            await dccTransfer.AcceptAsync(outputFileStream, 0, inputFileStream.Length);
         }
     }
 }

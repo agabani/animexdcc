@@ -6,7 +6,7 @@ namespace AnimeXdcc.Core.Dcc.Components
 {
     public interface IDccTransfer : IDisposable
     {
-        Task Accept(Stream stream, long offset, long size);
+        Task AcceptAsync(Stream stream, long offset, long size);
         event DccTransfer.DccTransferEventHandler TransferBegun;
         event DccTransfer.DccTransferEventHandler TransferFailed;
         event DccTransfer.DccTransferEventHandler TransferComplete;

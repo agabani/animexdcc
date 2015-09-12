@@ -45,7 +45,7 @@ namespace AnimeXdcc.Core.Dcc.Components
                 dccTransfer.TransferComplete += DccTransferOnTransferComplete;
                 dccTransfer.TransferProgress += DccTransferOnTransferProgress;
 
-                await dccTransfer.Accept(stream, 0, size);
+                await dccTransfer.AcceptAsync(stream, 0, size);
             }
         }
 

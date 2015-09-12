@@ -77,16 +77,6 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
             // EXPERIEMENT
 
-            
-
-            
-
-            
-
-            
-
-            
-
             unityContainer.RegisterType<IDccClientFactory, DccClientFactory>(
                 new InjectionConstructor(1000)); // needs to be completed
 
@@ -105,8 +95,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             unityContainer.RegisterType<IDownloadQueueService, DownloadQueueService>(
                 new InjectionConstructor(unityContainer.Resolve<IDownloadService>()));
 
-            unityContainer.RegisterType<DownloadQueueViewModel, DownloadQueueViewModel>(
-                new InjectionConstructor(unityContainer.Resolve<IDownloadQueueService>()));
+            
         }
 
         private static void RegisterViewModels(IUnityContainer unityContainer)
@@ -118,7 +107,11 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             unityContainer.RegisterType<SearchEpisodeViewModel, SearchEpisodeViewModel>(
                 new InjectionConstructor(unityContainer.Resolve<ISearchService>()));
 
-            unityContainer.RegisterType<DownloadEpisodeViewModel, DownloadEpisodeViewModel>();
+            unityContainer.RegisterType<DownloadEpisodeViewModel, DownloadEpisodeViewModel>(
+                new InjectionConstructor(unityContainer.Resolve<IDownloadService>()));
+
+            unityContainer.RegisterType<DownloadQueueViewModel, DownloadQueueViewModel>(
+                new InjectionConstructor(unityContainer.Resolve<IDownloadQueueService>()));
         }
     }
 }
