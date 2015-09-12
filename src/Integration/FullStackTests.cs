@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using AnimeXdcc.Core;
-using AnimeXdcc.Core.Logging.Console;
+using AnimeXdcc.Core.Components.Files;
+using AnimeXdcc.Core.Dcc.Components;
+using AnimeXdcc.Core.Irc.Clients;
+using AnimeXdcc.Core.Logging.Trace;
+using AnimeXdcc.Wpf.Services.Download;
+using AnimeXdcc.Wpf.Services.Search;
+using AnimeXdcc.Wpf.Services.Search.Searchable;
 using Intel.Haruhichan.ApiClient.Clients;
-using Intel.Haruhichan.ApiClient.Models;
 using NUnit.Framework;
 
 namespace Integration
@@ -13,29 +17,21 @@ namespace Integration
     public class FullStackTests
     {
         [Test]
-        public async Task Download_One_Piece_703()
+        public void Download_One_Piece_703()
         {
-            var intelHttpClient = new IntelHttpClient(
-                new Uri("http://intel.haruhichan.com/"),
-                new ConsoleLogger(ConsoleLogger.Level.Debug));
+            var s =
+                new SearchService(new List<ISearchable>
+                {
+                    new IntelSearchable(new IntelHttpClient(new Uri("http://intel.haruhichan.com/"),
+                        new TraceLogger(TraceLogger.Level.Debug)))
+                });
 
-            var file = (await intelHttpClient.SearchAsync("One Piece 703 480p"))
-                .Files
-                .OrderByDescending(r => r.Requested)
-                .First();
+            var result = s.SearchAsync("One Piece 703 480p").GetAwaiter().GetResult();
 
-            Display(file);
+            var x = new DownloadClient(new XdccIrcClient("irc.rizon.net", 6667, "speechlessdown"),
+                new DccClientFactory(1000));
 
-            using (var animeXdccClient = new AnimeXdccClient("irc.rizon.net", 6667, "speechlessdown"))
-            {
-                await animeXdccClient.DownloadPackageAsync(file.BotName, file.PackageNumber);
-            }
-        }
-
-        private static void Display(File file)
-        {
-            Console.WriteLine("File name: {0}\nFile size: {1}\nBot name: {2}\nPackage Id: {3}\nRequested: {4}",
-                file.FileName, file.Size, file.BotName, file.PackageNumber, file.Requested);
+            x.DownloadAsync(result.First().DccPackages.First(), new StreamProvider(), null).GetAwaiter().GetResult();
         }
     }
 }

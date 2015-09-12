@@ -91,7 +91,6 @@
       <DependentUpon>SearchEpisodeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Search\SearchEpisodeViewModel.cs" />
-    <Compile Include="Services\AnimeXdccService.cs" />
     <Compile Include="Models\DownloadProgress.cs" />
     <Compile Include="Services\Download\DownloadClient.cs" />
     <Compile Include="Services\Download\DownloadQueueService.cs" />
@@ -100,7 +99,6 @@
     <Compile Include="Services\Download\IDownloadQueueService.cs" />
     <Compile Include="Services\Download\IDownloadService.cs" />
     <Compile Include="Infrastructure\Notifications\NotificationListener.cs" />
-    <Compile Include="Services\IAnimeXdccService.cs" />
     <Compile Include="Models\DccPackage.cs" />
     <Compile Include="Models\DccSearchResults.cs" />
     <Compile Include="Models\Package.cs" />

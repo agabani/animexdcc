@@ -69,14 +69,6 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
         private void RegisterDownload(IUnityContainer unityContainer)
         {
-            unityContainer.RegisterType<IAnimeXdccClient, AnimeXdccClient>(
-                new InjectionConstructor("irc.rizon.net", 6667, unityContainer.Resolve<IUserNameGenerator>().Create(10)));
-
-            unityContainer.RegisterType<IAnimeXdccService, AnimeXdccService>(
-                new InjectionConstructor(unityContainer.Resolve<IAnimeXdccClient>()));
-
-            // EXPERIEMENT
-
             unityContainer.RegisterType<IDccClientFactory, DccClientFactory>(
                 new InjectionConstructor(1000)); // needs to be completed
 

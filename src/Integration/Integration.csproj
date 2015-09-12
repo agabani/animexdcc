@@ -41,7 +41,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnimeXdccClientTest.cs" />
     <Compile Include="Clients\IntegrationDccClient.cs" />
     <Compile Include="Clients\IntegrationIrcClient.cs" />
     <Compile Include="Configuration.cs" />
@@ -63,6 +62,10 @@
     <ProjectReference Include="..\AnimeXdcc.Core\AnimeXdcc.Core.csproj">
       <Project>{7CC688AD-0200-485D-9909-6974B64E1746}</Project>
       <Name>AnimeXdcc.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AnimeXdcc.Wpf\AnimeXdcc.Wpf.csproj">
+      <Project>{ED53487C-8B3A-4DDF-8652-4121327C052C}</Project>
+      <Name>AnimeXdcc.Wpf</Name>
     </ProjectReference>
     <ProjectReference Include="..\Intel.Haruhichan.ApiClient\Intel.Haruhichan.ApiClient.csproj">
       <Project>{58B2473F-CE22-42CE-B9F8-7FA802872616}</Project>
