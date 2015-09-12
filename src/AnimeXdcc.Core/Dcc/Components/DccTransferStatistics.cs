@@ -24,13 +24,16 @@ namespace AnimeXdcc.Core.Dcc.Components
 
         public DccTransferStatistic GetStatistics()
         {
+            var secondsElapsed = _interval/1000*_datasets;
+            var bytesRemaining = _fileSize - _bytesTransferred;
+
             return new DccTransferStatistic(
                 _fileSize, 
                 _bytesTransferred, 
-                _fileSize - _bytesTransferred,
-                _interval*_datasets, 
-                (_fileSize - _bytesTransferred)/(_bytesTransferred/(_interval*_datasets)),
-                _bytesTransferred/(double) (_interval*_datasets), 
+                bytesRemaining,
+                secondsElapsed, 
+                bytesRemaining/(_bytesTransferred/secondsElapsed),
+                _bytesTransferred/(double) secondsElapsed, 
                 _bytesTransferred*100/(double) _fileSize
                 );
         }
