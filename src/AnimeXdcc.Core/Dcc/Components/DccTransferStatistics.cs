@@ -7,7 +7,7 @@ namespace AnimeXdcc.Core.Dcc.Components
         private readonly long _fileSize;
         private readonly long _interval;
         private long _bytesTransferred;
-        private long _datasets;
+        private double _datasets;
 
         public DccTransferStatistics(long fileSize, long interval)
         {
@@ -22,9 +22,15 @@ namespace AnimeXdcc.Core.Dcc.Components
             _datasets++;
         }
 
+        public void FinalDataSet(long transferred, long elapsedMilliseconds)
+        {
+            _bytesTransferred = transferred;
+            _datasets += (elapsedMilliseconds - _interval) / (double)_interval;
+        }
+
         public DccTransferStatistic GetStatistics()
         {
-            var secondsElapsed = _interval/1000*_datasets;
+            var secondsElapsed = _interval / 1000 * (long)_datasets;
             var bytesRemaining = _fileSize - _bytesTransferred;
 
             return new DccTransferStatistic(

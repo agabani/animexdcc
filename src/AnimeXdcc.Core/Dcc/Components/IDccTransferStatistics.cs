@@ -6,5 +6,6 @@ namespace AnimeXdcc.Core.Dcc.Components
     {
         void AddDataSet(long transferred);
         DccTransferStatistic GetStatistics();
+        void FinalDataSet(long transferred, long elapsedMilliseconds);
     }
 }

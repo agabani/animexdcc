@@ -30,27 +30,17 @@ namespace AnimeXdcc.Wpf.Services.Download
             _dccClientFactory = dccClientFactory;
         }
 
-        public async Task<DownloadResult> DownloadAsync(DccPackage package, IStreamProvider provider, INotificationListener<DccTransferStatistic> listener)
+        public async Task<DownloadResult> DownloadAsync(DccPackage package, IStreamProvider provider,
+            INotificationListener<DccTransferStatistic> listener)
         {
             var ircResult = await _ircClient.RequestPackageAsync(package.BotName, package.PackageId);
 
             if (!ircResult.Successful)
             {
-                switch (ircResult.FailureKind)
-                {
-                    case XdccIrcClient.IrcFailureKind.None:
-                        return new DownloadResult(ircResult.Successful, DownloadFailureKind.None);
-                    case XdccIrcClient.IrcFailureKind.TaskCancelled:
-                        return new DownloadResult(ircResult.Successful, DownloadFailureKind.DownloadTerminated);
-                    case XdccIrcClient.IrcFailureKind.ServerNotFound:
-                        return new DownloadResult(ircResult.Successful, DownloadFailureKind.ServerNotAvailable);
-                    case XdccIrcClient.IrcFailureKind.SourceNotFound:
-                        return new DownloadResult(ircResult.Successful, DownloadFailureKind.SourceNotAvailable);
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                return FailureDownloadResult(ircResult);
             }
 
+            // TODO: move this message parser some where more responsible
             var message = new DccMessageParser(new IpConverter()).Parse(ircResult.Result);
 
             var dccClient = _dccClientFactory.Create(message.FileSize);
@@ -63,13 +53,35 @@ namespace AnimeXdcc.Wpf.Services.Download
                 listener.Notify(args.Statistic);
             };
 
+            // TODO: find a way to notify of final statistics
+
             await dccClient.DownloadAsync(
                 message.IpAddress,
                 message.Port,
                 message.FileSize,
-                provider.GetStream(package.FileName, StreamProvider.Strategy.Overwrite));
+                provider.GetStream(
+                    package.FileName,
+                    StreamProvider.Strategy.Overwrite)
+                );
 
             return CreateResult(statistic);
+        }
+
+        private static DownloadResult FailureDownloadResult(XdccIrcClient.IrcResult ircResult)
+        {
+            switch (ircResult.FailureKind)
+            {
+                case XdccIrcClient.IrcFailureKind.None:
+                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.None);
+                case XdccIrcClient.IrcFailureKind.TaskCancelled:
+                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.DownloadTerminated);
+                case XdccIrcClient.IrcFailureKind.ServerNotFound:
+                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.ServerNotAvailable);
+                case XdccIrcClient.IrcFailureKind.SourceNotFound:
+                    return new DownloadResult(ircResult.Successful, DownloadFailureKind.SourceNotAvailable);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private static DownloadResult CreateResult(DccTransferStatistic statistic)

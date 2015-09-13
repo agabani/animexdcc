@@ -17,7 +17,8 @@ namespace AnimeXdcc.Wpf.Services.Download
             _streamProvider = streamProvider;
         }
 
-        public async Task<DownloadClient.DownloadResult> DownloadAsync(DccPackage package, INotificationListener<DccTransferStatistic> listener)
+        public async Task<DownloadClient.DownloadResult> DownloadAsync(DccPackage package,
+            INotificationListener<DccTransferStatistic> listener)
         {
             return await _client.DownloadAsync(package, _streamProvider, listener);
         }

@@ -7,6 +7,7 @@ using AnimeXdcc.Core.SystemWrappers.Timer;
 
 namespace AnimeXdcc.Core.Dcc.Components
 {
+    // TODO: Make this entire class disposible as it is non renterant
     public class DccClient : IDccClient
     {
         public delegate void TransferProgressEventHandler(DccClient sender, DccClientTransferProgressEventArgs args);
@@ -24,6 +25,7 @@ namespace AnimeXdcc.Core.Dcc.Components
         private readonly IStopwatch _stopwatch;
         private readonly ITimer _timer;
         private long _bytesTransferred;
+        private long _size;
 
         public DccClient(ITimer timer, IStopwatch stopwatch, IDccTransferFactory transferFactory,
             IDccTransferStatistics statistics)
@@ -38,6 +40,8 @@ namespace AnimeXdcc.Core.Dcc.Components
 
         public async Task DownloadAsync(string hostname, int port, long size, Stream stream)
         {
+            _size = size;
+
             using (var dccTransfer = _transferFactory.Create(hostname, port))
             {
                 dccTransfer.TransferBegun += DccTransferOnTransferBegun;
@@ -66,6 +70,8 @@ namespace AnimeXdcc.Core.Dcc.Components
         private void DccTransferOnTransferComplete(DccTransfer sender, EventArgs args)
         {
             _stopwatch.Stop();
+            _statistics.FinalDataSet(_size, _stopwatch.ElapsedMilliseconds);
+            OnTransferProgress(new DccClientTransferProgressEventArgs(_statistics.GetStatistics()));
             _timer.Stop();
         }
 
