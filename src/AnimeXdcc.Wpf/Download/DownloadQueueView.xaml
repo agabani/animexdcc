@@ -24,16 +24,62 @@
                 <ColumnDefinition Width="0.05*" />
             </Grid.ColumnDefinitions>
             <Grid Column="1">
-                <ItemsControl ItemsSource="{Binding Downloads}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <ProgressBar Value="{Binding Percentage}"></ProgressBar>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Row="0" x:Name="ActiveDownloadGrid">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Active" />
+                        <TextBlock Text="{Binding ActiveDownload.FileName}" />
+                        <ProgressBar Value="{Binding PercentageComplete}" />
+                    </StackPanel>
+                </Grid>
+                <Grid Row="1" x:Name="QueuedDownloadsGrid">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Queued" />
+                        <ItemsControl ItemsSource="{Binding QueuedDownloads}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding FileName}" />
+                                        <ProgressBar Value="{Binding PercentageComplete}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Grid>
+                <Grid Row="2" x:Name="CompletedDownloadsGrid">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Completed" />
+                        <ItemsControl ItemsSource="{Binding CompletedDownloads}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding FileName}" />
+                                        <ProgressBar Value="{Binding PercentageComplete}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Grid>
             </Grid>
+
+            <!--            <Grid Column="1">-->
+            <!--                <ItemsControl ItemsSource="{Binding Downloads}">-->
+            <!--                    <ItemsControl.ItemTemplate>-->
+            <!--                        <DataTemplate>-->
+            <!--                            <StackPanel Orientation="Vertical">-->
+            <!--                                <TextBlock Text="{Binding FileName}" />-->
+            <!--                                <ProgressBar Value="{Binding Percentage}"></ProgressBar>-->
+            <!--                            </StackPanel>-->
+            <!--                        </DataTemplate>-->
+            <!--                    </ItemsControl.ItemTemplate>-->
+            <!--                </ItemsControl>-->
+            <!--            </Grid>-->
         </Grid>
     </Grid>
 </UserControl>

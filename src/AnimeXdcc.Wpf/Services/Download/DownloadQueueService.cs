@@ -8,20 +8,19 @@ namespace AnimeXdcc.Wpf.Services.Download
 {
     public class DownloadQueueService : IDownloadQueueService
     {
-        private readonly List<DownloadJob> _activeDownloads;
-        private readonly IDownloadService _service;
         private readonly Queue<DownloadJob> _queuedDownloads;
+        private readonly IDownloadService _service;
         private bool _processing;
 
         public DownloadQueueService(IDownloadService service)
         {
             _service = service;
             _processing = false;
-            _activeDownloads = new List<DownloadJob>();
             _queuedDownloads = new Queue<DownloadJob>();
         }
 
-        public void AddToQueue(string fileName, List<DccPackage> sources, INotificationListener<DccTransferStatistic> listener)
+        public void AddToQueue(string fileName, List<DccPackage> sources,
+            INotificationListener<DccTransferStatistic> listener)
         {
             _queuedDownloads.Enqueue(new DownloadJob(fileName, sources, listener));
             Process();
@@ -51,12 +50,7 @@ namespace AnimeXdcc.Wpf.Services.Download
             while (_queuedDownloads.Count > 0)
             {
                 var downloadJob = _queuedDownloads.Dequeue();
-
-                _activeDownloads.Add(downloadJob);
-
                 var success = await ProcessJob(downloadJob);
-
-                _activeDownloads.Remove(downloadJob);
             }
         }
 
@@ -79,7 +73,8 @@ namespace AnimeXdcc.Wpf.Services.Download
 
         internal class DownloadJob
         {
-            internal DownloadJob(string fileName, List<DccPackage> dccPackageSources, INotificationListener<DccTransferStatistic> listener)
+            internal DownloadJob(string fileName, List<DccPackage> dccPackageSources,
+                INotificationListener<DccTransferStatistic> listener)
             {
                 FileName = fileName;
                 DccPackageSources = dccPackageSources;

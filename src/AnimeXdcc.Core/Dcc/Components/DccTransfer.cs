@@ -9,9 +9,9 @@ namespace AnimeXdcc.Core.Dcc.Components
 {
     public class DccTransfer : IDccTransfer
     {
-        public delegate void DccTransferEventHandler(DccTransfer sender, EventArgs args);
+        public delegate void DccTransferEventHandler(object sender, EventArgs e);
 
-        public delegate void DccTransferProgressEventHandler(DccTransfer sender, DccTransferProgressEventArgs args);
+        public delegate void DccTransferProgressEventHandler(object sender, DccTransferProgressEventArgs e);
 
         private readonly byte[] _recvBuffer = new byte[1024];
         private TcpClient _client;

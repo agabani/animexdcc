@@ -53,16 +53,10 @@ namespace AnimeXdcc.Wpf.Services.Download
                 listener.Notify(args.Statistic);
             };
 
-            // TODO: find a way to notify of final statistics
-
-            await dccClient.DownloadAsync(
-                message.IpAddress,
-                message.Port,
-                message.FileSize,
-                provider.GetStream(
-                    package.FileName,
-                    StreamProvider.Strategy.Overwrite)
-                );
+            using (var stream = provider.GetStream(package.FileName, StreamProvider.Strategy.Overwrite))
+            {
+                await dccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, stream);
+            }
 
             return CreateResult(statistic);
         }

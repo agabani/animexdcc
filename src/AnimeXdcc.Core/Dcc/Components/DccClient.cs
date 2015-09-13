@@ -10,7 +10,7 @@ namespace AnimeXdcc.Core.Dcc.Components
     // TODO: Make this entire class disposible as it is non renterant
     public class DccClient : IDccClient
     {
-        public delegate void TransferProgressEventHandler(DccClient sender, DccClientTransferProgressEventArgs args);
+        public delegate void TransferProgressEventHandler(object sender, DccClientTransferProgressEventArgs e);
 
         public enum DccFailureKind
         {
@@ -55,19 +55,19 @@ namespace AnimeXdcc.Core.Dcc.Components
 
         public event TransferProgressEventHandler TransferProgress;
 
-        private void DccTransferOnTransferBegun(DccTransfer sender, EventArgs args)
+        private void DccTransferOnTransferBegun(object sender, EventArgs e)
         {
             _stopwatch.Start();
             _timer.Start();
         }
 
-        private void DccTransferOnTransferFailed(DccTransfer sender, EventArgs args)
+        private void DccTransferOnTransferFailed(object sender, EventArgs e)
         {
             _stopwatch.Stop();
             _timer.Stop();
         }
 
-        private void DccTransferOnTransferComplete(DccTransfer sender, EventArgs args)
+        private void DccTransferOnTransferComplete(object sender, EventArgs e)
         {
             _stopwatch.Stop();
             _statistics.FinalDataSet(_size, _stopwatch.ElapsedMilliseconds);
@@ -75,9 +75,9 @@ namespace AnimeXdcc.Core.Dcc.Components
             _timer.Stop();
         }
 
-        private void DccTransferOnTransferProgress(DccTransfer sender, DccTransferProgressEventArgs args)
+        private void DccTransferOnTransferProgress(object sender, DccTransferProgressEventArgs e)
         {
-            _bytesTransferred = args.Transferred;
+            _bytesTransferred = e.Transferred;
         }
 
         private void TimerOnElapsed(object sender, TimeElapsedEventArgs timeElapsedEventArgs)

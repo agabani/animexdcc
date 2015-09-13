@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using AnimeXdcc.Core.Components.HumanReadable;
-using AnimeXdcc.Core.Dcc.Models;
+using System.Linq;
 using AnimeXdcc.Wpf.Infrastructure.Bindable;
-using AnimeXdcc.Wpf.Infrastructure.Notifications;
 using AnimeXdcc.Wpf.Models;
 using AnimeXdcc.Wpf.Services.Download;
 
@@ -13,58 +10,83 @@ namespace AnimeXdcc.Wpf.Download
     public class DownloadQueueViewModel : BindableBase
     {
         private readonly IDownloadQueueService _service;
-        public ObservableCollection<EpisodeDownload> Downloads;
+        private Episode _activeDownload;
+        private ObservableCollection<Episode> _completedDownloads;
+        private ObservableCollection<Episode> _queuedDownloads;
 
         public DownloadQueueViewModel(IDownloadQueueService service)
         {
             _service = service;
-            Downloads = new ObservableCollection<EpisodeDownload>();
+            _queuedDownloads = new ObservableCollection<Episode>();
+            _completedDownloads = new ObservableCollection<Episode>();
+        }
+
+        public Episode ActiveDownload
+        {
+            get { return _activeDownload; }
+            set { SetProperty(ref _activeDownload, value); }
+        }
+
+        public ObservableCollection<Episode> QueuedDownloads
+        {
+            get { return _queuedDownloads; }
+            set { SetProperty(ref _queuedDownloads, value); }
+        }
+
+        public ObservableCollection<Episode> CompletedDownloads
+        {
+            get { return _completedDownloads; }
+            set { SetProperty(ref _completedDownloads, value); }
         }
 
         public void AddToDownloadQueue(string fileName, List<DccPackage> source)
         {
-            var download = new EpisodeDownload(fileName);
+            if (IsDuplicate(fileName))
+            {
+                return;
+            }
 
-            Downloads.Add(download);
+            var episode = new Episode(fileName);
 
-            var notificationListener =
-                new NotificationListener<DccTransferStatistic>(
-                    statistic => { return new Task(() => { download.Parse(statistic); }); });
+            QueuedDownloads.Add(episode);
 
-            _service.AddToQueue(fileName, source, notificationListener);
+            // TODO: add episode to download service queue
         }
 
-        public class EpisodeDownload
+        private bool IsDuplicate(string fileName)
         {
-            public EpisodeDownload(string fileName)
+            return QueuedDownloads.Any(n => n.FileName == fileName) || 
+                (ActiveDownload != null && ActiveDownload.FileName == fileName) ||
+                CompletedDownloads.Any(n => n.FileName == fileName);
+        }
+
+        public void SetToActiveDownload(string filename)
+        {
+            var episode = QueuedDownloads.First(d => d.FileName == filename);
+
+            QueuedDownloads.Remove(episode);
+
+            ActiveDownload = episode;
+        }
+
+        public void SetToCompletedDownload()
+        {
+            var episode = ActiveDownload;
+
+            ActiveDownload = null;
+
+            CompletedDownloads.Add(episode);
+        }
+
+        public class Episode
+        {
+            public Episode(string fileName)
             {
                 FileName = fileName;
             }
 
-            public string RemainingBytes { get; set; }
-            public string TransferedBytes { get; set; }
-            public string TransferSpeed { get; set; }
-            public string TimeElapsed { get; set; }
-            public string TimeRemaining { get; set; }
             public string FileName { get; private set; }
-            public string FileSize { get; set; }
-            public string PercentageComplete { get; set; }
-            public long BytesTransferred { get; set; }
-            public double Percentage { get; set; }
-
-            public void Parse(DccTransferStatistic statistic)
-            {
-                var convertor = new BytesConvertor();
-
-                Percentage = statistic.PercentageComplete;
-                FileSize = string.Format("{0}", convertor.ToHumanReadable(statistic.FileSize));
-                PercentageComplete = string.Format("{0}%", statistic.PercentageComplete);
-                TimeRemaining = string.Format("{0}s", statistic.SecondsRemaining);
-                TimeElapsed = string.Format("{0}s", statistic.SecondsElapsed);
-                TransferSpeed = string.Format("{0}/s", convertor.ToHumanReadable((long) statistic.BytesPerSecond));
-                TransferedBytes = string.Format("{0}", convertor.ToHumanReadable(statistic.BytesTransferred));
-                RemainingBytes = string.Format("{0}", convertor.ToHumanReadable(statistic.BytesRemaining));
-            }
+            public int PercentageComplete { get; set; }
         }
     }
 }
