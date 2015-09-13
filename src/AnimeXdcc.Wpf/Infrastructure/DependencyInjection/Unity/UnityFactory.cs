@@ -99,9 +99,6 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             unityContainer.RegisterType<SearchEpisodeViewModel, SearchEpisodeViewModel>(
                 new InjectionConstructor(unityContainer.Resolve<ISearchService>()));
 
-            unityContainer.RegisterType<DownloadEpisodeViewModel, DownloadEpisodeViewModel>(
-                new InjectionConstructor(unityContainer.Resolve<IDownloadService>()));
-
             unityContainer.RegisterType<DownloadQueueViewModel, DownloadQueueViewModel>(
                 new InjectionConstructor(unityContainer.Resolve<IDownloadQueueService>()));
         }

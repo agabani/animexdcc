@@ -13,7 +13,6 @@ namespace AnimeXdcc.Wpf
 {
     internal class MainWindowViewModel : BindableBase
     {
-        private readonly DownloadEpisodeViewModel _downloadEpisodeViewModel;
         private readonly DownloadQueueViewModel _downloadQueueViewModel;
         private readonly SearchEpisodeViewModel _searchEpisodeViewModel;
         private readonly HomeViewModel _homeViewModel;
@@ -31,7 +30,6 @@ namespace AnimeXdcc.Wpf
 
             _homeViewModel = dependencyResolver.GetSerivce<HomeViewModel>();
             _aboutViewModel = dependencyResolver.GetSerivce<AboutViewModel>();
-            _downloadEpisodeViewModel = dependencyResolver.GetSerivce<DownloadEpisodeViewModel>();
             _searchEpisodeViewModel = dependencyResolver.GetSerivce<SearchEpisodeViewModel>();
 
             _homeViewModel.EpisodeNavigationRequested += () => OnNavigation("SearchEpisode");
@@ -59,7 +57,7 @@ namespace AnimeXdcc.Wpf
                     CurrentViewModel = _aboutViewModel;
                     break;
                 case "Download":
-                    CurrentViewModel = _downloadEpisodeViewModel;
+                    CurrentViewModel = _downloadQueueViewModel;
                     break;
                 case "SearchEpisode":
                     CurrentViewModel = _searchEpisodeViewModel;
@@ -72,19 +70,8 @@ namespace AnimeXdcc.Wpf
 
         private void OnDownloadRequested(DccSearchResults package)
         {
-            if (false)
-            {
-                // TODO: remove this implimentation
-                _downloadEpisodeViewModel.Download(package.DccPackages.First());
-                CurrentViewModel = _downloadEpisodeViewModel;
-            }
-            else
-            {
-                // TODO: keep this implimentation
-                CurrentViewModel = _downloadQueueViewModel;
-
-                _downloadQueueViewModel.AddToDownloadQueue(package.FileName, package.DccPackages);
-            }
+            CurrentViewModel = _downloadQueueViewModel;
+            _downloadQueueViewModel.AddToDownloadQueue(package.FileName, package.DccPackages);
         }
     }
 }

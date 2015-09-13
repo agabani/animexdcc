@@ -69,10 +69,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Download\DownloadEpisodeView.xaml.cs">
-      <DependentUpon>DownloadEpisodeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Download\DownloadEpisodeViewModel.cs" />
     <Compile Include="Download\DownloadQueueView.xaml.cs">
       <DependentUpon>DownloadQueueView.xaml</DependentUpon>
     </Compile>
@@ -119,10 +115,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Buttons.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Download\DownloadEpisodeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
