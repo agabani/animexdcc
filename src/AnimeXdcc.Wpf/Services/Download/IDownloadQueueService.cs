@@ -8,5 +8,7 @@ namespace AnimeXdcc.Wpf.Services.Download
     public interface IDownloadQueueService
     {
         void AddToQueue(string fileName, List<DccPackage> sources, INotificationListener<DccTransferStatistic> listener);
+        event DownloadQueueService.DownloadEventHandler DownloadTerminated;
+        event DownloadQueueService.DownloadEventHandler DownloadStarted;
     }
 }

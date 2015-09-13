@@ -33,7 +33,7 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="Active" />
                         <TextBlock Text="{Binding ActiveDownload.FileName}" />
-                        <ProgressBar Value="{Binding PercentageComplete}" />
+                        <ProgressBar Value="{Binding ActiveDownload.PercentageComplete}" />
                     </StackPanel>
                 </Grid>
                 <Grid Row="1" x:Name="QueuedDownloadsGrid">

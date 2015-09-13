@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using AnimeXdcc.Core.Dcc.Models;
 using AnimeXdcc.Wpf.Infrastructure.Bindable;
+using AnimeXdcc.Wpf.Infrastructure.Notifications;
 using AnimeXdcc.Wpf.Models;
 using AnimeXdcc.Wpf.Services.Download;
 
@@ -9,6 +13,7 @@ namespace AnimeXdcc.Wpf.Download
 {
     public class DownloadQueueViewModel : BindableBase
     {
+        private readonly NotificationListener<DccTransferStatistic> _notificationListener;
         private readonly IDownloadQueueService _service;
         private Episode _activeDownload;
         private ObservableCollection<Episode> _completedDownloads;
@@ -16,9 +21,14 @@ namespace AnimeXdcc.Wpf.Download
 
         public DownloadQueueViewModel(IDownloadQueueService service)
         {
+            _notificationListener = new NotificationListener<DccTransferStatistic>(ExecuteAsync);
+
             _service = service;
             _queuedDownloads = new ObservableCollection<Episode>();
             _completedDownloads = new ObservableCollection<Episode>();
+
+            _service.DownloadStarted += ServiceOnDownloadStarted;
+            _service.DownloadTerminated += ServiceOnDownloadTerminated;
         }
 
         public Episode ActiveDownload
@@ -39,6 +49,16 @@ namespace AnimeXdcc.Wpf.Download
             set { SetProperty(ref _completedDownloads, value); }
         }
 
+        private void ServiceOnDownloadTerminated(object sender, DownloadQueueService.DownloadEventArgs downloadEventArgs)
+        {
+            SetToCompletedDownload();
+        }
+
+        private void ServiceOnDownloadStarted(object sender, DownloadQueueService.DownloadEventArgs downloadEventArgs)
+        {
+            SetToActiveDownload(downloadEventArgs.FileName);
+        }
+
         public void AddToDownloadQueue(string fileName, List<DccPackage> source)
         {
             if (IsDuplicate(fileName))
@@ -51,13 +71,24 @@ namespace AnimeXdcc.Wpf.Download
             QueuedDownloads.Add(episode);
 
             // TODO: add episode to download service queue
+            _service.AddToQueue(fileName, source, _notificationListener);
+        }
+
+        private Task ExecuteAsync(DccTransferStatistic dccTransferStatistic)
+        {
+            ActiveDownload = new Episode(ActiveDownload.FileName)
+            {
+                PercentageComplete = (int)dccTransferStatistic.PercentageComplete
+            }; 
+
+            return Task.FromResult<object>(null);
         }
 
         private bool IsDuplicate(string fileName)
         {
-            return QueuedDownloads.Any(n => n.FileName == fileName) || 
-                (ActiveDownload != null && ActiveDownload.FileName == fileName) ||
-                CompletedDownloads.Any(n => n.FileName == fileName);
+            return QueuedDownloads.Any(n => n.FileName == fileName) ||
+                   (ActiveDownload != null && ActiveDownload.FileName == fileName) ||
+                   CompletedDownloads.Any(n => n.FileName == fileName);
         }
 
         public void SetToActiveDownload(string filename)

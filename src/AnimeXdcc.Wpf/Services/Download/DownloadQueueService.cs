@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AnimeXdcc.Core.Dcc.Models;
 using AnimeXdcc.Wpf.Infrastructure.Notifications;
@@ -8,6 +9,8 @@ namespace AnimeXdcc.Wpf.Services.Download
 {
     public class DownloadQueueService : IDownloadQueueService
     {
+        public delegate void DownloadEventHandler(object sender, DownloadEventArgs e);
+
         private readonly Queue<DownloadJob> _queuedDownloads;
         private readonly IDownloadService _service;
         private bool _processing;
@@ -50,7 +53,12 @@ namespace AnimeXdcc.Wpf.Services.Download
             while (_queuedDownloads.Count > 0)
             {
                 var downloadJob = _queuedDownloads.Dequeue();
+
+                OnDownloadStarted(new DownloadEventArgs(downloadJob.FileName));
+
                 var success = await ProcessJob(downloadJob);
+
+                OnDownloadTerminated(new DownloadEventArgs(downloadJob.FileName));
             }
         }
 
@@ -69,6 +77,31 @@ namespace AnimeXdcc.Wpf.Services.Download
             }
 
             return false;
+        }
+
+        public event DownloadEventHandler DownloadTerminated;
+        public event DownloadEventHandler DownloadStarted;
+
+        protected virtual void OnDownloadTerminated(DownloadEventArgs e)
+        {
+            var handler = DownloadTerminated;
+            if (handler != null) handler(this, e);
+        }
+
+        protected virtual void OnDownloadStarted(DownloadEventArgs e)
+        {
+            var handler = DownloadStarted;
+            if (handler != null) handler(this, e);
+        }
+
+        public class DownloadEventArgs : EventArgs
+        {
+            public DownloadEventArgs(string fileName)
+            {
+                FileName = fileName;
+            }
+
+            public string FileName { get; private set; }
         }
 
         internal class DownloadJob

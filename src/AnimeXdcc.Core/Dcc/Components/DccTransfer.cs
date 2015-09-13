@@ -76,7 +76,7 @@ namespace AnimeXdcc.Core.Dcc.Components
         private void SendAcknowledgement(long bytesTransferred, NetworkStream networkStream)
         {
             _sendBuffer = StandardiseEndian(BitConverter.GetBytes(bytesTransferred));
-            networkStream.Write(_sendBuffer, 0, _sendBuffer.Length);
+            networkStream.WriteAsync(_sendBuffer, 0, _sendBuffer.Length);
         }
 
         private static byte[] StandardiseEndian(byte[] bytes)
