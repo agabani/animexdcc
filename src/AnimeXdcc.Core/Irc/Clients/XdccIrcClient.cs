@@ -34,43 +34,52 @@ namespace AnimeXdcc.Core.Irc.Clients
             GC.SuppressFinalize(this);
         }
 
-        public async Task<IrcResult> RequestPackageAsync(string botName, int packageId, CancellationToken token = default(CancellationToken))
+        public async Task<IrcResult> RequestPackageAsync(string botName, int packageId,
+            CancellationToken token = default(CancellationToken))
         {
             var connectResult = await ConnectAsync(token);
 
-            // TODO: change null results to actual results...
-
             if (!connectResult.Successful)
             {
-                return null;
+                return new IrcResult(false,
+                    string.Format("Failed to connect to {0}:{1} as {2}", _hostname, _port, _nickname),
+                    IrcFailureKind.ServerNotFound);
             }
 
             var channelResult = await FindTargetChannel(botName, token);
 
             if (!channelResult.Successful)
             {
-                return null;
+                return new IrcResult(false,
+                    string.Format("Failed to find {0} channel", botName),
+                    IrcFailureKind.SourceNotFound);
             }
 
             var joinResult = await JoinChannel(channelResult.Result, token);
 
             if (!joinResult.Successful)
             {
-                return null;
+                return new IrcResult(false,
+                    string.Format("Failed to join {0}", channelResult.Result), 
+                    IrcFailureKind.SourceNotFound);
             }
 
             var requestResult = await RequestPackageTransfer(botName, packageId, token);
 
             if (!requestResult.Successful)
             {
-                return null;
+                return new IrcResult(false,
+                    string.Format("Failed to send package request to {0}", botName),
+                    IrcFailureKind.SourceNotFound);
             }
 
             var recieveResult = await RecievePackageTransfer(botName, token);
 
             if (!recieveResult.Successful)
             {
-                return null;
+                return new IrcResult(false,
+                    string.Format("Failed to recieve package response from {0}", botName),
+                    IrcFailureKind.TaskCancelled);
             }
 
             return recieveResult;
@@ -193,10 +202,8 @@ namespace AnimeXdcc.Core.Irc.Clients
         {
             IrcResult result = null;
 
-            _standardIrcClient.LocalUser.MessageSent += (sender, args) =>
-            {
-                result = new IrcResult(true, string.Format("{0} {1}", target, packageId));
-            };
+            _standardIrcClient.LocalUser.MessageSent +=
+                (sender, args) => { result = new IrcResult(true, string.Format("{0} {1}", target, packageId)); };
 
             _standardIrcClient.LocalUser.SendMessage(target, string.Format("XDCC SEND #{0}", packageId));
 

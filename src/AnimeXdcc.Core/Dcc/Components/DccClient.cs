@@ -38,7 +38,7 @@ namespace AnimeXdcc.Core.Dcc.Components
             _timer.Elapsed += TimerOnElapsed;
         }
 
-        public async Task DownloadAsync(string hostname, int port, long size, Stream stream)
+        public async Task<DccResult> DownloadAsync(string hostname, int port, long size, Stream stream)
         {
             _size = size;
 
@@ -49,7 +49,16 @@ namespace AnimeXdcc.Core.Dcc.Components
                 dccTransfer.TransferComplete += DccTransferOnTransferComplete;
                 dccTransfer.TransferProgress += DccTransferOnTransferProgress;
 
-                await dccTransfer.AcceptAsync(stream, 0, size);
+                try
+                {
+                    await dccTransfer.AcceptAsync(stream, 0, size);
+                }
+                catch
+                {
+                    return new DccResult(false, DccFailureKind.RemoteHostClosedConnection);
+                }
+
+                return new DccResult(true, DccFailureKind.None);
             }
         }
 

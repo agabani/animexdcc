@@ -55,7 +55,12 @@ namespace AnimeXdcc.Wpf.Services.Download
 
             using (var stream = provider.GetStream(package.FileName, StreamProvider.Strategy.Overwrite))
             {
-                await dccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, stream);
+                var dccResult = await dccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, stream);
+
+                if (!dccResult.Successful)
+                {
+                    return new DownloadResult(false, DownloadFailureKind.SourceNotAvailable);
+                }
             }
 
             return CreateResult(statistic);
