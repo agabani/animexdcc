@@ -53,7 +53,7 @@ namespace AnimeXdcc.Core.Clients.Dcc.Components
                 {
                     await dccTransfer.AcceptAsync(stream, 0, size);
                 }
-                catch
+                catch // TODO: make results more specific to failure, eg: host not reachable, timeout, etc...
                 {
                     return new DccResult(false, DccFailureKind.RemoteHostClosedConnection);
                 }

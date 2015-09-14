@@ -41,45 +41,35 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
 
             if (!connectResult.Successful)
             {
-                return new IrcResult(false,
-                    string.Format("Failed to connect to {0}:{1} as {2}", _hostname, _port, _nickname),
-                    IrcFailureKind.ServerNotFound);
+                return connectResult;
             }
 
             var channelResult = await FindTargetChannel(botName, token);
 
             if (!channelResult.Successful)
             {
-                return new IrcResult(false,
-                    string.Format("Failed to find {0} channel", botName),
-                    IrcFailureKind.SourceNotFound);
+                return channelResult;
             }
 
             var joinResult = await JoinChannel(channelResult.Result, token);
 
             if (!joinResult.Successful)
             {
-                return new IrcResult(false,
-                    string.Format("Failed to join {0}", channelResult.Result), 
-                    IrcFailureKind.SourceNotFound);
+                return joinResult;
             }
 
             var requestResult = await RequestPackageTransfer(botName, packageId, token);
 
             if (!requestResult.Successful)
             {
-                return new IrcResult(false,
-                    string.Format("Failed to send package request to {0}", botName),
-                    IrcFailureKind.SourceNotFound);
+                return requestResult;
             }
 
             var recieveResult = await RecievePackageTransfer(botName, token);
 
             if (!recieveResult.Successful)
             {
-                return new IrcResult(false,
-                    string.Format("Failed to recieve package response from {0}", botName),
-                    IrcFailureKind.TaskCancelled);
+                return recieveResult;
             }
 
             return recieveResult;

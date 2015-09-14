@@ -9,6 +9,7 @@ namespace AnimeXdcc.Core.Clients.Irc.Models
     {
         private readonly IpConverter _ipConverter;
 
+        // TODO: Make construtor take interface implimentation instead of concrete, update unit tests
         public DccMessageParser(IpConverter ipConverter)
         {
             _ipConverter = ipConverter;

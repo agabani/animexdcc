@@ -69,7 +69,6 @@ namespace AnimeXdcc.Wpf.Download
 
             QueuedDownloads.Add(episode);
 
-            // TODO: add episode to download service queue
             _service.AddToQueue(fileName, source, _notificationListener);
         }
 
