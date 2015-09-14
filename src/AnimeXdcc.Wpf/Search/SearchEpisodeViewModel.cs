@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using AnimeXdcc.Core.Clients.Models;
+using AnimeXdcc.Core.Services;
 using AnimeXdcc.Wpf.Infrastructure.Bindable;
 using AnimeXdcc.Wpf.Infrastructure.Relay;
-using AnimeXdcc.Wpf.Models;
-using AnimeXdcc.Wpf.Services.Search;
 
 namespace AnimeXdcc.Wpf.Search
 {

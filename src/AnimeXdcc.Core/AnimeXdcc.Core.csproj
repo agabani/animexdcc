@@ -37,10 +37,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\FilesManager\FilesManagerService.cs" />
-    <Compile Include="Components\FilesManager\IFilesManagerService.cs" />
+    <Compile Include="Clients\DownloadClient.cs" />
+    <Compile Include="Clients\IDownloadClient.cs" />
+    <Compile Include="Clients\Models\DccPackage.cs" />
+    <Compile Include="Clients\Models\DccSearchResults.cs" />
     <Compile Include="Components\Files\IStreamProvider.cs" />
-    <Compile Include="Components\Files\Services\IFileService.cs" />
     <Compile Include="Components\Files\StreamProvider.cs" />
     <Compile Include="Components\Filters\Builders\IEpisodeBuilder.cs" />
     <Compile Include="Components\Filters\Builders\RegexPatternBuilder.cs" />
@@ -48,50 +49,59 @@
     <Compile Include="Components\Filters\RegexService.cs" />
     <Compile Include="Components\HumanReadable\BytesConvertor.cs" />
     <Compile Include="Components\HumanReadable\IBytesConvertor.cs" />
-    <Compile Include="Components\Publishers\Download\DccDownloadStatusPublisher.cs" />
-    <Compile Include="Components\Publishers\Download\IDownloadStatusPublisher.cs" />
+    <Compile Include="Components\Notifications\INotificationListener.cs" />
+    <Compile Include="Components\Notifications\NotificationListener.cs" />
+    <Compile Include="Components\Searchable\IntelSearchable.cs" />
+    <Compile Include="Components\Searchable\ISearchable.cs" />
     <Compile Include="Components\UserName\IUserNameGenerator.cs" />
     <Compile Include="Components\Versions\Models\SoftwareVersion.cs" />
-    <Compile Include="Dcc\Clients\IXdccDccClient.cs" />
-    <Compile Include="Dcc\Clients\XdccDccClient.cs" />
-    <Compile Include="Dcc\Components\DccClient.cs" />
-    <Compile Include="Dcc\Components\DccClientFactory.cs" />
-    <Compile Include="Dcc\Components\DccTransfer.cs" />
-    <Compile Include="Dcc\Components\DccTransferFactory.cs" />
-    <Compile Include="Dcc\Components\IDccClientFactory.cs" />
-    <Compile Include="Dcc\Models\DccTransferStatistic.cs" />
-    <Compile Include="Dcc\Components\DccTransferStatistics.cs" />
-    <Compile Include="Dcc\Components\IDccClient.cs" />
-    <Compile Include="Dcc\Components\IDccTransfer.cs" />
-    <Compile Include="Dcc\Components\IDccTransferFactory.cs" />
-    <Compile Include="Dcc\Components\IDccTransferStatistics.cs" />
-    <Compile Include="Dcc\Models\DccClientTransferProgressEventArgs.cs" />
-    <Compile Include="Dcc\Models\DccTransferProgressEventArgs.cs" />
-    <Compile Include="Dcc\Models\DccTransferStatus.cs" />
-    <Compile Include="Irc\Clients\IXdccIrcClient.cs" />
-    <Compile Include="Irc\DccMessage\DccMessageParser.cs" />
-    <Compile Include="Irc\DccMessage\DccSendMessage.cs" />
-    <Compile Include="Irc\Clients\XdccIrcClient.cs" />
-    <Compile Include="Components\Files\Models\FileDetails.cs" />
-    <Compile Include="Components\Files\Services\FileService.cs" />
-    <Compile Include="Components\Files\Models\FileStrategy.cs" />
-    <Compile Include="Logging\Callback\CallbackLogger.cs" />
-    <Compile Include="Logging\Callback\LogEventArgs.cs" />
-    <Compile Include="Logging\Null\NullLogger.cs" />
-    <Compile Include="SystemWrappers\Timer\TimeElapsedEventArgs.cs" />
-    <Compile Include="Utilities\IpConverter.cs" />
-    <Compile Include="Logging\Console\ConsoleLogger.cs" />
-    <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Logging\Trace\TraceLogger.cs" />
+    <Compile Include="Clients\Dcc\Components\DccClient.cs" />
+    <Compile Include="Clients\Dcc\Components\DccClientFactory.cs" />
+    <Compile Include="Clients\Dcc\Components\DccTransfer.cs" />
+    <Compile Include="Clients\Dcc\Components\DccTransferFactory.cs" />
+    <Compile Include="Clients\Dcc\Components\IDccClientFactory.cs" />
+    <Compile Include="Clients\Dcc\Models\DccTransferStatistic.cs" />
+    <Compile Include="Clients\Dcc\Components\DccTransferStatistics.cs" />
+    <Compile Include="Clients\Dcc\Components\IDccClient.cs" />
+    <Compile Include="Clients\Dcc\Components\IDccTransfer.cs" />
+    <Compile Include="Clients\Dcc\Components\IDccTransferFactory.cs" />
+    <Compile Include="Clients\Dcc\Components\IDccTransferStatistics.cs" />
+    <Compile Include="Clients\Dcc\Models\DccClientTransferProgressEventArgs.cs" />
+    <Compile Include="Clients\Dcc\Models\DccTransferProgressEventArgs.cs" />
+    <Compile Include="Clients\Dcc\Models\DccTransferStatus.cs" />
+    <Compile Include="Clients\Irc\Components\IIrcClient.cs" />
+    <Compile Include="Clients\Irc\Models\DccMessageParser.cs" />
+    <Compile Include="Clients\Irc\Models\DccSendMessage.cs" />
+    <Compile Include="Clients\Irc\Components\IrcClient.cs" />
+    <Compile Include="Components\Logging\Callback\CallbackLogger.cs" />
+    <Compile Include="Components\Logging\Callback\LogEventArgs.cs" />
+    <Compile Include="Components\Logging\ILogger.cs" />
+    <Compile Include="Components\Logging\Null\NullLogger.cs" />
+    <Compile Include="Services\DownloadQueueService.cs" />
+    <Compile Include="Services\DownloadService.cs" />
+    <Compile Include="Services\IDownloadQueueService.cs" />
+    <Compile Include="Services\IDownloadService.cs" />
+    <Compile Include="Services\ISearchService.cs" />
+    <Compile Include="Services\SearchService.cs" />
+    <Compile Include="Components\SystemWrappers\Timer\TimeElapsedEventArgs.cs" />
+    <Compile Include="Components\Converters\IpConverter.cs" />
+    <Compile Include="Components\Logging\Console\ConsoleLogger.cs" />
+    <Compile Include="Components\Logging\Trace\TraceLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SystemWrappers\Stopwatch\IStopwatch.cs" />
-    <Compile Include="SystemWrappers\Timer\ITimer.cs" />
-    <Compile Include="SystemWrappers\Stopwatch\StopwatchWrapper.cs" />
-    <Compile Include="SystemWrappers\Timer\TimerWrapper.cs" />
+    <Compile Include="Components\SystemWrappers\Stopwatch\IStopwatch.cs" />
+    <Compile Include="Components\SystemWrappers\Timer\ITimer.cs" />
+    <Compile Include="Components\SystemWrappers\Stopwatch\StopwatchWrapper.cs" />
+    <Compile Include="Components\SystemWrappers\Timer\TimerWrapper.cs" />
     <Compile Include="Components\UserName\UsernameGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Intel.Haruhichan.ApiClient\Intel.Haruhichan.ApiClient.csproj">
+      <Project>{58B2473F-CE22-42CE-B9F8-7FA802872616}</Project>
+      <Name>Intel.Haruhichan.ApiClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

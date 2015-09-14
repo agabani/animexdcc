@@ -46,21 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Search\Searchable\IntelSearchableTests.cs" />
-    <Compile Include="Services\Search\SearchServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AnimeXdcc.Wpf\AnimeXdcc.Wpf.csproj">
-      <Project>{ed53487c-8b3a-4ddf-8652-4121327c052c}</Project>
-      <Name>AnimeXdcc.Wpf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Intel.Haruhichan.ApiClient\Intel.Haruhichan.ApiClient.csproj">
-      <Project>{58B2473F-CE22-42CE-B9F8-7FA802872616}</Project>
-      <Name>Intel.Haruhichan.ApiClient</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

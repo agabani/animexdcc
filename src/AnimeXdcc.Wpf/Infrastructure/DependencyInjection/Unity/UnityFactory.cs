@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using AnimeXdcc.Core;
+using AnimeXdcc.Core.Clients;
+using AnimeXdcc.Core.Clients.Dcc.Components;
+using AnimeXdcc.Core.Clients.Irc.Components;
 using AnimeXdcc.Core.Components.Files;
 using AnimeXdcc.Core.Components.HumanReadable;
+using AnimeXdcc.Core.Components.Logging;
+using AnimeXdcc.Core.Components.Logging.Trace;
+using AnimeXdcc.Core.Components.Searchable;
 using AnimeXdcc.Core.Components.UserName;
-using AnimeXdcc.Core.Dcc.Components;
-using AnimeXdcc.Core.Irc.Clients;
-using AnimeXdcc.Core.Logging;
-using AnimeXdcc.Core.Logging.Trace;
+using AnimeXdcc.Core.Services;
 using AnimeXdcc.Wpf.Download;
 using AnimeXdcc.Wpf.General;
 using AnimeXdcc.Wpf.Search;
-using AnimeXdcc.Wpf.Services;
-using AnimeXdcc.Wpf.Services.Download;
-using AnimeXdcc.Wpf.Services.Search;
-using AnimeXdcc.Wpf.Services.Search.Searchable;
 using Intel.Haruhichan.ApiClient.Clients;
 using Microsoft.Practices.Unity;
 
@@ -55,7 +53,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
             unityContainer.RegisterType<IIntelHttpClient, IntelHttpClient>(
                 new ContainerControlledLifetimeManager(),
-                new InjectionConstructor(unityContainer.Resolve<Uri>("intel"), unityContainer.Resolve<ILogger>()));
+                new InjectionConstructor(unityContainer.Resolve<Uri>("intel")));
 
             unityContainer.RegisterType<ISearchable, IntelSearchable>("intel",
                 new InjectionConstructor(unityContainer.Resolve<IIntelHttpClient>()));
@@ -72,14 +70,14 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             unityContainer.RegisterType<IDccClientFactory, DccClientFactory>(
                 new InjectionConstructor(1000)); // needs to be completed
 
-            unityContainer.RegisterType<IXdccIrcClient, XdccIrcClient>(
+            unityContainer.RegisterType<IIrcClient, IrcClient>(
                 new InjectionConstructor("irc.rizon.net", 6667, unityContainer.Resolve<IUserNameGenerator>().Create(10)));
 
             unityContainer.RegisterType<IStreamProvider, StreamProvider>(
                 new InjectionConstructor());
 
             unityContainer.RegisterType<IDownloadClient, DownloadClient>(
-                new InjectionConstructor(unityContainer.Resolve<IXdccIrcClient>(), unityContainer.Resolve<IDccClientFactory>()));
+                new InjectionConstructor(unityContainer.Resolve<IIrcClient>(), unityContainer.Resolve<IDccClientFactory>()));
 
             unityContainer.RegisterType<IDownloadService, DownloadService>(
                 new InjectionConstructor(unityContainer.Resolve<IDownloadClient>(), unityContainer.Resolve<IStreamProvider>()));

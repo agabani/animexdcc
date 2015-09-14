@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AnimeXdcc.Core.Logging;
 using Intel.Haruhichan.ApiClient.Models;
 using Newtonsoft.Json;
 
@@ -11,14 +10,10 @@ namespace Intel.Haruhichan.ApiClient.Clients
     public class IntelHttpClient : IIntelHttpClient
     {
         private readonly Uri _baseAddress;
-        private readonly ILogger _logger;
-        private readonly string _logTag;
 
-        public IntelHttpClient(Uri baseAddress, ILogger logger)
+        public IntelHttpClient(Uri baseAddress)
         {
             _baseAddress = baseAddress;
-            _logger = logger;
-            _logTag = GetType().FullName;
         }
 
         public async Task<Search> SearchAsync(string term, CancellationToken cancellationToken = default(CancellationToken))
@@ -43,7 +38,6 @@ namespace Intel.Haruhichan.ApiClient.Clients
 
         private async Task<HttpResponseMessage> Get(string relativeUri, CancellationToken cancellationToken)
         {
-            _logger.Debug(_logTag + "[URI] " + relativeUri);
             using (var httpClient = new HttpClient {BaseAddress = _baseAddress})
             {
                 return await httpClient.GetAsync(relativeUri, cancellationToken);
@@ -53,7 +47,6 @@ namespace Intel.Haruhichan.ApiClient.Clients
         private async Task<Search> Parse(HttpResponseMessage httpResponseMessage)
         {
             var jsonResponseMessage = await httpResponseMessage.Content.ReadAsStringAsync();
-            _logger.Debug(_logTag + "[RESPONSE] " + jsonResponseMessage);
             return JsonConvert.DeserializeObject<Search>(jsonResponseMessage);
         }
     }

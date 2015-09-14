@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AnimeXdcc.Core.Logging.Trace;
 using Intel.Haruhichan.ApiClient.Clients;
 using NUnit.Framework;
 
@@ -10,8 +9,7 @@ namespace Intel.Haruhichan.ApiClient.Tests
     [TestFixture]
     public class Characterization
     {
-        private readonly IntelHttpClient _intelHttpClient = new IntelHttpClient(new ConfigurationManager().BaseUri,
-            new TraceLogger(TraceLogger.Level.Debug));
+        private readonly IntelHttpClient _intelHttpClient = new IntelHttpClient(new ConfigurationManager().BaseUri);
 
         [Test]
         public async Task Should_search()

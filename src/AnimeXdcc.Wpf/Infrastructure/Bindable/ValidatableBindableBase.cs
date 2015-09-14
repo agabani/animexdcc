@@ -26,6 +26,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.Bindable
 
         protected override void SetProperty<T>(ref T member, T value, [CallerMemberName] string propertyName = default (string))
         {
+            // ReSharper disable once ExplicitCallerInfoArgument
             base.SetProperty(ref member, value, propertyName);
             ValidateProperty(propertyName, value);
         }

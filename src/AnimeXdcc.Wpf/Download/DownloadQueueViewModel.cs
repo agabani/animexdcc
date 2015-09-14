@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using AnimeXdcc.Core.Dcc.Models;
+using AnimeXdcc.Core.Clients.Dcc.Models;
+using AnimeXdcc.Core.Clients.Models;
+using AnimeXdcc.Core.Components.Notifications;
+using AnimeXdcc.Core.Services;
 using AnimeXdcc.Wpf.Infrastructure.Bindable;
-using AnimeXdcc.Wpf.Infrastructure.Notifications;
-using AnimeXdcc.Wpf.Models;
-using AnimeXdcc.Wpf.Services.Download;
 
 namespace AnimeXdcc.Wpf.Download
 {

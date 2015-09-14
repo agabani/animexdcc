@@ -41,15 +41,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\FilesManager\FilesManagerServiceTests.cs" />
     <Compile Include="Components\Filters\Builders\RegexPatternBuilderTests.cs" />
     <Compile Include="Components\Filters\Builders\SearchTermBuilderTests.cs" />
-    <Compile Include="Components\Publishers\Download\DccDownloadStatusPublisherTests.cs" />
     <Compile Include="Components\Versions\Models\SoftwareVersionTests.cs" />
     <Compile Include="Experiments\RegexPatternsTests.cs" />
-    <Compile Include="Irc\DccSendRequestTests.cs" />
-    <Compile Include="SystemWrappers\Timer\TimerWrapperTests.cs" />
-    <Compile Include="Utilities\IpConverterTest.cs" />
+    <Compile Include="Clients\Irc\Models\DccMessageParserTests.cs" />
+    <Compile Include="Components\Searchable\IntelSearchableTests.cs" />
+    <Compile Include="Services\SearchServiceTests.cs" />
+    <Compile Include="Components\SystemWrappers\Timer\TimerWrapperTests.cs" />
+    <Compile Include="Components\Converters\IpConverterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
@@ -57,6 +57,10 @@
     <ProjectReference Include="..\AnimeXdcc.Core\AnimeXdcc.Core.csproj">
       <Project>{7CC688AD-0200-485D-9909-6974B64E1746}</Project>
       <Name>AnimeXdcc.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Intel.Haruhichan.ApiClient\Intel.Haruhichan.ApiClient.csproj">
+      <Project>{58B2473F-CE22-42CE-B9F8-7FA802872616}</Project>
+      <Name>Intel.Haruhichan.ApiClient</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

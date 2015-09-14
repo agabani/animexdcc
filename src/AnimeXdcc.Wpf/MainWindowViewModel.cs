@@ -1,13 +1,11 @@
-﻿using System.Linq;
+﻿using AnimeXdcc.Core.Clients.Models;
 using AnimeXdcc.Wpf.Download;
 using AnimeXdcc.Wpf.General;
 using AnimeXdcc.Wpf.Infrastructure.Bindable;
 using AnimeXdcc.Wpf.Infrastructure.DependencyInjection;
 using AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity;
 using AnimeXdcc.Wpf.Infrastructure.Relay;
-using AnimeXdcc.Wpf.Models;
 using AnimeXdcc.Wpf.Search;
-using AnimeXdcc.Wpf.Services;
 
 namespace AnimeXdcc.Wpf
 {

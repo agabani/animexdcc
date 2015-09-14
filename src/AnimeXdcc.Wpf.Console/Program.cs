@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AnimeXdcc.Core.Clients;
+using AnimeXdcc.Core.Clients.Dcc.Components;
+using AnimeXdcc.Core.Clients.Dcc.Models;
+using AnimeXdcc.Core.Clients.Irc.Components;
+using AnimeXdcc.Core.Clients.Models;
 using AnimeXdcc.Core.Components.Files;
+using AnimeXdcc.Core.Components.Notifications;
+using AnimeXdcc.Core.Components.Searchable;
 using AnimeXdcc.Core.Components.UserName;
-using AnimeXdcc.Core.Dcc.Components;
-using AnimeXdcc.Core.Dcc.Models;
-using AnimeXdcc.Core.Irc.Clients;
-using AnimeXdcc.Core.Logging.Console;
-using AnimeXdcc.Wpf.Infrastructure.Notifications;
-using AnimeXdcc.Wpf.Models;
-using AnimeXdcc.Wpf.Services.Download;
-using AnimeXdcc.Wpf.Services.Search;
-using AnimeXdcc.Wpf.Services.Search.Searchable;
+using AnimeXdcc.Core.Services;
 using Intel.Haruhichan.ApiClient.Clients;
 
 namespace AnimeXdcc.Wpf.Console
@@ -21,17 +20,17 @@ namespace AnimeXdcc.Wpf.Console
     {
         private static void Main(string[] args)
         {
+            if (args == null) throw new ArgumentNullException("args");
             var application = new Application(
                 new SearchService(
                     new List<ISearchable>
                     {
                         new IntelSearchable(
-                            new IntelHttpClient(new Uri("http://intel.haruhichan.com"),
-                                new ConsoleLogger(ConsoleLogger.Level.Fatal)))
+                            new IntelHttpClient(new Uri("http://intel.haruhichan.com")))
                     }),
                 new DownloadService(
                     new DownloadClient(
-                        new XdccIrcClient("irc.rizon.net", 6667, new UserNameGenerator().Create(10)), new DccClientFactory(1000)),
+                        new IrcClient("irc.rizon.net", 6667, new UserNameGenerator().Create(10)), new DccClientFactory(1000)),
                     new StreamProvider()));
 
             Task.Run(async () => await application.RunAsync()).GetAwaiter().GetResult();
