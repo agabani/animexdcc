@@ -44,7 +44,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
         private void RegisterUtilities(IUnityContainer unityContainer)
         {
             unityContainer.RegisterType<IUserNameGenerator, UserNameGenerator>();
-            unityContainer.RegisterType<IBytesConvertor, BytesConvertor>();
+            unityContainer.RegisterType<IBytesConverter, BytesConverter>();
         }
 
         public static void RegisterIntel(IUnityContainer unityContainer)
@@ -68,7 +68,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
         private void RegisterDownload(IUnityContainer unityContainer)
         {
             unityContainer.RegisterType<IDccClientFactory, DccClientFactory>(
-                new InjectionConstructor(1000)); // needs to be completed
+                new InjectionConstructor(1000));
 
             unityContainer.RegisterType<IIrcClient, IrcClient>(
                 new InjectionConstructor("irc.rizon.net", 6667, unityContainer.Resolve<IUserNameGenerator>().Create(10)));
@@ -84,8 +84,6 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
             unityContainer.RegisterType<IDownloadQueueService, DownloadQueueService>(
                 new InjectionConstructor(unityContainer.Resolve<IDownloadService>()));
-
-            
         }
 
         private static void RegisterViewModels(IUnityContainer unityContainer)

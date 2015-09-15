@@ -1,5 +1,6 @@
 ﻿namespace AnimeXdcc.Core.Clients.Dcc.Models
 {
+    // TODO: Review property types to see which ones should be double or long
     public class DccTransferStatistic
     {
         public DccTransferStatistic(

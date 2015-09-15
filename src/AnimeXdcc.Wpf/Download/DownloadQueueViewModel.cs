@@ -10,6 +10,8 @@ using AnimeXdcc.Wpf.Infrastructure.Bindable;
 
 namespace AnimeXdcc.Wpf.Download
 {
+    // TODO: Add cancel buttons
+    // TODO: Add back to search button
     public class DownloadQueueViewModel : BindableBase
     {
         private readonly NotificationListener<DccTransferStatistic> _notificationListener;
@@ -107,6 +109,7 @@ namespace AnimeXdcc.Wpf.Download
             CompletedDownloads.Add(episode);
         }
 
+        // TODO: Episode should display transfer speed, time elapsed, etc...
         public class Episode
         {
             public Episode(string fileName)

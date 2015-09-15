@@ -2,6 +2,7 @@
 
 namespace AnimeXdcc.Core.Clients.Irc.Models
 {
+    // TODO: Make into nested type of DccMessageParser
     public class DccSendMessage : EventArgs
     {
         public string FileName { get; set; }

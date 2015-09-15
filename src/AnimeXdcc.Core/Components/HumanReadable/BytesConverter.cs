@@ -2,7 +2,7 @@
 
 namespace AnimeXdcc.Core.Components.HumanReadable
 {
-    public class BytesConvertor : IBytesConvertor
+    public class BytesConverter : IBytesConverter
     {
         private static readonly string[] SizeSuffixes = {"B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
 

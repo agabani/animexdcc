@@ -129,6 +129,7 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
         {
             IrcResult result = null;
 
+            // TODO: Unassign event handler
             _standardIrcClient.WhoIsReplyReceived +=
                 (sender, args) =>
                 {
@@ -158,6 +159,7 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
         {
             IrcResult result = null;
 
+            // TODO: Unassign event handler
             if (_standardIrcClient.Channels.Any(c => c.Name == channel) &&
                 _standardIrcClient.Channels.First(c => c.Name == channel)
                     .Users.Any(u => u.User.NickName == _standardIrcClient.LocalUser.NickName))
@@ -192,6 +194,7 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
         {
             IrcResult result = null;
 
+            // TODO: Unassign event handler
             _standardIrcClient.LocalUser.MessageSent +=
                 (sender, args) => { result = new IrcResult(true, string.Format("{0} {1}", target, packageId)); };
 
@@ -214,6 +217,7 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
         {
             IrcResult result = null;
 
+            // TODO: Unassign event handler
             _standardIrcClient.LocalUser.MessageReceived += (sender, args) =>
             {
                 if (args.Source.Name.Equals(target, StringComparison.OrdinalIgnoreCase))

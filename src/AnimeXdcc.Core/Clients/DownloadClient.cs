@@ -47,6 +47,7 @@ namespace AnimeXdcc.Core.Clients
 
             DccTransferStatistic statistic = null;
 
+            // TODO: unassign callback when task download has terminated
             dccClient.TransferProgress += (sender, args) =>
             {
                 statistic = args.Statistic;

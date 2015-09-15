@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace Intel.Haruhichan.ApiClient.Clients
 {
+    // TODO: search methods should be able to give feedback on errors such as "cannot connect to host"
     public class IntelHttpClient : IIntelHttpClient
     {
         private readonly Uri _baseAddress;

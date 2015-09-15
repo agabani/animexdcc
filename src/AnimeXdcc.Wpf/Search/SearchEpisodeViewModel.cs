@@ -8,6 +8,7 @@ using AnimeXdcc.Wpf.Infrastructure.Relay;
 
 namespace AnimeXdcc.Wpf.Search
 {
+    // TODO: Add "no results found" message when no results are found from search
     internal class SearchEpisodeViewModel : BindableBase
     {
         private readonly ISearchService _search;

@@ -47,8 +47,8 @@
     <Compile Include="Components\Filters\Builders\RegexPatternBuilder.cs" />
     <Compile Include="Components\Filters\Builders\SearchTermBuilder.cs" />
     <Compile Include="Components\Filters\RegexService.cs" />
-    <Compile Include="Components\HumanReadable\BytesConvertor.cs" />
-    <Compile Include="Components\HumanReadable\IBytesConvertor.cs" />
+    <Compile Include="Components\HumanReadable\BytesConverter.cs" />
+    <Compile Include="Components\HumanReadable\IBytesConverter.cs" />
     <Compile Include="Components\Notifications\INotificationListener.cs" />
     <Compile Include="Components\Notifications\NotificationListener.cs" />
     <Compile Include="Components\Searchable\IntelSearchable.cs" />
@@ -68,7 +68,6 @@
     <Compile Include="Clients\Dcc\Components\IDccTransferStatistics.cs" />
     <Compile Include="Clients\Dcc\Models\DccClientTransferProgressEventArgs.cs" />
     <Compile Include="Clients\Dcc\Models\DccTransferProgressEventArgs.cs" />
-    <Compile Include="Clients\Dcc\Models\DccTransferStatus.cs" />
     <Compile Include="Clients\Irc\Components\IIrcClient.cs" />
     <Compile Include="Clients\Irc\Models\DccMessageParser.cs" />
     <Compile Include="Clients\Irc\Models\DccSendMessage.cs" />
