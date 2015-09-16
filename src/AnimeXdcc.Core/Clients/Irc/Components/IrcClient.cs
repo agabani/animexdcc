@@ -129,16 +129,16 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
         {
             IrcResult result = null;
 
-            // TODO: Unassign event handler
-            _standardIrcClient.WhoIsReplyReceived +=
-                (sender, args) =>
-                {
-                    var ircChannel = args.User.Client.Channels.FirstOrDefault();
+            EventHandler<IrcUserEventArgs> standardIrcClientOnWhoIsReplyReceived = (sender, args) =>
+            {
+                var ircChannel = args.User.Client.Channels.FirstOrDefault();
 
-                    result = ircChannel == null
-                        ? new IrcResult(false, target, IrcFailureKind.SourceNotFound)
-                        : new IrcResult(true, ircChannel.Name);
-                };
+                result = ircChannel == null
+                    ? new IrcResult(false, target, IrcFailureKind.SourceNotFound)
+                    : new IrcResult(true, ircChannel.Name);
+            };
+
+            _standardIrcClient.WhoIsReplyReceived += standardIrcClientOnWhoIsReplyReceived;
 
             _standardIrcClient.QueryWhoIs(target);
 
@@ -146,6 +146,8 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
             {
                 await Delay(token);
             }
+
+            _standardIrcClient.WhoIsReplyReceived -= standardIrcClientOnWhoIsReplyReceived;
 
             if (token.IsCancellationRequested)
             {
@@ -159,7 +161,6 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
         {
             IrcResult result = null;
 
-            // TODO: Unassign event handler
             if (_standardIrcClient.Channels.Any(c => c.Name == channel) &&
                 _standardIrcClient.Channels.First(c => c.Name == channel)
                     .Users.Any(u => u.User.NickName == _standardIrcClient.LocalUser.NickName))
@@ -167,7 +168,7 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
                 return new IrcResult(true, channel);
             }
 
-            _standardIrcClient.LocalUser.JoinedChannel += (sender, args) =>
+            EventHandler<IrcChannelEventArgs> localUserOnJoinedChannel = (sender, args) =>
             {
                 if (channel.Equals(args.Channel.Name, StringComparison.OrdinalIgnoreCase))
                 {
@@ -175,12 +176,16 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
                 }
             };
 
+            _standardIrcClient.LocalUser.JoinedChannel += localUserOnJoinedChannel;
+
             _standardIrcClient.Channels.Join(channel);
 
             while (result == null && !token.IsCancellationRequested)
             {
                 await Delay(token);
             }
+
+            _standardIrcClient.LocalUser.JoinedChannel -= localUserOnJoinedChannel;
 
             if (token.IsCancellationRequested)
             {
@@ -194,9 +199,10 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
         {
             IrcResult result = null;
 
-            // TODO: Unassign event handler
-            _standardIrcClient.LocalUser.MessageSent +=
+            EventHandler<IrcMessageEventArgs> localUserOnMessageSent =
                 (sender, args) => { result = new IrcResult(true, string.Format("{0} {1}", target, packageId)); };
+
+            _standardIrcClient.LocalUser.MessageSent += localUserOnMessageSent;
 
             _standardIrcClient.LocalUser.SendMessage(target, string.Format("XDCC SEND #{0}", packageId));
 
@@ -204,6 +210,8 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
             {
                 await Delay(token);
             }
+
+            _standardIrcClient.LocalUser.MessageSent -= localUserOnMessageSent;
 
             if (token.IsCancellationRequested)
             {
@@ -217,8 +225,7 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
         {
             IrcResult result = null;
 
-            // TODO: Unassign event handler
-            _standardIrcClient.LocalUser.MessageReceived += (sender, args) =>
+            EventHandler<IrcMessageEventArgs> localUserOnMessageReceived = (sender, args) =>
             {
                 if (args.Source.Name.Equals(target, StringComparison.OrdinalIgnoreCase))
                 {
@@ -226,10 +233,14 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
                 }
             };
 
+            _standardIrcClient.LocalUser.MessageReceived += localUserOnMessageReceived;
+
             while (result == null && !token.IsCancellationRequested)
             {
                 await Delay(token);
             }
+
+            _standardIrcClient.LocalUser.MessageReceived -= localUserOnMessageReceived;
 
             if (token.IsCancellationRequested)
             {
