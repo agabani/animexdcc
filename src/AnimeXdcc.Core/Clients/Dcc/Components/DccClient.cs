@@ -7,7 +7,6 @@ using AnimeXdcc.Core.Components.SystemWrappers.Timer;
 
 namespace AnimeXdcc.Core.Clients.Dcc.Components
 {
-    // TODO: Make this entire class disposible as it is non renterant
     public class DccClient : IDccClient
     {
         public delegate void TransferProgressEventHandler(object sender, DccClientTransferProgressEventArgs e);
@@ -20,12 +19,12 @@ namespace AnimeXdcc.Core.Clients.Dcc.Components
             RemoteHostNotReachable
         }
 
-        private readonly IDccTransferFactory _transferFactory;
         private readonly IDccTransferStatistics _statistics;
         private readonly IStopwatch _stopwatch;
-        private readonly ITimer _timer;
+        private readonly IDccTransferFactory _transferFactory;
         private long _bytesTransferred;
         private long _size;
+        private ITimer _timer;
 
         public DccClient(ITimer timer, IStopwatch stopwatch, IDccTransferFactory transferFactory,
             IDccTransferStatistics statistics)
@@ -64,6 +63,12 @@ namespace AnimeXdcc.Core.Clients.Dcc.Components
 
         public event TransferProgressEventHandler TransferProgress;
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         private void DccTransferOnTransferBegun(object sender, EventArgs e)
         {
             _stopwatch.Start();
@@ -99,6 +104,23 @@ namespace AnimeXdcc.Core.Clients.Dcc.Components
         {
             var handler = TransferProgress;
             if (handler != null) handler(this, args);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_timer != null)
+                {
+                    _timer.Dispose();
+                    _timer = null;
+                }
+            }
+        }
+
+        ~DccClient()
+        {
+            Dispose(false);
         }
 
         public class DccResult
