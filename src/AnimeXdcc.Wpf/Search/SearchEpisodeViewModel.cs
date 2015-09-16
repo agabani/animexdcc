@@ -9,6 +9,8 @@ using AnimeXdcc.Wpf.Infrastructure.Relay;
 namespace AnimeXdcc.Wpf.Search
 {
     // TODO: Add "no results found" message when no results are found from search
+    // TODO: Should add progress bar to provide feedback on search response times
+    // TODO: Should add spinner to display that search is in progress
     internal class SearchEpisodeViewModel : BindableBase
     {
         private readonly ISearchService _search;
