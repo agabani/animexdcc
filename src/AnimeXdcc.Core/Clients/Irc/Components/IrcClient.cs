@@ -58,6 +58,7 @@ namespace AnimeXdcc.Core.Clients.Irc.Components
                 return joinResult;
             }
 
+            // TODO: prepare client to accept response before making request
             var requestResult = await RequestPackageTransfer(botName, packageId, token);
 
             if (!requestResult.Successful)
