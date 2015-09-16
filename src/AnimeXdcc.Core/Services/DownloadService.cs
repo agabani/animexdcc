@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AnimeXdcc.Core.Clients;
 using AnimeXdcc.Core.Clients.Dcc.Models;
 using AnimeXdcc.Core.Clients.Models;
@@ -9,8 +10,8 @@ namespace AnimeXdcc.Core.Services
 {
     public class DownloadService : IDownloadService
     {
-        private readonly IDownloadClient _client;
         private readonly IStreamProvider _streamProvider;
+        private IDownloadClient _client;
 
         public DownloadService(IDownloadClient client, IStreamProvider streamProvider)
         {
@@ -22,6 +23,29 @@ namespace AnimeXdcc.Core.Services
             INotificationListener<DccTransferStatistic> listener)
         {
             return await _client.DownloadAsync(package, _streamProvider, listener);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_client != null)
+                {
+                    _client.Dispose();
+                    _client = null;
+                }
+            }
+        }
+
+        ~DownloadService()
+        {
+            Dispose(false);
         }
     }
 }
