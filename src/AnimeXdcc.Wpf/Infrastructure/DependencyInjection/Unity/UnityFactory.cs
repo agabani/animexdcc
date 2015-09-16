@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using AnimeXdcc.Core.Clients;
 using AnimeXdcc.Core.Clients.Dcc.Components;
 using AnimeXdcc.Core.Clients.Irc.Components;
+using AnimeXdcc.Core.Components.Converters;
 using AnimeXdcc.Core.Components.Files;
 using AnimeXdcc.Core.Components.HumanReadable;
 using AnimeXdcc.Core.Components.Logging;
 using AnimeXdcc.Core.Components.Logging.Trace;
+using AnimeXdcc.Core.Components.Parsers.Dcc;
 using AnimeXdcc.Core.Components.Searchable;
 using AnimeXdcc.Core.Components.UserName;
 using AnimeXdcc.Core.Services;
@@ -45,6 +47,8 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
         {
             unityContainer.RegisterType<IUserNameGenerator, UserNameGenerator>();
             unityContainer.RegisterType<IBytesConverter, BytesConverter>();
+            unityContainer.RegisterType<IIpConverter, IpConverter>();
+            unityContainer.RegisterType<IDccMessageParser, DccMessageParser>();
         }
 
         public static void RegisterIntel(IUnityContainer unityContainer)
@@ -77,7 +81,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
                 new InjectionConstructor());
 
             unityContainer.RegisterType<IDownloadClient, DownloadClient>(
-                new InjectionConstructor(unityContainer.Resolve<IIrcClient>(), unityContainer.Resolve<IDccClientFactory>()));
+                new InjectionConstructor(unityContainer.Resolve<IIrcClient>(), unityContainer.Resolve<IDccClientFactory>(), unityContainer.Resolve<IDccMessageParser>()));
 
             unityContainer.RegisterType<IDownloadService, DownloadService>(
                 new InjectionConstructor(unityContainer.Resolve<IDownloadClient>(), unityContainer.Resolve<IStreamProvider>()));

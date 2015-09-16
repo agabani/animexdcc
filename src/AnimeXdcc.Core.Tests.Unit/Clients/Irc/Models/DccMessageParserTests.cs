@@ -1,5 +1,5 @@
-﻿using AnimeXdcc.Core.Clients.Irc.Models;
-using AnimeXdcc.Core.Components.Converters;
+﻿using AnimeXdcc.Core.Components.Converters;
+using AnimeXdcc.Core.Components.Parsers.Dcc;
 using NUnit.Framework;
 
 namespace AnimeXdcc.Core.Tests.Unit.Clients.Irc.Models

@@ -7,8 +7,10 @@ using AnimeXdcc.Core.Clients.Dcc.Components;
 using AnimeXdcc.Core.Clients.Dcc.Models;
 using AnimeXdcc.Core.Clients.Irc.Components;
 using AnimeXdcc.Core.Clients.Models;
+using AnimeXdcc.Core.Components.Converters;
 using AnimeXdcc.Core.Components.Files;
 using AnimeXdcc.Core.Components.Notifications;
+using AnimeXdcc.Core.Components.Parsers.Dcc;
 using AnimeXdcc.Core.Components.Searchable;
 using AnimeXdcc.Core.Components.UserName;
 using AnimeXdcc.Core.Services;
@@ -30,7 +32,9 @@ namespace AnimeXdcc.Wpf.Console
                     }),
                 new DownloadService(
                     new DownloadClient(
-                        new IrcClient("irc.rizon.net", 6667, new UserNameGenerator().Create(10)), new DccClientFactory(1000)),
+                        new IrcClient("irc.rizon.net", 6667, new UserNameGenerator().Create(10)),
+                        new DccClientFactory(1000),
+                        new DccMessageParser(new IpConverter())),
                     new StreamProvider()));
 
             Task.Run(async () => await application.RunAsync()).GetAwaiter().GetResult();

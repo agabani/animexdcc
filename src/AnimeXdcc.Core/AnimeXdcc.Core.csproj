@@ -39,8 +39,10 @@
   <ItemGroup>
     <Compile Include="Clients\DownloadClient.cs" />
     <Compile Include="Clients\IDownloadClient.cs" />
+    <Compile Include="Components\Parsers\Dcc\IDccMessageParser.cs" />
     <Compile Include="Clients\Models\DccPackage.cs" />
     <Compile Include="Clients\Models\DccSearchResults.cs" />
+    <Compile Include="Components\Converters\IIpConverter.cs" />
     <Compile Include="Components\Files\IStreamProvider.cs" />
     <Compile Include="Components\Files\StreamProvider.cs" />
     <Compile Include="Components\Filters\Builders\IEpisodeBuilder.cs" />
@@ -69,8 +71,7 @@
     <Compile Include="Clients\Dcc\Models\DccClientTransferProgressEventArgs.cs" />
     <Compile Include="Clients\Dcc\Models\DccTransferProgressEventArgs.cs" />
     <Compile Include="Clients\Irc\Components\IIrcClient.cs" />
-    <Compile Include="Clients\Irc\Models\DccMessageParser.cs" />
-    <Compile Include="Clients\Irc\Models\DccSendMessage.cs" />
+    <Compile Include="Components\Parsers\Dcc\DccMessageParser.cs" />
     <Compile Include="Clients\Irc\Components\IrcClient.cs" />
     <Compile Include="Components\Logging\Callback\CallbackLogger.cs" />
     <Compile Include="Components\Logging\Callback\LogEventArgs.cs" />

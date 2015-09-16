@@ -2,7 +2,7 @@
 
 namespace AnimeXdcc.Core.Components.Converters
 {
-    public class IpConverter
+    public class IpConverter : IIpConverter
     {
         public long IpAddressToIntAddress(string ipAddress)
         {

@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using AnimeXdcc.Core.Clients.Dcc.Components;
 using AnimeXdcc.Core.Clients.Dcc.Models;
 using AnimeXdcc.Core.Clients.Irc.Components;
-using AnimeXdcc.Core.Clients.Irc.Models;
 using AnimeXdcc.Core.Clients.Models;
-using AnimeXdcc.Core.Components.Converters;
 using AnimeXdcc.Core.Components.Files;
 using AnimeXdcc.Core.Components.Notifications;
+using AnimeXdcc.Core.Components.Parsers.Dcc;
 
 namespace AnimeXdcc.Core.Clients
 {
@@ -22,12 +21,15 @@ namespace AnimeXdcc.Core.Clients
         }
 
         private readonly IDccClientFactory _dccClientFactory;
+        private readonly IDccMessageParser _dccMessageParser;
         private IIrcClient _ircClient;
 
-        public DownloadClient(IIrcClient ircClient, IDccClientFactory dccClientFactory)
+        public DownloadClient(IIrcClient ircClient, IDccClientFactory dccClientFactory,
+            IDccMessageParser dccMessageParser)
         {
             _ircClient = ircClient;
             _dccClientFactory = dccClientFactory;
+            _dccMessageParser = dccMessageParser;
         }
 
         public async Task<DownloadResult> DownloadAsync(DccPackage package, IStreamProvider provider,
@@ -40,8 +42,7 @@ namespace AnimeXdcc.Core.Clients
                 return FailureDownloadResult(ircResult);
             }
 
-            // TODO: move this message parser some where more responsible
-            var message = new DccMessageParser(new IpConverter()).Parse(ircResult.Result);
+            var message = _dccMessageParser.Parse(ircResult.Result);
 
             return await DownloadFromSourceAsync(message, provider, listener);
         }
@@ -57,7 +58,8 @@ namespace AnimeXdcc.Core.Clients
             return _ircClient.RequestPackageAsync(package.BotName, package.PackageId);
         }
 
-        private async Task<DownloadResult> DownloadFromSourceAsync(DccSendMessage message, IStreamProvider provider,
+        private async Task<DownloadResult> DownloadFromSourceAsync(DccMessageParser.DccSendMessage message,
+            IStreamProvider provider,
             INotificationListener<DccTransferStatistic> listener)
         {
             using (var dccClient = _dccClientFactory.Create(message.FileSize))

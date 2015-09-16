@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AnimeXdcc.Core.Components.Converters;
 
-namespace AnimeXdcc.Core.Clients.Irc.Models
+namespace AnimeXdcc.Core.Components.Parsers.Dcc
 {
-    public class DccMessageParser
+    public class DccMessageParser : IDccMessageParser
     {
-        private readonly IpConverter _ipConverter;
+        private readonly IIpConverter _ipConverter;
 
-        // TODO: Make construtor take interface implimentation instead of concrete, update unit tests
-        public DccMessageParser(IpConverter ipConverter)
+        public DccMessageParser(IIpConverter ipConverter)
         {
             _ipConverter = ipConverter;
         }
@@ -86,6 +86,14 @@ namespace AnimeXdcc.Core.Clients.Irc.Models
         {
             return Path.GetInvalidFileNameChars()
                 .Aggregate(fileName, (current, chararacter) => current.Replace(chararacter, '_'));
+        }
+
+        public class DccSendMessage : EventArgs
+        {
+            public string FileName { get; set; }
+            public long FileSize { get; set; }
+            public string IpAddress { get; set; }
+            public int Port { get; set; }
         }
     }
 }
