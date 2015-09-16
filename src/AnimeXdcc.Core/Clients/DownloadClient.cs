@@ -22,7 +22,7 @@ namespace AnimeXdcc.Core.Clients
         }
 
         private readonly IDccClientFactory _dccClientFactory;
-        private readonly IIrcClient _ircClient;
+        private IIrcClient _ircClient;
 
         public DownloadClient(IIrcClient ircClient, IDccClientFactory dccClientFactory)
         {
@@ -33,7 +33,7 @@ namespace AnimeXdcc.Core.Clients
         public async Task<DownloadResult> DownloadAsync(DccPackage package, IStreamProvider provider,
             INotificationListener<DccTransferStatistic> listener)
         {
-            var ircResult = await _ircClient.RequestPackageAsync(package.BotName, package.PackageId);
+            var ircResult = await RequestFromSourceAsync(package);
 
             if (!ircResult.Successful)
             {
@@ -43,28 +43,48 @@ namespace AnimeXdcc.Core.Clients
             // TODO: move this message parser some where more responsible
             var message = new DccMessageParser(new IpConverter()).Parse(ircResult.Result);
 
-            var dccClient = _dccClientFactory.Create(message.FileSize);
+            return await DownloadFromSourceAsync(message, provider, listener);
+        }
 
-            DccTransferStatistic statistic = null;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            // TODO: unassign callback when task download has terminated
-            dccClient.TransferProgress += (sender, args) =>
+        private Task<IrcClient.IrcResult> RequestFromSourceAsync(DccPackage package)
+        {
+            return _ircClient.RequestPackageAsync(package.BotName, package.PackageId);
+        }
+
+        private async Task<DownloadResult> DownloadFromSourceAsync(DccSendMessage message, IStreamProvider provider,
+            INotificationListener<DccTransferStatistic> listener)
+        {
+            using (var dccClient = _dccClientFactory.Create(message.FileSize))
             {
-                statistic = args.Statistic;
-                listener.Notify(args.Statistic);
-            };
-
-            using (var stream = provider.GetStream(package.FileName, StreamProvider.Strategy.Overwrite))
-            {
-                var dccResult = await dccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, stream);
-
-                if (!dccResult.Successful)
+                using (var stream = provider.GetStream(message.FileName, StreamProvider.Strategy.Overwrite))
                 {
-                    return new DownloadResult(false, DownloadFailureKind.SourceNotAvailable);
+                    DccTransferStatistic statistic = null;
+
+                    DccClient.TransferProgressEventHandler dccClientOnTransferProgress = (sender, args) =>
+                    {
+                        statistic = args.Statistic;
+                        listener.Notify(args.Statistic);
+                    };
+
+                    dccClient.TransferProgress += dccClientOnTransferProgress;
+                    var dccResult =
+                        await dccClient.DownloadAsync(message.IpAddress, message.Port, message.FileSize, stream);
+                    dccClient.TransferProgress -= dccClientOnTransferProgress;
+
+                    if (!dccResult.Successful)
+                    {
+                        return new DownloadResult(false, DownloadFailureKind.SourceNotAvailable);
+                    }
+
+                    return CreateResult(statistic);
                 }
             }
-
-            return CreateResult(statistic);
         }
 
         private static DownloadResult FailureDownloadResult(IrcClient.IrcResult ircResult)
@@ -109,6 +129,23 @@ namespace AnimeXdcc.Core.Clients
             }
 
             return result;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_ircClient != null)
+                {
+                    _ircClient.Dispose();
+                    _ircClient = null;
+                }
+            }
+        }
+
+        ~DownloadClient()
+        {
+            Dispose(false);
         }
 
         public class DownloadResult
