@@ -64,6 +64,7 @@ namespace AnimeXdcc.Wpf.Download
 
         public void AddToDownloadQueue(string fileName, List<DccPackage> source)
         {
+            // TODO: move duplication checks to appropriate class
             if (IsDuplicate(fileName))
             {
                 return;
