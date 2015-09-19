@@ -46,9 +46,6 @@
                         CommandParameter="Download">
                     <StaticResource ResourceKey="DownloadButton" />
                 </Button>
-                <Button IsEnabled="False">
-                    <StaticResource ResourceKey="SettingButton" />
-                </Button>
                 <Button Command="{Binding NavigationCommand}"
                         CommandParameter="About">
                     <StaticResource ResourceKey="AboutButton" />
