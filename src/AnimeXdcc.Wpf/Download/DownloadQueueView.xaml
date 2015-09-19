@@ -31,21 +31,37 @@
                 </Grid.RowDefinitions>
                 <Grid Row="0" x:Name="ActiveDownloadGrid">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Active" />
+                        <TextBlock Text="Active"
+                                   FontFamily="{DynamicResource HeaderFontFamily}"
+                                   FontSize="16"
+                                   Margin="5" />
                         <TextBlock Text="{Binding ActiveDownload.FileName}" />
                         <ProgressBar Value="{Binding ActiveDownload.PercentageComplete}" />
+                        <TextBlock Text="{Binding ActiveDownload.TransferProgressText}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid Column="0">
+                                <TextBlock Text="{Binding ActiveDownload.TransferSpeedText}" />
+                            </Grid>
+                            <Grid Column="1">
+                                <TextBlock Text="{Binding ActiveDownload.TimeText}" />
+                            </Grid>
+                        </Grid>
                     </StackPanel>
                 </Grid>
                 <Grid Row="1" x:Name="QueuedDownloadsGrid">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Queued" />
+                        <TextBlock Text="Queued"
+                                   FontFamily="{DynamicResource HeaderFontFamily}"
+                                   FontSize="16"
+                                   Margin="5" />
                         <ItemsControl ItemsSource="{Binding QueuedDownloads}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding FileName}" />
-                                        <ProgressBar Value="{Binding PercentageComplete}" />
-                                    </StackPanel>
+                                    <TextBlock Text="{Binding FileName}" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -53,13 +69,28 @@
                 </Grid>
                 <Grid Row="2" x:Name="CompletedDownloadsGrid">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Completed" />
+                        <TextBlock Text="Completed"
+                                   FontFamily="{DynamicResource HeaderFontFamily}"
+                                   FontSize="16"
+                                   Margin="5" />
                         <ItemsControl ItemsSource="{Binding CompletedDownloads}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
                                         <TextBlock Text="{Binding FileName}" />
                                         <ProgressBar Value="{Binding PercentageComplete}" />
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Column="0">
+                                                <TextBlock Text="{Binding TransferSpeedText}" />
+                                            </Grid>
+                                            <Grid Column="1">
+                                                <TextBlock Text="{Binding TimeText}" />
+                                            </Grid>
+                                        </Grid>
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -67,19 +98,6 @@
                     </StackPanel>
                 </Grid>
             </Grid>
-
-            <!--            <Grid Column="1">-->
-            <!--                <ItemsControl ItemsSource="{Binding Downloads}">-->
-            <!--                    <ItemsControl.ItemTemplate>-->
-            <!--                        <DataTemplate>-->
-            <!--                            <StackPanel Orientation="Vertical">-->
-            <!--                                <TextBlock Text="{Binding FileName}" />-->
-            <!--                                <ProgressBar Value="{Binding Percentage}"></ProgressBar>-->
-            <!--                            </StackPanel>-->
-            <!--                        </DataTemplate>-->
-            <!--                    </ItemsControl.ItemTemplate>-->
-            <!--                </ItemsControl>-->
-            <!--            </Grid>-->
         </Grid>
     </Grid>
 </UserControl>

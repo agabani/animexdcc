@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AnimeXdcc.Core.Clients.Dcc.Models;
 using AnimeXdcc.Core.Clients.Models;
+using AnimeXdcc.Core.Components.HumanReadable;
 using AnimeXdcc.Core.Components.Notifications;
 using AnimeXdcc.Core.Services;
 using AnimeXdcc.Wpf.Infrastructure.Bindable;
@@ -12,8 +13,10 @@ namespace AnimeXdcc.Wpf.Download
 {
     // TODO: Add cancel buttons
     // TODO: Add back to search button
+    // TODO: Inject dependencies
     public class DownloadQueueViewModel : BindableBase
     {
+        private readonly BytesConverter _bytesConverter = new BytesConverter();
         private readonly NotificationListener<DccTransferStatistic> _notificationListener;
         private readonly IDownloadQueueService _service;
         private Episode _activeDownload;
@@ -67,7 +70,7 @@ namespace AnimeXdcc.Wpf.Download
                 return;
             }
 
-            var episode = new Episode(fileName);
+            var episode = Episode.Default(fileName);
 
             QueuedDownloads.Add(episode);
 
@@ -76,10 +79,7 @@ namespace AnimeXdcc.Wpf.Download
 
         private Task ExecuteAsync(DccTransferStatistic dccTransferStatistic)
         {
-            ActiveDownload = new Episode(ActiveDownload.FileName)
-            {
-                PercentageComplete = (int)dccTransferStatistic.PercentageComplete
-            }; 
+            ActiveDownload = ConvertEpisode(dccTransferStatistic);
 
             return Task.FromResult<object>(null);
         }
@@ -109,16 +109,65 @@ namespace AnimeXdcc.Wpf.Download
             CompletedDownloads.Add(episode);
         }
 
-        // TODO: Episode should display transfer speed, time elapsed, etc...
+        private Episode ConvertEpisode(DccTransferStatistic statistic)
+        {
+            return new StatisticsToEpisodeConverter(_bytesConverter).Convert(ActiveDownload.FileName, statistic);
+        }
+
         public class Episode
         {
-            public Episode(string fileName)
+            public static Episode Default(string fileName)
             {
-                FileName = fileName;
+                return new Episode
+                {
+                    FileName = fileName,
+                    TransferSpeedText = string.Empty,
+                    PercentageComplete = 0,
+                    TimeText = string.Empty,
+                    TransferProgressText = string.Empty
+                };
             }
 
-            public string FileName { get; private set; }
+            public string FileName { get; set; }
             public int PercentageComplete { get; set; }
+            public string TransferProgressText { get; set; }
+            public string TransferSpeedText { get; set; }
+            public string TimeText { get; set; }
+        }
+
+        public class StatisticsToEpisodeConverter
+        {
+            private readonly IBytesConverter _bytesConverter;
+
+            public StatisticsToEpisodeConverter(IBytesConverter bytesConverter)
+            {
+                _bytesConverter = bytesConverter;
+            }
+
+            public Episode Convert(string fileName, DccTransferStatistic statistic)
+            {
+                var bytesTransferredPerSecond = _bytesConverter.ToHumanReadable((long)statistic.BytesPerSecond);
+
+                var transferProgressText = string.Format("{0} of {1} ({2:N1}%)",
+                    _bytesConverter.ToHumanReadable(statistic.BytesTransferred),
+                    _bytesConverter.ToHumanReadable(statistic.FileSize),
+                    statistic.PercentageComplete);
+
+                var transferSpeedText = string.Format("Speed: {0}/s", bytesTransferredPerSecond);
+
+                var timeText = statistic.PercentageComplete >= 100
+                    ? string.Format("Elapsed: {0} s", statistic.SecondsElapsed)
+                    : string.Format("ETA: {0} s", statistic.SecondsRemaining);
+
+                return new Episode
+                {
+                    FileName = fileName,
+                    PercentageComplete = (int) statistic.PercentageComplete,
+                    TransferProgressText = transferProgressText,
+                    TransferSpeedText = transferSpeedText,
+                    TimeText = timeText
+                };
+            }
         }
     }
 }
