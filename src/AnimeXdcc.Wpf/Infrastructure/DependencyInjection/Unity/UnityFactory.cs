@@ -1,13 +1,20 @@
 ﻿using System;
-using AnimeXdcc.Core;
+using System.Collections.Generic;
+using AnimeXdcc.Core.Clients;
+using AnimeXdcc.Core.Clients.Dcc.Components;
+using AnimeXdcc.Core.Clients.Irc.Components;
+using AnimeXdcc.Core.Components.Converters;
+using AnimeXdcc.Core.Components.Files;
 using AnimeXdcc.Core.Components.HumanReadable;
+using AnimeXdcc.Core.Components.Logging;
+using AnimeXdcc.Core.Components.Logging.Trace;
+using AnimeXdcc.Core.Components.Parsers.Dcc;
+using AnimeXdcc.Core.Components.Searchable;
 using AnimeXdcc.Core.Components.UserName;
-using AnimeXdcc.Core.Logging;
-using AnimeXdcc.Core.Logging.Trace;
+using AnimeXdcc.Core.Services;
 using AnimeXdcc.Wpf.Download;
 using AnimeXdcc.Wpf.General;
 using AnimeXdcc.Wpf.Search;
-using AnimeXdcc.Wpf.Services;
 using Intel.Haruhichan.ApiClient.Clients;
 using Microsoft.Practices.Unity;
 
@@ -22,6 +29,7 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
             RegisterLogger(unityContainer);
             RegisterUtilities(unityContainer);
             RegisterIntel(unityContainer);
+            RegisterSearch(unityContainer);
             RegisterDownload(unityContainer);
             RegisterViewModels(unityContainer);
 
@@ -35,10 +43,12 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
                 new InjectionConstructor(TraceLogger.Level.Debug));
         }
 
-        private void RegisterUtilities(UnityContainer unityContainer)
+        private void RegisterUtilities(IUnityContainer unityContainer)
         {
             unityContainer.RegisterType<IUserNameGenerator, UserNameGenerator>();
-            unityContainer.RegisterType<IBytesConvertor, BytesConvertor>();
+            unityContainer.RegisterType<IBytesConverter, BytesConverter>();
+            unityContainer.RegisterType<IIpConverter, IpConverter>();
+            unityContainer.RegisterType<IDccMessageParser, DccMessageParser>();
         }
 
         public static void RegisterIntel(IUnityContainer unityContainer)
@@ -47,19 +57,37 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
             unityContainer.RegisterType<IIntelHttpClient, IntelHttpClient>(
                 new ContainerControlledLifetimeManager(),
-                new InjectionConstructor(unityContainer.Resolve<Uri>("intel"), unityContainer.Resolve<ILogger>()));
+                new InjectionConstructor(unityContainer.Resolve<Uri>("intel")));
 
-            unityContainer.RegisterType<IIntelService, IntelService>(new ContainerControlledLifetimeManager(),
+            unityContainer.RegisterType<ISearchable, IntelSearchable>("intel",
                 new InjectionConstructor(unityContainer.Resolve<IIntelHttpClient>()));
         }
 
-        private void RegisterDownload(UnityContainer unityContainer)
+        private static void RegisterSearch(IUnityContainer unityContainer)
         {
-            unityContainer.RegisterType<IAnimeXdccClient, AnimeXdccClient>(
+            unityContainer.RegisterType<ISearchService, SearchService>(new InjectionConstructor(
+                new List<ISearchable> {unityContainer.Resolve<ISearchable>("intel")}));
+        }
+
+        private void RegisterDownload(IUnityContainer unityContainer)
+        {
+            unityContainer.RegisterType<IDccClientFactory, DccClientFactory>(
+                new InjectionConstructor(1000));
+
+            unityContainer.RegisterType<IIrcClient, IrcClient>(
                 new InjectionConstructor("irc.rizon.net", 6667, unityContainer.Resolve<IUserNameGenerator>().Create(10)));
 
-            unityContainer.RegisterType<IAnimeXdccService, AnimeXdccService>(
-                new InjectionConstructor(unityContainer.Resolve<IAnimeXdccClient>()));
+            unityContainer.RegisterType<IStreamProvider, StreamProvider>(
+                new InjectionConstructor());
+
+            unityContainer.RegisterType<IDownloadClient, DownloadClient>(
+                new InjectionConstructor(unityContainer.Resolve<IIrcClient>(), unityContainer.Resolve<IDccClientFactory>(), unityContainer.Resolve<IDccMessageParser>()));
+
+            unityContainer.RegisterType<IDownloadService, DownloadService>(
+                new InjectionConstructor(unityContainer.Resolve<IDownloadClient>(), unityContainer.Resolve<IStreamProvider>()));
+
+            unityContainer.RegisterType<IDownloadQueueService, DownloadQueueService>(
+                new InjectionConstructor(unityContainer.Resolve<IDownloadService>()));
         }
 
         private static void RegisterViewModels(IUnityContainer unityContainer)
@@ -68,10 +96,11 @@ namespace AnimeXdcc.Wpf.Infrastructure.DependencyInjection.Unity
 
             unityContainer.RegisterType<AboutViewModel, AboutViewModel>();
 
-            unityContainer.RegisterType<EpisodeSearchViewModel, EpisodeSearchViewModel>(
-                new InjectionConstructor(unityContainer.Resolve<IIntelService>()));
+            unityContainer.RegisterType<SearchEpisodeViewModel, SearchEpisodeViewModel>(
+                new InjectionConstructor(unityContainer.Resolve<ISearchService>()));
 
-            unityContainer.RegisterType<DownloadEpisodeViewModel, DownloadEpisodeViewModel>();
+            unityContainer.RegisterType<DownloadQueueViewModel, DownloadQueueViewModel>(
+                new InjectionConstructor(unityContainer.Resolve<IDownloadQueueService>()));
         }
     }
 }

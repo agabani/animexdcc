@@ -4,7 +4,7 @@ using AnimeXdcc.Wpf.Annotations;
 
 namespace AnimeXdcc.Wpf.Infrastructure.Bindable
 {
-    internal class BindableBase : INotifyPropertyChanged
+    public class BindableBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

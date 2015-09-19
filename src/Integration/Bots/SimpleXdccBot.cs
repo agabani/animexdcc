@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AnimeXdcc.Core.Utilities;
+using AnimeXdcc.Core.Components.Converters;
 using Integration.Clients;
 
 namespace Integration.Bots

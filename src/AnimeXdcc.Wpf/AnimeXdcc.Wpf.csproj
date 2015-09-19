@@ -69,10 +69,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Download\DownloadEpisodeView.xaml.cs">
-      <DependentUpon>DownloadEpisodeView.xaml</DependentUpon>
+    <Compile Include="Download\DownloadQueueView.xaml.cs">
+      <DependentUpon>DownloadQueueView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Download\DownloadEpisodeViewModel.cs" />
+    <Compile Include="Download\DownloadQueueViewModel.cs" />
     <Compile Include="General\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
@@ -82,15 +82,14 @@
     </Compile>
     <Compile Include="General\HomeViewModel.cs" />
     <Compile Include="Infrastructure\Input\InputBindingManager.cs" />
-    <Compile Include="Search\EpisodeSearchView.xaml.cs">
-      <DependentUpon>EpisodeSearchView.xaml</DependentUpon>
+    <Compile Include="Search\SearchEpisodeView.xaml.cs">
+      <DependentUpon>SearchEpisodeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Search\EpisodeSearchViewModel.cs" />
-    <Compile Include="Services\AnimeXdccService.cs" />
-    <Compile Include="Models\DownloadProgress.cs" />
-    <Compile Include="Services\IAnimeXdccService.cs" />
-    <Compile Include="Services\IIntelService.cs" />
-    <Compile Include="Services\IntelService.cs" />
+    <Compile Include="Search\SearchEpisodeViewModel.cs" />
+    <Page Include="Download\DownloadQueueView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="General\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -100,10 +99,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Buttons.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Download\DownloadEpisodeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -125,9 +120,9 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Search\EpisodeSearchView.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Search\SearchEpisodeView.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +165,7 @@
       <Name>Intel.Haruhichan.ApiClient</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
