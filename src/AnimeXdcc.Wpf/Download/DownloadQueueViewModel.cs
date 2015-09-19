@@ -64,12 +64,6 @@ namespace AnimeXdcc.Wpf.Download
 
         public void AddToDownloadQueue(string fileName, List<DccPackage> source)
         {
-            // TODO: move duplication checks to appropriate class
-            if (IsDuplicate(fileName))
-            {
-                return;
-            }
-
             var episode = Episode.Default(fileName);
 
             QueuedDownloads.Add(episode);
@@ -82,13 +76,6 @@ namespace AnimeXdcc.Wpf.Download
             ActiveDownload = ConvertEpisode(dccTransferStatistic);
 
             return Task.FromResult<object>(null);
-        }
-
-        private bool IsDuplicate(string fileName)
-        {
-            return QueuedDownloads.Any(n => n.FileName == fileName) ||
-                   (ActiveDownload != null && ActiveDownload.FileName == fileName) ||
-                   CompletedDownloads.Any(n => n.FileName == fileName);
         }
 
         public void SetToActiveDownload(string filename)
