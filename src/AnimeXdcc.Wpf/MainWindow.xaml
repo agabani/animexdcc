@@ -42,6 +42,11 @@
                         CommandParameter="Home">
                     <StaticResource ResourceKey="HomeButton" />
                 </Button>
+                <Button Style="{DynamicResource {x:Type Button}}"
+                        Command="{Binding NavigationCommand}"
+                        CommandParameter="Search">
+                    <StaticResource ResourceKey="SearchButton" />
+                </Button>
                 <Button Command="{Binding NavigationCommand}"
                         CommandParameter="Download">
                     <StaticResource ResourceKey="DownloadButton" />

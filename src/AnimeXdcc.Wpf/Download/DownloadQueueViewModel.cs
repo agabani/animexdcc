@@ -12,7 +12,6 @@ using AnimeXdcc.Wpf.Infrastructure.Bindable;
 namespace AnimeXdcc.Wpf.Download
 {
     // TODO: Add cancel buttons
-    // TODO: Add back to search button
     // TODO: Inject dependencies
     public class DownloadQueueViewModel : BindableBase
     {

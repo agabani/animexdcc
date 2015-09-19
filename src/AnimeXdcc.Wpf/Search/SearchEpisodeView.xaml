@@ -12,7 +12,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Text="Episode"
+        <TextBlock Text="Search Episode"
                    HorizontalAlignment="Center"
                    FontFamily="{DynamicResource HeaderFontFamily}"
                    FontSize="30"

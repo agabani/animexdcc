@@ -23,12 +23,10 @@ namespace AnimeXdcc.Wpf
 
             NavigationCommand = new RelayCommand<string>(OnNavigation);
 
-            // EXPERIMENT
-            _downloadQueueViewModel = dependencyResolver.GetSerivce<DownloadQueueViewModel>();
-
             _homeViewModel = dependencyResolver.GetSerivce<HomeViewModel>();
             _aboutViewModel = dependencyResolver.GetSerivce<AboutViewModel>();
             _searchEpisodeViewModel = dependencyResolver.GetSerivce<SearchEpisodeViewModel>();
+            _downloadQueueViewModel = dependencyResolver.GetSerivce<DownloadQueueViewModel>();
 
             _homeViewModel.EpisodeNavigationRequested += () => OnNavigation("SearchEpisode");
             _searchEpisodeViewModel.DownloadRequested += OnDownloadRequested;
@@ -57,6 +55,7 @@ namespace AnimeXdcc.Wpf
                 case "Download":
                     CurrentViewModel = _downloadQueueViewModel;
                     break;
+                case "Search":
                 case "SearchEpisode":
                     CurrentViewModel = _searchEpisodeViewModel;
                     break;
