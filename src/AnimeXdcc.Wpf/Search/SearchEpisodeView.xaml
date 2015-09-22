@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:input="clr-namespace:AnimeXdcc.Wpf.Infrastructure.Input"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -42,7 +43,7 @@
                 <ColumnDefinition Width="0.90*" />
                 <ColumnDefinition Width="0.05*" />
             </Grid.ColumnDefinitions>
-            <Grid Column="1">
+            <Grid Column="1" IsEnabled="{Binding EnableResults}">
                 <ItemsControl ItemsSource="{Binding SearchResults}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -77,6 +78,19 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+            </Grid>
+            <Grid Column="1" Visibility="{Binding DisplayNoResultsFoundMessage}">
+                <TextBlock Text="No results found..."
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontFamily="{DynamicResource ContentFontFamily}"
+                           FontSize="16" />
+            </Grid>
+            <Grid Column="1">
+                <controls:ProgressRing
+                    Width="40"
+                    Height="40"
+                    IsActive="{Binding EnableProgressRing}" />
             </Grid>
         </Grid>
     </Grid>

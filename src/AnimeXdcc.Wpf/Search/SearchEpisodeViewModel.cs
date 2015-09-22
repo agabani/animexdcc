@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using AnimeXdcc.Core.Clients.Models;
 using AnimeXdcc.Core.Services;
@@ -8,12 +9,12 @@ using AnimeXdcc.Wpf.Infrastructure.Relay;
 
 namespace AnimeXdcc.Wpf.Search
 {
-    // TODO: Add "no results found" message when no results are found from search
-    // TODO: Should add progress bar to provide feedback on search response times
-    // TODO: Should add spinner to display that search is in progress
     internal class SearchEpisodeViewModel : BindableBase
     {
         private readonly ISearchService _search;
+        private string _displayNoResultsFoundMessage = "Hidden";
+        private bool _enableProgressRing;
+        private bool _enableResults;
         private List<DccSearchResults> _searchResults;
         private string _searchTerm;
         private CancellationTokenSource _source;
@@ -46,6 +47,24 @@ namespace AnimeXdcc.Wpf.Search
         public RelayCommand<DccSearchResults> DownloadCommand { get; private set; }
         public RelayCommand SearchCommand { get; private set; }
 
+        public bool EnableResults
+        {
+            get { return _enableResults; }
+            set { SetProperty(ref _enableResults, value); }
+        }
+
+        public bool EnableProgressRing
+        {
+            get { return _enableProgressRing; }
+            set { SetProperty(ref _enableProgressRing, value); }
+        }
+
+        public string DisplayNoResultsFoundMessage
+        {
+            get { return _displayNoResultsFoundMessage; }
+            set { SetProperty(ref _displayNoResultsFoundMessage, value); }
+        }
+
         private void DownloadAsync(DccSearchResults searchResults)
         {
             DownloadRequested(searchResults);
@@ -62,13 +81,31 @@ namespace AnimeXdcc.Wpf.Search
 
             _source = new CancellationTokenSource();
 
+            DisableUi();
+
             SearchResults = await _search.SearchAsync(SearchTerm, _source.Token);
+
+            EnableUi();
 
             if (_source != null)
             {
                 _source.Dispose();
                 _source = null;
             }
+        }
+
+        private void DisableUi()
+        {
+            DisplayNoResultsFoundMessage = "Hidden";
+            EnableResults = false;
+            EnableProgressRing = true;
+        }
+
+        private void EnableUi()
+        {
+            DisplayNoResultsFoundMessage = SearchResults == null || SearchResults.Any() ? "Hidden" : "Visible";
+            EnableProgressRing = false;
+            EnableResults = true;
         }
 
         public event Action<DccSearchResults> DownloadRequested = delegate { };
