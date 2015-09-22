@@ -12,7 +12,13 @@
                       ResizeMode="CanResizeWithGrip"
                       TitleCaps="False"
                       GlowBrush="Black"
-                      BorderThickness="0">
+                      BorderThickness="0"
+                      Icon="Resources/favicon-32.png">
+    <controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Image Source="Resources/favicon-32.png" />
+        </DataTemplate>
+    </controls:MetroWindow.IconTemplate>
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>

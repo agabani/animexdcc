@@ -165,7 +165,11 @@
       <Name>Intel.Haruhichan.ApiClient</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\favicon-16.png" />
+    <Resource Include="Resources\favicon-32.png" />
+    <Resource Include="Resources\favicon-512.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
