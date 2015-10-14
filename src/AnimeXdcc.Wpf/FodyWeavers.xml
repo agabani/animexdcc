@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Weavers>
+  <Costura CreateTemporaryAssemblies="false" IncludeDebugSymbols="true" DisableCompression="false">
+    <ExcludeAssemblies>
+    </ExcludeAssemblies>
+
+    <IncludeAssemblies>
+      AnimeXdcc.Core
+      Intel.Haruhichan.ApiClient
+      IrcDotNet
+      MahApps.Metro
+      Microsoft.Practices.Unity.Configuration
+      Microsoft.Practices.Unity
+      Microsoft.Practices.Unity.RegistrationByConvention
+      Newtonsoft.Json
+      System.Windows.Interactivity
+    </IncludeAssemblies>
+
+    <Unmanaged32Assemblies>
+    </Unmanaged32Assemblies>
+
+    <Unmanaged64Assemblies>
+    </Unmanaged64Assemblies>
+  </Costura>
+</Weavers>
